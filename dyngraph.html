@@ -4,13 +4,94 @@
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
         <title>Dynamic graph</title>
-        <link rel="stylesheet" href="css/styles.css">
         <script src="js/main.js"></script>
         <script src="js/node.js"></script>
         <script src="js/graph.js"></script>
+	<script type="text/javascript">
+	  const canv_name = "c";
+	</script>
+	<style type="text/css">
+	  body {
+	      font-family: helvetica,arial,sans-serif;
+	  }
+	  h1 {
+	      text-align: center;
+	  }
+	  .float-container {
+	      border: 3px solid #fff;
+	      padding: 0px;
+	  }
+	  .float-canvas-child {
+	      width: 55%;
+	      float: left;
+	      padding: 0px;
+	      /* border: 2px solid red; */
+	  }
+	  .float-control-child {
+	      width: 35%;
+	      float: right;
+	      padding: 50px;
+	      /* border: 2px solid red; */
+	  }
+	  #canvas_space {}
+	  #panel_space {}
+	  body {
+	      background: #27221F; /* 墨色 「すみいろ」*/
+	      /* color: #EBF6F7;      /\* 藍白 「あいじろ」*\/ */
+	      color: #FFDDCA;      /* 白練 「しろねり」*/
+	  }
+	  canvas {
+	      background: #171412; /* 黒色 「こくしょく」*/
+	      /* background: #181B26; /\* 褐色 「かちいろ」*\/ */
+	      padding: 0;
+	      margin: 0 auto;
+	      margin-bottom: 1rem;
+	      display: block;
+	  }
+	  /* td { */
+	  /*     text-align: center; */
+	  /* } */
+	</style>
     </head>
 
     <body onload="start();">
-        <canvas id="c" width="1000" height="1000" style="background-color: rgb(66, 125, 133); "></canvas>
-        <div style="color:rgb(145, 151, 189)">
+      <!-- <div class="float-container"> -->
+        <div class="float-canvas-child" id="canvas_space"><canvas id="c" width="1000" height="1000"></canvas></div>
+        <div class="float-control-child" id="panel_space">
+	  <table>
+	    <tr>
+	      <td>number of nodes</td>
+	      <!-- <td></td> -->
+	      <td><input id="nu_nodes" type="number" value="100"></input></td>
+	    </tr>
+	    <tr>
+	      <td>number of edges</td>
+	      <!-- <td></td> -->
+	      <td><input id="nu_edges" type="number" value="100"></input></td>
+	    </tr>
+	    <tr>
+	      <td>tracing</td>
+	      <!-- <td></td> -->
+	      <td><input id="cb_tracing" type="checkbox" checked></input></td>
+	    </tr>
+	    <tr>
+	      <td colspan="3"><button onClick="clear_canvas();">Clear Canvas</button></td>
+	    </tr>
+	    <tr>
+	      <td><button onClick="pause();">Pause</button></td>
+	      <td><button onClick="go_on(check_tracer());">Continue</button></td>
+	    </tr>
+	    <tr>
+	      <td><button onClick="start(canv_name,check_tracer(),Number(nodes.value),Number(edges.value));">Start</button></td>
+	      <td><button onClick="stop();">Stop</button></td>
+	    </tr>
+	  </table>
+	</div>
+      <!-- </div> -->
+      <script type="text/javascript">
+	const tracer = document.getElementById("cb_tracing");
+	const nodes = document.getElementById("nu_nodes");
+	const edges = document.getElementById("nu_edges");
+      </script>
     </body>
+</html>
