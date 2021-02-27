@@ -20,6 +20,7 @@ function start(canv_name="c",
 
     //console.log("tracing: " + tracing);
 
+    clear_canvas();
     g = new Graph('trygraph');
 
     for(let i = 0;i<num_nodes;i++) {
@@ -32,6 +33,15 @@ function start(canv_name="c",
 
     count = 0;
     animPhase();
+}
+
+function clear_canvas(from_x=0,
+		      from_y=0,
+		      to_x=canv.width,
+		      to_y=canv.height,
+		      c=canv) {
+    const ctx = c.getContext('2d');
+    ctx.clearRect(from_x, from_y, to_x, to_y);
 }
 
 function stop() {
@@ -53,14 +63,6 @@ function go_on(tracer) {
     animPhase();
 }
 
-function clear_canvas(from_x=0,
-		      from_y=0,
-		      to_x=canv.width,
-		      to_y=canv.height,
-		      c=canv) {
-    const ctx = c.getContext('2d');
-    ctx.clearRect(from_x, from_y, to_x, to_y);
-}
 function check_tracer(t=tracer) {
     if(t.checked) {
 	console.log("trace: on");

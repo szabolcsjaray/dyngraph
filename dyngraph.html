@@ -17,6 +17,18 @@
 	  h1 {
 	      text-align: center;
 	  }
+	  input, button, label {
+	      font-size: 1.8vw;
+	      vertical-align: middle;
+	  }
+	  input.cb {
+	      width: 2vw;
+	      height: 2vh;
+	  }
+	  /* input.rb { */
+	  /*     width: 2.5vw; */
+	  /*     height: 2.5vh; */
+	  /* } */
 	  .float-container {
 	      border: 3px solid #fff;
 	      padding: 0px;
@@ -48,9 +60,10 @@
 	      margin-bottom: 1rem;
 	      display: block;
 	  }
-	  /* td { */
-	  /*     text-align: center; */
-	  /* } */
+	  td {
+	      /* text-align: center; */
+	      vertical-align: middle;
+	  }
 	</style>
     </head>
 
@@ -60,30 +73,30 @@
         <div class="float-control-child" id="panel_space">
 	  <table>
 	    <tr>
-	      <td>number of nodes</td>
+	      <td><label>nodes</label></td>
 	      <!-- <td></td> -->
-	      <td><input id="nu_nodes" type="number" value="100"></input></td>
+	      <td><input id="nu_nodes" type="number" value="100" min="2" max="1000"></input></td>
 	    </tr>
 	    <tr>
-	      <td>number of edges</td>
+	      <td><label>edges</label></td>
 	      <!-- <td></td> -->
-	      <td><input id="nu_edges" type="number" value="100"></input></td>
+	      <td><input id="nu_edges" type="number" value="100" min="2" max="1000"></input></td>
 	    </tr>
 	    <tr>
-	      <td>tracing</td>
+	      <td><label>tracing</label></td>
 	      <!-- <td></td> -->
-	      <td><input id="cb_tracing" type="checkbox" checked></input></td>
+	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
 	    <tr>
 	      <td colspan="3"><button onClick="clear_canvas();">Clear Canvas</button></td>
 	    </tr>
 	    <tr>
-	      <td><button onClick="pause();">Pause</button></td>
-	      <td><button onClick="go_on(check_tracer());">Continue</button></td>
+	      <td><input type="button" onClick="pause();" value="Pause" /></td>
+	      <td><input type="button" onClick="go_on(check_tracer());" value="Continue" /></td>
 	    </tr>
 	    <tr>
-	      <td><button onClick="start(canv_name,check_tracer(),Number(nodes.value),Number(edges.value));">Start</button></td>
-	      <td><button onClick="stop();">Stop</button></td>
+	      <td><input type="button" onClick="start(canv_name,check_tracer(),Number(nodes.value),Number(edges.value));" value="Restart" /></td>
+	      <td><input type="button" onClick="stop();" value="Stop" /></td>
 	    </tr>
 	  </table>
 	</div>
