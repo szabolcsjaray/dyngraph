@@ -36,6 +36,18 @@ class Graph {
 
     }
 
+    list_connections() {
+	for(let i in this.ns) {
+	    if (this.ns[i].links.length == 0) {
+		console.log("Node " + this.ns[i].name + " is disconnected.");
+	    } else {
+		for(let j in this.ns[i].links) {
+		    console.log("Node " + this.ns[i].name + " is connected to node " + this.ns[i].links[j].name);
+		}
+	    }
+	}
+    }
+
     step() {
         this.calcForces();
         this.ns.forEach( node => {
