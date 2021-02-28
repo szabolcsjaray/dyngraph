@@ -30,10 +30,10 @@
 	      width: 2vw;
 	      height: 2vh;
 	  }
-	  /* input.rb { */
-	  /*     width: 2.5vw; */
-	  /*     height: 2.5vh; */
-	  /* } */
+	  input.rb {
+	      width: 2.5vw;
+	      height: 2.5vh;
+	  }
 	  .float-container {
 	      border: 3px solid #fff;
 	      padding: 0px;
@@ -83,7 +83,7 @@
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
-	      <td><input id="nu_edges" type="number" value="100" min="2" max="1000"></input></td>
+	      <td><input id="nu_edges" type="number" value="100" min="1" max="1000"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>fill</label></td>
@@ -97,8 +97,13 @@
 	      <td><label>tracing</label></td>
 	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
+	    <tr><td colspan="2"><label>Algorithms</label></td></tr>
 	    <tr>
-	      <td colspan="3"><input type="button" onClick="clear_canvas();" value="Clear Canvas" /></td>
+	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="set_graph_alg(0);" checked>R2R</label></td>
+	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_graph_alg(1);" />S2R</label></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="button" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	    </tr>
 	    <tr>
 	      <td><input type="button" id="btn_pause" onClick="pause();" value="Pause" /></td>
@@ -124,6 +129,7 @@
 	sel_fillcol.addEventListener("change",function() { set_fill_col(); });
 	const sel_linecol = document.getElementById("line_col");
 	sel_linecol.addEventListener("change",function() { set_line_col(); });
+
       </script>
     </body>
 </html>

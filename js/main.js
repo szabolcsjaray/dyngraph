@@ -7,6 +7,7 @@ let tracing;
 let saved_count;
 let fill_colour;
 let line_colour;
+let graph_algorithm = 0;
 
 function set_fill_col() {
     fill_colour = sel_fillcol.value;
@@ -14,6 +15,10 @@ function set_fill_col() {
 
 function set_line_col() {
     line_colour = sel_linecol.value;
+}
+
+function set_graph_alg(a) {
+    graph_algorithm = Number(a);
 }
 
 function start(canv_name="c",
@@ -35,16 +40,34 @@ function start(canv_name="c",
         g.addNode(new Node('n'+i, 'c', fill_colour, line_colour,  Math.random()*800+100, Math.random()*800+100, c2d));
     }
 
-    for(let i = 0;i<num_edges;++i) {
-	let n1 = Math.floor(Math.random()*num_nodes);
-	let n2 = Math.floor(Math.random()*num_nodes);
-	if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
-            g.addLink(n1,n2);
-	    g.addLink(n2,n1);
+    switch(graph_algorithm) {
+    case 0:
+	console.log("Random to random algorithm.");
+	for(let i = 0;i<num_edges;++i) {
+	    let n1 = Math.floor(Math.random()*num_nodes);
+	    let n2 = Math.floor(Math.random()*num_nodes);
+	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
+		g.addLink(n1,n2);
+		g.addLink(n2,n1);
+	    }
 	}
+	break;
+    case 1:
+	console.log("Sequential to random algorithm.");
+	for(let i = 0;i<num_edges;++i) {
+	    let n1 = i;
+	    let n2 = Math.floor(Math.random()*num_nodes);
+	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
+		g.addLink(n1,n2);
+		g.addLink(n2,n1);
+	    }
+	}
+	break;
+    default:
+	console.log("Invalid graph algorithm code: " + graph_algorigthm);
     }
 
-    g.list_connections();
+    //g.list_connections();
     count = 0;
     animPhase();
 }
