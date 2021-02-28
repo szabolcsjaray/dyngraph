@@ -7,20 +7,16 @@ let tracing;
 let saved_count;
 
 function start(canv_name="c",
-	       trace=true,
 	       nnodes=100,
 	       nedges=100,
 	       nsteps=2000) {
     canv = document.getElementById(canv_name);
     c2d = canv.getContext("2d");
-    tracing=trace;
     num_steps = nsteps;
     let num_nodes = nnodes;
     let num_edges = nedges;
     btn_stop.disabled = false;
     btn_pause.disabled = false;
-
-    //console.log("tracing: " + tracing);
 
     clear_canvas();
     g = new Graph('trygraph');
@@ -59,8 +55,7 @@ function pause() {
     btn_pause.disabled = true;
 }
 
-function go_on(tracer) {
-    tracing = tracer;
+function go_on() {
     count = saved_count;
     console.log("count: " + count);
     saved_count = 0;

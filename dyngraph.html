@@ -67,7 +67,7 @@
 	</style>
     </head>
 
-    <body onload="start();">
+    <body onload="check_tracer();start();">
       <!-- <div class="float-container"> -->
         <div class="float-canvas-child" id="canvas_space"><canvas id="c" width="1000" height="1000"></canvas></div>
         <div class="float-control-child" id="panel_space">
@@ -88,14 +88,14 @@
 	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
 	    <tr>
-	      <td colspan="3"><button onClick="clear_canvas();">Clear Canvas</button></td>
+	      <td colspan="3"><input type="button" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	    </tr>
 	    <tr>
 	      <td><input type="button" id="btn_pause" onClick="pause();" value="Pause" /></td>
-	      <td><input type="button" id="btn_cont" onClick="go_on(check_tracer());" value="Continue" disabled></td>
+	      <td><input type="button" id="btn_cont" onClick="go_on();" value="Continue" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" id="btn_start" onClick="start(canv_name,check_tracer(),Number(nodes.value),Number(edges.value));" value="Restart" /></td>
+	      <td><input type="button" id="btn_start" onClick="start(canv_name,Number(nodes.value),Number(edges.value));" value="Restart" /></td>
 	      <td><input type="button" id="btn_stop" onClick="stop();" value="Stop" /></td>
 	    </tr>
 	  </table>
