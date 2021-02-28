@@ -91,20 +91,25 @@
 	      <td colspan="3"><button onClick="clear_canvas();">Clear Canvas</button></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" onClick="pause();" value="Pause" /></td>
-	      <td><input type="button" onClick="go_on(check_tracer());" value="Continue" /></td>
+	      <td><input type="button" id="btn_pause" onClick="pause();" value="Pause" /></td>
+	      <td><input type="button" id="btn_cont" onClick="go_on(check_tracer());" value="Continue" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" onClick="start(canv_name,check_tracer(),Number(nodes.value),Number(edges.value));" value="Restart" /></td>
-	      <td><input type="button" onClick="stop();" value="Stop" /></td>
+	      <td><input type="button" id="btn_start" onClick="start(canv_name,check_tracer(),Number(nodes.value),Number(edges.value));" value="Restart" /></td>
+	      <td><input type="button" id="btn_stop" onClick="stop();" value="Stop" /></td>
 	    </tr>
 	  </table>
 	</div>
       <!-- </div> -->
       <script type="text/javascript">
 	const tracer = document.getElementById("cb_tracing");
+	tracer.addEventListener("change",function() { check_tracer(); });
 	const nodes = document.getElementById("nu_nodes");
 	const edges = document.getElementById("nu_edges");
+	const btn_start = document.getElementById("btn_start");
+	const btn_stop = document.getElementById("btn_stop");
+	const btn_pause = document.getElementById("btn_pause");
+	const btn_cont = document.getElementById("btn_cont");
       </script>
     </body>
 </html>

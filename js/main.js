@@ -17,6 +17,8 @@ function start(canv_name="c",
     num_steps = nsteps;
     let num_nodes = nnodes;
     let num_edges = nedges;
+    btn_stop.disabled = false;
+    btn_pause.disabled = false;
 
     //console.log("tracing: " + tracing);
 
@@ -53,6 +55,8 @@ function pause() {
     saved_count = count;
     console.log("saved: " + saved_count);
     count = num_steps;
+    btn_cont.disabled = false;
+    btn_pause.disabled = true;
 }
 
 function go_on(tracer) {
@@ -61,14 +65,19 @@ function go_on(tracer) {
     console.log("count: " + count);
     saved_count = 0;
     animPhase();
+    btn_cont.disabled = true;
+    btn_pause.disabled = false;
+    btn_stop.disabled = false;
 }
 
 function check_tracer(t=tracer) {
     if(t.checked) {
 	console.log("trace: on");
+	tracing = true;
 	return true;
     } else {
 	console.log("trace: off");
+	tracing = false;
 	return false;
     }
 }
@@ -85,5 +94,8 @@ function animPhase() {
     g.draw();
     if(count<num_steps) {
         setTimeout(animPhase, 10);
+    } else {
+	btn_stop.disabled = true;
+	btn_pause.disabled = true;
     }
 }
