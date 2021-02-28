@@ -5,6 +5,16 @@ let count;
 let num_steps;
 let tracing;
 let saved_count;
+let fill_colour;
+let line_colour;
+
+function set_fill_col() {
+    fill_colour = sel_fillcol.value;
+}
+
+function set_line_col() {
+    line_colour = sel_linecol.value;
+}
 
 function start(canv_name="c",
 	       nnodes=100,
@@ -22,13 +32,19 @@ function start(canv_name="c",
     g = new Graph('trygraph');
 
     for(let i = 0;i<num_nodes;i++) {
-        g.addNode(new Node('n'+i, 'c', 'rgb(145, 151, 189)', 'rgb(31, 30, 124)',  Math.random()*800+100, Math.random()*800+100, c2d));
+        g.addNode(new Node('n'+i, 'c', fill_colour, line_colour,  Math.random()*800+100, Math.random()*800+100, c2d));
     }
 
-    for(let i = 0;i<num_edges;i++) {
-        g.addLink(Math.floor(Math.random()*num_nodes), Math.floor(Math.random()*num_nodes));
+    for(let i = 0;i<num_edges;++i) {
+	let n1 = Math.floor(Math.random()*num_nodes);
+	let n2 = Math.floor(Math.random()*num_nodes);
+	if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
+            g.addLink(n1,n2);
+	    g.addLink(n2,n1);
+	}
     }
 
+    g.list_connections();
     count = 0;
     animPhase();
 }

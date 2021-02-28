@@ -54,6 +54,13 @@ class Node {
         otherNode.addBacklink(this);
     }
 
+    is_connected(other_node) {
+	for(let i in this.links)
+	    if (this.links[i].name == other_node.name)
+		return true;
+	return false;
+    }
+
     addBacklink(otherNode) {
         this.backLinks.push(otherNode);
     }

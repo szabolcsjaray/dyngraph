@@ -9,6 +9,11 @@
         <script src="js/graph.js"></script>
 	<script type="text/javascript">
 	  const canv_name = "c";
+	  function config() {
+	      check_tracer();
+	      set_fill_col();
+	      set_line_col();
+	  }
 	</script>
 	<style type="text/css">
 	  body {
@@ -67,24 +72,29 @@
 	</style>
     </head>
 
-    <body onload="check_tracer();start();">
+    <body onload="config();start();">
       <!-- <div class="float-container"> -->
         <div class="float-canvas-child" id="canvas_space"><canvas id="c" width="1000" height="1000"></canvas></div>
         <div class="float-control-child" id="panel_space">
 	  <table>
 	    <tr>
 	      <td><label>nodes</label></td>
-	      <!-- <td></td> -->
 	      <td><input id="nu_nodes" type="number" value="100" min="2" max="1000"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
-	      <!-- <td></td> -->
 	      <td><input id="nu_edges" type="number" value="100" min="2" max="1000"></input></td>
 	    </tr>
 	    <tr>
+	      <td><label>fill</label></td>
+	      <td><input id="fill_col" type="color" value="#48929B"></input></td>
+	    </tr>
+	    <tr>
+	      <td><label>line</label></td>
+	      <td><input id="line_col" type="color" value="#344D56"></input></td>
+	    </tr>
+	    <tr>
 	      <td><label>tracing</label></td>
-	      <!-- <td></td> -->
 	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
 	    <tr>
@@ -110,6 +120,10 @@
 	const btn_stop = document.getElementById("btn_stop");
 	const btn_pause = document.getElementById("btn_pause");
 	const btn_cont = document.getElementById("btn_cont");
+	const sel_fillcol = document.getElementById("fill_col");
+	sel_fillcol.addEventListener("change",function() { set_fill_col(); });
+	const sel_linecol = document.getElementById("line_col");
+	sel_linecol.addEventListener("change",function() { set_line_col(); });
       </script>
     </body>
 </html>
