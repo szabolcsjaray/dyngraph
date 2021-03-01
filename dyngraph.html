@@ -55,6 +55,12 @@
 	      margin-right: auto;
 	      text-align: center;
 	  }
+	  .button1 {
+	      width: 10rem;
+	  }
+	  .button2 {
+	      width: 100%;
+	  }
 	  #canvas_space {}
 	  #panel_space {}
 	  body {
@@ -108,15 +114,15 @@
 	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_graph_alg(1);" />S2R</label></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" id="btn_pause" onClick="pause();" value="Pause" /></td>
-	      <td><input type="button" id="btn_cont" onClick="go_on();" value="Continue" disabled></td>
+	      <td><input type="button" class="button1" id="btn_pause" onClick="pause();" value="Pause" /></td>
+	      <td><input type="button" class="button1" id="btn_cont" onClick="go_on();" value="Continue" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" id="btn_start" onClick="start(canv_name,Number(nodes.value),Number(edges.value));" value="Restart" /></td>
-	      <td><input type="button" id="btn_stop" onClick="stop();" value="Stop" /></td>
+	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv_name,Number(nodes.value),Number(edges.value));" value="Restart" /></td>
+	      <td><input type="button" class="button1" id="btn_stop" onClick="stop();" value="Stop" /></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><input type="button" onClick="clear_canvas();" value="Clear Canvas" /></td>
+	      <td colspan="2"><input type="button" class="button2" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	    </tr>
 	  </table>
 	</div>
