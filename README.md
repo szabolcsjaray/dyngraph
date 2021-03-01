@@ -12,4 +12,4 @@ The grouping of the nodes peaked my interest. For this reason, simple controls h
 2. physics parameters tweak (attraction, repulsion)
 3. node size
 4. input from file (node + edge list, or edge list only)
-
+5. adding graph layout algorithms (or additional physics rules)
