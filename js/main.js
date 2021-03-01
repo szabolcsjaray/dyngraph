@@ -48,7 +48,7 @@ function start(canv_name="c",
 	    let n2 = Math.floor(Math.random()*num_nodes);
 	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
 		g.addLink(n1,n2);
-		g.addLink(n2,n1);
+//		g.addLink(n2,n1);
 	    }
 	}
 	break;
