@@ -50,6 +50,11 @@
 	      padding: 50px;
 	      /* border: 2px solid red; */
 	  }
+	  .centred {
+	      margin-left: auto;
+	      margin-right: auto;
+	      text-align: center;
+	  }
 	  #canvas_space {}
 	  #panel_space {}
 	  body {
@@ -97,13 +102,10 @@
 	      <td><label>tracing</label></td>
 	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
-	    <tr><td colspan="2"><label>Algorithms</label></td></tr>
+	    <tr><td colspan="2" class="centred"><label>Algorithms</label></td></tr>
 	    <tr>
 	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="set_graph_alg(0);" checked>R2R</label></td>
 	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_graph_alg(1);" />S2R</label></td>
-	    </tr>
-	    <tr>
-	      <td colspan="2"><input type="button" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	    </tr>
 	    <tr>
 	      <td><input type="button" id="btn_pause" onClick="pause();" value="Pause" /></td>
@@ -112,6 +114,9 @@
 	    <tr>
 	      <td><input type="button" id="btn_start" onClick="start(canv_name,Number(nodes.value),Number(edges.value));" value="Restart" /></td>
 	      <td><input type="button" id="btn_stop" onClick="stop();" value="Stop" /></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="button" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	    </tr>
 	  </table>
 	</div>
