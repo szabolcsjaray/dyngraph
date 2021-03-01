@@ -21,6 +21,56 @@ function set_graph_alg(a) {
     graph_algorithm = Number(a);
 }
 
+// function get_edge_list() {
+    
+//     console.log("length: " + edges.length);
+//     console.log(edges);
+// }
+
+function add_nodes(g, num) {
+    for(let i = 0;i<num;i++) {
+        g.addNode(new Node('n'+i, 'c',
+			   fill_colour,
+			   line_colour,
+			   Math.random()*800+100,
+			   Math.random()*800+100, c2d));
+    }
+}
+
+function add_named_nodes(g,node_names) {
+    for(let i in node_names) {
+	// console.log("node name: " + node_names[i]);
+	g.addNode(new Node(node_names[i], 'c',
+			   fill_colour,
+			   line_colour,
+			   Math.random()*800+100,
+			   Math.random()*800+100, c2d));
+    }
+}
+
+function get_edge_list() {
+    const edges = area_edgelist.value.split('\n');
+    let split_edges = [];
+    for (let i in edges) {
+	const a_pair = edges[i].split(" ");
+	if (a_pair.length != 2)
+	    continue;
+	split_edges.push(a_pair);
+    }
+    return split_edges;
+}
+
+function get_node_list(edges) {
+    let nodes = [];
+    for(let i in edges) {
+	const a_pair = edges[i];
+	for(let j in a_pair)
+	    if (nodes.indexOf(a_pair[j]) == -1)
+		nodes.push(a_pair[j]);
+    }
+    return nodes;
+}
+
 function start(canv_name="c",
 	       nnodes=100,
 	       nedges=100,
@@ -28,21 +78,19 @@ function start(canv_name="c",
     canv = document.getElementById(canv_name);
     c2d = canv.getContext("2d");
     num_steps = nsteps;
-    let num_nodes = nnodes;
-    let num_edges = nedges;
+    const num_nodes = nnodes;
+    const num_edges = nedges;
     btn_stop.disabled = false;
     btn_pause.disabled = false;
 
     clear_canvas();
     g = new Graph('trygraph');
 
-    for(let i = 0;i<num_nodes;i++) {
-        g.addNode(new Node('n'+i, 'c', fill_colour, line_colour,  Math.random()*800+100, Math.random()*800+100, c2d));
-    }
-
     switch(graph_algorithm) {
     case 0:
 	console.log("Random to random algorithm.");
+	add_nodes(g,num_nodes);
+	//console.log(g.ns);
 	for(let i = 0;i<num_edges;++i) {
 	    let n1 = Math.floor(Math.random()*num_nodes);
 	    let n2 = Math.floor(Math.random()*num_nodes);
@@ -54,6 +102,7 @@ function start(canv_name="c",
 	break;
     case 1:
 	console.log("Sequential to random algorithm.");
+	add_nodes(g,num_nodes);
 	for(let i = 0;i<num_edges;++i) {
 	    let n1 = i;
 	    let n2 = Math.floor(Math.random()*num_nodes);
@@ -61,6 +110,22 @@ function start(canv_name="c",
 		g.addLink(n1,n2);
 		g.addLink(n2,n1);
 	    }
+	}
+	break;
+    case 2:
+	console.log("Graph from edge list.");
+	const edges = get_edge_list();
+	//console.log("number of edges: " + edges.length);
+	const nodes = get_node_list(edges);
+	//console.log("number of nodes: " + nodes.length);
+	//console.log("nodes: " + nodes);
+	add_named_nodes(g,nodes);
+	//console.log("nodes in g: " + g.ns);
+	for(let i in edges) {
+	    if (edges[i].length != 2)
+		continue;
+	    //console.log(edges[i]);
+	    g.addLink(nodes.indexOf(edges[i][0]),nodes.indexOf(edges[i][1]));
 	}
 	break;
     default:
