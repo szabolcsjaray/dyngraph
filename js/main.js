@@ -21,11 +21,9 @@ function set_graph_alg(a) {
     graph_algorithm = Number(a);
 }
 
-// function get_edge_list() {
-    
-//     console.log("length: " + edges.length);
-//     console.log(edges);
-// }
+function print_edges(target) {
+    target.value = g.get_edge_list();
+}
 
 function add_nodes(g, num) {
     for(let i = 0;i<num;i++) {

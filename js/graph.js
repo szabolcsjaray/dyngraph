@@ -36,16 +36,20 @@ class Graph {
 
     }
 
-    list_connections() {
+    get_edge_list() {
+	let output_string = "";
 	for(let i in this.ns) {
 	    if (this.ns[i].links.length == 0) {
-		console.log("Node " + this.ns[i].name + " is disconnected.");
+		output_string = output_string + this.ns[i].name + "\n";
+		//console.log(output_string);
 	    } else {
 		for(let j in this.ns[i].links) {
-		    console.log("Node " + this.ns[i].name + " is connected to node " + this.ns[i].links[j].name);
+		    output_string = output_string + this.ns[i].name + " " + this.ns[i].links[j].name + "\n";
+		    //console.log(output_string);
 		}
 	    }
 	}
+	return output_string;
     }
 
     step() {
