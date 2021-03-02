@@ -7,15 +7,8 @@ let tracing;
 let saved_count;
 let fill_colour;
 let line_colour;
+let trace_colour;
 let graph_algorithm = 0;
-
-function set_fill_col() {
-    fill_colour = sel_fillcol.value;
-}
-
-function set_line_col() {
-    line_colour = sel_linecol.value;
-}
 
 function set_graph_alg(a) {
     graph_algorithm = Number(a);
@@ -181,8 +174,8 @@ function check_tracer(t=tracer) {
 
 function animPhase() {
     count++;
-    c2d.fillStyle='black';
-    c2d.strokeStyle='gray';
+    c2d.fillStyle=fill_colour;
+    c2d.strokeStyle=trace_colour;
     g.draw(false);
     g.calcForces();
     g.step();
