@@ -15,6 +15,14 @@
 	      set_fill_col();
 	      set_line_col();
 	  }
+	  function remove_unconnected() {
+	      const edge_list = get_edge_list();
+	      let output_string = "";
+	      for(let i in edge_list) {
+		  output_string += edge_list[i][0] + " " + edge_list[i][1] + "\n";
+	      }
+	      area_edgelist.value = output_string;
+	  }
 	</script>
 	<style type="text/css">
 	  body {
@@ -134,7 +142,10 @@
 	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="set_graph_alg(2);" />from Edge List</label></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2" class="centred"><textarea id="edge_list" rows="30" cols="40"></textarea>
+	      <td colspan="2" class="centred"><textarea id="edge_list" rows="20" cols="40"></textarea>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="button" class="button2" onClick="remove_unconnected();" value="Remove Lone Nodes" /></td>
 	    </tr>
 	  </table>
 	</div>
