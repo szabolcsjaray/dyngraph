@@ -14,7 +14,8 @@
 	      check_tracer();
 	      sel_fillcol.dispatchEvent(new Event("change"));
 	      sel_linecol.dispatchEvent(new Event("change"));
-	      sel_tracecol.dispatchEvent(new Event("change"));
+	      sel_tracefill.dispatchEvent(new Event("change"));
+	      sel_traceline.dispatchEvent(new Event("change"));
 	  }
 	  function remove_unconnected() {
 	      const edge_list = get_edge_list();
@@ -115,8 +116,12 @@
 	      <td><input id="line_col" type="color" value="#344D56"></input></td> <!-- 熨斗目花色「のしめはないろ」 -->
 	    </tr>
 	    <tr>
-	      <td><label>trace</label></td>
-	      <td><input id="trace_col" type="color" value="#86ABA5"></input></td> <!-- 水色「みずいろ」 -->
+	      <td><label>trace fill</label></td>
+	      <td><input id="trace_fill" type="color" value="#2B3736"></input></td> <!-- 鉄御納戸「てつおなんど」 -->
+	    </tr>
+	    <tr>
+	      <td><label>trace line</label></td>
+	      <td><input id="trace_line" type="color" value="#86ABA5"></input></td> <!-- 水色「みずいろ」 -->
 	    </tr>
 	    <tr>
 	      <td><label>tracing</label></td>
@@ -168,8 +173,10 @@
 	sel_fillcol.addEventListener("change",function() { fill_colour = sel_fillcol.value; });
 	const sel_linecol = document.getElementById("line_col");
 	sel_linecol.addEventListener("change",function() { line_colour = sel_linecol.value; });
-	const sel_tracecol = document.getElementById("trace_col");
-	sel_tracecol.addEventListener("change",function() { trace_colour = sel_tracecol.value; });
+	const sel_tracefill = document.getElementById("trace_fill");
+	sel_tracefill.addEventListener("change",function() { trace_fill_colour = sel_tracefill.value; });
+	const sel_traceline = document.getElementById("trace_line");
+	sel_traceline.addEventListener("change",function() { trace_line_colour = sel_traceline.value; });
 	const area_edgelist = document.getElementById("edge_list");
 	area_edgelist.placeholder = "n1 n2\nn2 n3\nn3 n1";
       </script>
