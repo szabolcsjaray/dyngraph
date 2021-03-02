@@ -108,14 +108,8 @@
 	      <td><label>tracing</label></td>
 	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
-	    <tr><td colspan="2" class="centred"><label>Algorithms</label></td></tr>
 	    <tr>
-	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="set_graph_alg(0);" checked>R2R</label></td>
-	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_graph_alg(1);" />S2R</label></td>
-	    </tr>
-	    <tr>
-	      <td><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="set_graph_alg(2);" />EdgeLst</label></td>
-	      <td><!-- <label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_graph_alg(1);" />S2R</label> --></td>
+	      <td colspan="2"><input type="button" class="button2" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	    </tr>
 	    <tr>
 	      <td><input type="button" class="button1" id="btn_pause" onClick="pause();" value="Pause" /></td>
@@ -125,15 +119,19 @@
 	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv_name,Number(txt_nodes.value),Number(txt_edges.value));" value="Restart" /></td>
 	      <td><input type="button" class="button1" id="btn_stop" onClick="stop();" value="Stop" /></td>
 	    </tr>
+	    <tr><td colspan="2" class="centred"><label>How to build graph?</label></td></tr>
 	    <tr>
-	      <td colspan="2"><input type="button" class="button2" onClick="clear_canvas();" value="Clear Canvas" /></td>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="set_graph_alg(0);" checked>Random:Random</label></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><textarea id="edge_list" rows="30" cols="40"></textarea>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_graph_alg(1);" />Serial:Random</label></td>
 	    </tr>
-	    <!-- <tr> -->
-	    <!--   <td colspan="2"><input type="button" class="button2" onClick="send_edge_list;" value="Submit List" /></td> -->
-	    <!-- </tr> -->
+	    <tr>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="set_graph_alg(2);" />from Edge List</label></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2" class="centred"><textarea id="edge_list" rows="30" cols="40"></textarea>
+	    </tr>
 	  </table>
 	</div>
       <!-- </div> -->
