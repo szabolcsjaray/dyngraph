@@ -21,4 +21,4 @@ The grouping of the nodes peaked my interest. For this reason, simple controls h
      * More or less works with FF engine too, but layout of controls fall apart
      * and button inactivation is unreliable
 
-![heptagon with traces on](https://github.com/tiborh/dyngraph/blob/[master]/img/heptagon_trace.png?raw=true)
+![heptagon with traces on](https://github.com/tiborh/dyngraph/blob/master/img/heptagon_trace.png?raw=true)
