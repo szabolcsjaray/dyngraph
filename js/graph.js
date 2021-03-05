@@ -36,6 +36,13 @@ class Graph {
 
     }
 
+    step() {
+        this.calcForces();
+        this.ns.forEach( node => {
+            node.step();
+        });
+    }
+
     get_edge_list() {
 	let output_string = "";
 	for(let i in this.ns) {
@@ -50,12 +57,5 @@ class Graph {
 	    }
 	}
 	return output_string;
-    }
-
-    step() {
-        this.calcForces();
-        this.ns.forEach( node => {
-            node.step();
-        });
     }
 }
