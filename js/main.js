@@ -77,6 +77,7 @@ function start(canv_name="c",
     //console.log("edges: " + num_edges);
     btn_stop.disabled = false;
     btn_pause.disabled = false;
+    btn_cont.disabled = true;
 
     clear_canvas();
     g = new Graph('trygraph');
