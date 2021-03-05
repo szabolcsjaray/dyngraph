@@ -1,15 +1,16 @@
 let g;
 let canv;
 let c2d;
-let count;
+//let count;
 let num_steps;
 let tracing;
-let saved_count;
+//let saved_count;
 let fill_colour;
 let line_colour;
 let trace_fill_colour;
 let trace_line_colour;
 let graph_algorithm = 0;
+let animate = true;
 
 function set_graph_alg(a) {
     graph_algorithm = Number(a);
@@ -126,7 +127,8 @@ function start(canv_name="c",
     }
 
     //g.list_connections();
-    count = 0;
+//    count = 0;
+    animate=true;
     animPhase();
 }
 
@@ -140,22 +142,25 @@ function clear_canvas(from_x=0,
 }
 
 function stop() {
-    count = num_steps;
-    saved_count = num_steps;
+    //count = num_steps;
+    //saved_count = num_steps;
+    animate = false;
 }
 
 function pause() {
-    saved_count = count;
-    console.log("saved: " + saved_count);
-    count = num_steps;
+    //saved_count = count;
+    //console.log("saved: " + saved_count);
+    //count = num_steps;
+    animate=false;
     btn_cont.disabled = false;
     btn_pause.disabled = true;
 }
 
 function go_on() {
-    count = saved_count;
-    console.log("count: " + count);
-    saved_count = 0;
+    //count = saved_count;
+    //console.log("count: " + count);
+    //saved_count = 0;
+    animate = true;
     animPhase();
     btn_cont.disabled = true;
     btn_pause.disabled = false;
@@ -175,7 +180,7 @@ function check_tracer(t=tracer) {
 }
 
 function animPhase() {
-    count++;
+    //count++;
     c2d.fillStyle=trace_fill_colour;
     c2d.strokeStyle=trace_line_colour;
     g.draw(false);
@@ -184,7 +189,8 @@ function animPhase() {
     if(!tracing)
 	clear_canvas();
     g.draw();
-    if(count<num_steps) {
+    //if(count<num_steps) {
+    if (animate) {
         setTimeout(animPhase, 10);
     } else {
 	btn_stop.disabled = true;
