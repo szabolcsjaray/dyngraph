@@ -71,7 +71,9 @@ function start(canv_name="c",
     c2d = canv.getContext("2d");
     num_steps = nsteps;
     const num_nodes = nnodes;
+    //console.log("nodes: " + num_nodes);
     const num_edges = nedges;
+    //console.log("edges: " + num_edges);
     btn_stop.disabled = false;
     btn_pause.disabled = false;
 
@@ -95,12 +97,14 @@ function start(canv_name="c",
     case 1:
 	console.log("Sequential to random algorithm.");
 	add_nodes(g,num_nodes);
-	for(let i = 0;i<num_edges;++i) {
-	    let n1 = i;
+	let e = 0;
+	let n = 0;
+	for(;e < num_edges && n < num_nodes;++e,++n) {
+	    let n1 = n;
 	    let n2 = Math.floor(Math.random()*num_nodes);
 	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
 		g.addLink(n1,n2);
-		g.addLink(n2,n1);
+//		g.addLink(n2,n1);
 	    }
 	}
 	break;
