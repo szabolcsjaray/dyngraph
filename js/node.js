@@ -58,6 +58,9 @@ class Node {
 	for(let i in this.links)
 	    if (this.links[i].name == other_node.name)
 		return true;
+	for(let i in this.backLinks)
+	    if (this.backLinks[i] == other_node.name)
+		return true;
 	return false;
     }
 

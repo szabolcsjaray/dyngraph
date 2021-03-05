@@ -88,24 +88,21 @@ function start(canv_name="c",
 	for(let i = 0;i<num_edges;++i) {
 	    let n1 = Math.floor(Math.random()*num_nodes);
 	    let n2 = Math.floor(Math.random()*num_nodes);
-	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
+	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2)
 		g.addLink(n1,n2);
-//		g.addLink(n2,n1);
-	    }
 	}
 	break;
     case 1:
 	console.log("Sequential to random algorithm.");
 	add_nodes(g,num_nodes);
-	let e = 0;
 	let n = 0;
-	for(;e < num_edges && n < num_nodes;++e,++n) {
+	for(let i = 0;i < num_edges;++i,++n) {
+	    if (n == num_nodes)
+		n = 0;
 	    let n1 = n;
 	    let n2 = Math.floor(Math.random()*num_nodes);
-	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2) {
+	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2)
 		g.addLink(n1,n2);
-//		g.addLink(n2,n1);
-	    }
 	}
 	break;
     case 2:
