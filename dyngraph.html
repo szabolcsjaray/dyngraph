@@ -108,28 +108,35 @@
 	      <td><input id="nu_edges" type="number" value="100" min="1" max="1000"></input></td>
 	    </tr>
 	    <tr>
-	      <td><label>rand col</label></td>
-	      <td><input id="cb_randcol" class="cb" type="checkbox"></input></td>
-	    </tr>
-	    <tr>
-	      <td><label>fill</label></td>
-	      <td><input id="fill_col" type="color" value="#48929B"></input></td> <!-- 浅葱色「あさぎいろ」 -->
-	    </tr>
-	    <tr>
-	      <td><label>line</label></td>
-	      <td><input id="line_col" type="color" value="#344D56"></input></td> <!-- 熨斗目花色「のしめはないろ」 -->
-	    </tr>
-	    <tr>
-	      <td><label>rand tcol</label></td>
-	      <td><input id="cb_rand_tracecol" class="cb" type="checkbox"></input></td>
-	    </tr>
-	    <tr>
-	      <td><label>trace fill</label></td>
-	      <td><input id="trace_fill" type="color" value="#2B3736"></input></td> <!-- 鉄御納戸「てつおなんど」 -->
-	    </tr>
-	    <tr>
-	      <td><label>trace line</label></td>
-	      <td><input id="trace_line" type="color" value="#86ABA5"></input></td> <!-- 水色「みずいろ」 -->
+	      <td colspan="2">
+		<table id="tbl_col_select">
+		  <tr>
+		    <th class="button1"></th>
+		    <th>colour</th>
+		    <th>random</th>
+		  </tr>
+		  <tr>
+		    <td><label>fill</label></td>
+		    <td class="centred"><input id="fill_col" type="color" value="#48929B"></input></td> <!-- 浅葱色「あさぎいろ」 -->
+		    <td class="centred"><input id="cb_randfillcol" class="cb" type="checkbox" onchange="col_sel_change('cb_randfillcol','fill_col','rnd_fil_col')"></input></td>
+		  </tr>
+		  <tr>
+		    <td><label>line</label></td>
+		    <td class="centred"><input id="line_col" type="color" value="#344D56"></input></td> <!-- 熨斗目花色「のしめはないろ」 -->
+		    <td class="centred"><input id="cb_randlinecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randlinecol','line_col','rnd_lin_col')"></input></td>
+		  </tr>
+		  <tr>
+		    <td><label>trace fill</label></td>
+		    <td class="centred"><input id="trace_fill" type="color" value="#2B3736"></input></td> <!-- 鉄御納戸「てつおなんど」 -->
+		    <td class="centred"><input id="cb_randtracecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randtracecol','trace_fill','rnd_trc_fil')"></input></td>
+		  </tr>
+		  <tr>
+		    <td><label>trace line</label></td>
+		    <td class="centred"><input id="trace_line" type="color" value="#86ABA5"></input></td> <!-- 水色「みずいろ」 -->
+		    <td class="centred"><input id="cb_randtraceline" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceline','trace_line','rnd_trc_col')"></input></td>
+		  </tr>
+		</table>
+	      </td>
 	    </tr>
 	    <tr>
 	      <td><label>tracing</label></td>
@@ -169,10 +176,6 @@
       <script type="text/javascript">
 	const tracer = document.getElementById("cb_tracing");
 	tracer.addEventListener("change",function() { check_tracer(); });
-	const cb_randcol = document.getElementById("cb_randcol");
-	cb_randcol.addEventListener("change",function() { check_randcol(); });
-	const cb_rand_tracecol = document.getElementById("cb_rand_tracecol");
-	cb_rand_tracecol.addEventListener("change",function() { check_rand_tracecol(); });
 	const txt_nodes = document.getElementById("nu_nodes");
 	const txt_edges = document.getElementById("nu_edges");
 	const btn_start = document.getElementById("btn_start");

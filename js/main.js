@@ -11,9 +11,15 @@ let trace_fill_colour;
 let trace_line_colour;
 let graph_algorithm = 0;
 let animate = true;
-let rand_colour = false;
-let rand_trace_colour = false;
+// let rand_colour = false;
+// let rand_trace_colour = false;
 const min_num = 0;
+const rnd_pairs = {
+    rnd_fil_col: false,
+    rnd_lin_col: false,
+    rnd_trc_fil: false,
+    rnd_trc_col: false
+}
 
 function gen_num(nmax,nmin=min_num) {
     if (nmax < nmin) {
@@ -44,8 +50,8 @@ function print_edges(target) {
 function add_nodes(g, num) {
     for(let i = 0;i<num;i++) {
         g.addNode(new Node('n'+i, 'c',
-			   rand_colour ? gen_colour() : fill_colour,
-			   rand_colour ? gen_colour() : line_colour,
+			   rnd_pairs["rnd_fil_col"] ? gen_colour() : fill_colour,
+			   rnd_pairs["rnd_lin_col"] ? gen_colour() : line_colour,
 			   Math.random()*800+100,
 			   Math.random()*800+100, c2d));
     }
@@ -189,59 +195,30 @@ function go_on() {
     btn_stop.disabled = false;
 }
 
-function check_randcol(r=cb_randcol) {
-    if(r.checked) {
-	console.log("random colour: on");
-	rand_colour = true;
-	sel_fillcol.disabled = true;
-	sel_linecol.disabled = true;
-	return true;
-    } else {
-	console.log("random colour: off");
-	rand_colour = false;
-	sel_fillcol.disabled = false;
-	sel_linecol.disabled = false;
-	return false;
-    }
-}
-
-function check_rand_tracecol(r=cb_rand_tracecol) {
-    if(r.checked) {
-	console.log("random trace colour: on");
-	rand_trace_colour = true;
-	sel_tracefill.disabled = true;
-	sel_traceline.disabled = true;
-	return true;
-    } else {
-	console.log("random trace colour: off");
-	rand_trace_colour = false;
-	sel_tracefill.disabled = false;
-	sel_traceline.disabled = false;
-	return false;
-    }
+function col_sel_change(cb_id,sel_id,v) {
+    const cb = document.getElementById(cb_id);
+    const sel = document.getElementById(sel_id);
+    sel.disabled = cb.checked ? true : false;
+    rnd_pairs[v] = cb.checked ? true : false;
+    //console.log(v + " should change to " + (cb.checked ? true : false));
 }
 
 function check_tracer(t=tracer) {
     if(t.checked) {
 	console.log("trace: on");
 	tracing = true;
-	cb_rand_tracecol.disabled = false;
-	check_rand_tracecol();
 	return true;
     } else {
 	console.log("trace: off");
 	tracing = false;
-	cb_rand_tracecol.disabled = true;
-	sel_tracefill.disabled = true;
-	sel_traceline.disabled = true;
 	return false;
     }
 }
 
 function animPhase() {
     //count++;
-    c2d.fillStyle = rand_trace_colour ? gen_colour() : trace_fill_colour;
-    c2d.strokeStyle= rand_trace_colour ? gen_colour() : trace_line_colour;
+    c2d.fillStyle = rnd_pairs["rnd_trc_fil"] ? gen_colour() : trace_fill_colour;
+    c2d.strokeStyle= rnd_pairs["rnd_trc_col"] ? gen_colour() : trace_line_colour;
     g.draw(false);
     g.calcForces();
     g.step();
