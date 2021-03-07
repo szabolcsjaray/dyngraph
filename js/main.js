@@ -8,23 +8,28 @@ const colours = {
     outline_col: "#000000",
     line_colour: "#ffffff",
     trc_fil_col: "#777777",
-    trc_lin_col: "#555555"
+    trc_oli_col: "#555555",
+    trc_lin_col: "#333333"
 };
 let graph_algorithm = 0;
 let animate;
 let time_out = 10;
 const min_num = 0;
+const drw_pairs = {
+    fill: true,
+    outl: true,
+    line: true,
+    tfil: true,
+    toli: true,
+    tlin: true
+}
 const rnd_pairs = {
     rnd_fil_col: false,
+    rnd_oli_col: false,
     rnd_lin_col: false,
     rnd_trc_fil: false,
-    rnd_trc_col: false,
-    rnd_oli_col: false,
-    fil_col_off: false,
-    lin_col_off: false,
-    oli_col_off: false,
-    trc_fil_off: false,
-    trc_col_off: false
+    rnd_trc_oli: false,
+    rnd_trc_lin: false
 };
 
 function gen_num(nmax,nmin=min_num) {
@@ -56,9 +61,11 @@ function print_edges(target) {
 function add_nodes(g, num) {
     for(let i = 0;i<num;i++) {
         g.addNode(new Node('n'+i, 'c', node_size,
-			   rnd_pairs["rnd_fil_col"] ? gen_colour() : colours["fill_colour"],
-			   rnd_pairs["rnd_oli_col"] ? gen_colour() : colours["outline_col"],
-			   rnd_pairs["rnd_lin_col"] ? gen_colour() : colours["line_colour"],
+			   // rnd_pairs["rnd_fil_col"] ? gen_colour() : colours["fill_colour"],
+			   // rnd_pairs["rnd_oli_col"] ? gen_colour() : colours["outline_col"],
+			   // rnd_pairs["rnd_lin_col"] ? gen_colour() : colours["line_colour"],
+			   colours,
+			   rnd_pairs,
 			   Math.random()*800+100,
 			   Math.random()*800+100, c2d));
     }
@@ -68,9 +75,8 @@ function add_named_nodes(g,node_names) {
     for(let i in node_names) {
 	// console.log("node name: " + node_names[i]);
 	g.addNode(new Node(node_names[i], 'c', node_size,
-			   colours["fill_colour"],
-			   colours["outline_col"],
-			   colours["line_colour"],
+			   colours,
+			   rnd_pairs,
 			   Math.random()*800+100,
 			   Math.random()*800+100, c2d));
     }
@@ -206,11 +212,11 @@ function col_off_change(off_cb_id,rnd_cb_id,sel_id,v) {
     if (off_cb.checked) {
 	sel.disabled = true;
 	rnd_cb.disabled = true;
-	rnd_pairs[v] = true;
+	drw_pairs[v] = false;
     } else {
 	sel.disabled = false;
 	rnd_cb.disabled = false;
-	rnd_pairs[v] = false;
+	drw_pairs[v] = true;
     }
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
@@ -228,14 +234,13 @@ function check_tracer(t=tracer) {
 }
 
 function animPhase() {
-    // c2d.fillStyle = rnd_pairs["rnd_trc_fil"] ? gen_colour() : colours["fill_colour"];
-    // c2d.strokeStyle= rnd_pairs["rnd_trc_col"] ? gen_colour() : colours["line_colour"];
-    g.draw(!rnd_pairs["lin_col_off"],!rnd_pairs["oli_col_off"],!rnd_pairs["fil_col_off"]);
+    
+    g.draw(drw_pairs,true);
     g.calcForces();
     g.step();
     if(!tracing)
 	clear_canvas();
-    g.draw(!rnd_pairs["lin_col_off"],!rnd_pairs["oli_col_off"],!rnd_pairs["fil_col_off"]);
+    g.draw(drw_pairs,false);
     if (animate) {
         setTimeout(animPhase, time_out);
     } else {

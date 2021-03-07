@@ -16,10 +16,10 @@ class Graph {
         this.ns[index1].addLink(this.ns[index2]);
     }
 
-    draw(setLineColour = true, setOutlineColour = true, setFillColour = true) {
+    draw(params,draw_trace) {
 	//console.log("graph.draw() has been called");
         this.ns.forEach( node => {
-            node.draw(setLineColour,setOutlineColour,setFillColour);
+            node.draw(params,draw_trace);
         });
     }
 

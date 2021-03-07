@@ -2,13 +2,16 @@ const LINKMAXLENGTH = 30;
 const LINKMINLENGTH = 20;
 
 class Node {
-    constructor( name, shape, size, fillcolour, outlcolour, linecolour, x, y, c2d) {
+    constructor( name, shape, size, cols, rnd, x, y, c2d) {
         this.name = name;
         this.shape = shape;
 	this.size = size;
-        this.fillcolour = fillcolour;
-	this.outlcolour = outlcolour;
-        this.linecolour = linecolour;
+        this.fillcolour = rnd.rnd_fil_col ? gen_colour() : cols.fill_colour;
+	this.outlcolour = rnd.rnd_oli_col ? gen_colour() : cols.outline_col;
+        this.linecolour = rnd.rnd_lin_col ? gen_colour() : cols.line_colour;
+	this.tracefillcolour = rnd.rnd_trc_fil ? gen_colour() : cols.trc_fil_col;
+	this.traceoutlcolour = rnd.rnd_trc_oli ? gen_colour() : cols.trc_oli_col;
+	this.tracelinecolour = rnd.rnd_trc_lin ? gen_colour() : cols.trc_lin_col;
         this.x = x;
         this.y = y;
         this.links = [];
@@ -70,27 +73,27 @@ class Node {
 	return false;
     }
 
-    draw(setLineColour,setOutLineColour,setFillColour) {
-        if (setFillColour)
-	    this.c2d.fillStyle = this.fillcolour;
-	if (setOutLineColour)
-            this.c2d.strokeStyle = this.outlcolour;
+    draw(p,draw_trace) {
+        if (p.fill)
+	    this.c2d.fillStyle = draw_trace ? this.tracefillcolour : this.fillcolour;
+	if (p.outl)
+            this.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
         this.c2d.beginPath();
         this.c2d.arc(this.x, this.y, this.size, 0, 2*Math.PI);
-	if (setFillColour)
+	if (p.fill)
             this.c2d.fill();
-	if (setOutLineColour)
+	if (p.outl)
 	    this.c2d.stroke();
 
-	if (setLineColour)
-            this.c2d.strokeStyle = this.linecolour;
+	if (p.line)
+            this.c2d.strokeStyle = draw_trace ? this.tracelinecolour : this.linecolour;
         this.c2d.beginPath();
         this.links.forEach(otherNode => {
             this.c2d.moveTo(this.x, this.y);
             this.c2d.lineTo(otherNode.x, otherNode.y);
         });
 
-	if (setLineColour)
+	if (p.line)
             this.c2d.stroke();
     }
 
