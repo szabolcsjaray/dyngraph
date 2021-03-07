@@ -2,11 +2,13 @@ const LINKMAXLENGTH = 30;
 const LINKMINLENGTH = 20;
 
 class Node {
-    constructor( name, shape, color, linecolor, x, y, c2d) {
+    constructor( name, shape, size, fillcolour, outlcolour, linecolour, x, y, c2d) {
         this.name = name;
         this.shape = shape;
-        this.color = color;
-        this.linecolor = linecolor;
+	this.size = size;
+        this.fillcolour = fillcolour;
+	this.outlcolour = outlcolour;
+        this.linecolour = linecolour;
         this.x = x;
         this.y = y;
         this.links = [];
@@ -68,25 +70,28 @@ class Node {
 	return false;
     }
 
-    draw(setColor = true) {
-        if (setColor) {
-            this.c2d.fillStyle = this.color;
-        }
+    draw(setLineColour,setOutLineColour,setFillColour) {
+        if (setFillColour)
+	    this.c2d.fillStyle = this.fillcolour;
+	if (setOutLineColour)
+            this.c2d.strokeStyle = this.outlcolour;
         this.c2d.beginPath();
-        this.c2d.arc(this.x, this.y, 5, 0, 2*Math.PI);
-        this.c2d.fill();
+        this.c2d.arc(this.x, this.y, this.size, 0, 2*Math.PI);
+	if (setFillColour)
+            this.c2d.fill();
+	if (setOutLineColour)
+	    this.c2d.stroke();
 
-        if (setColor) {
-            this.c2d.strokeStyle = this.linecolor;
-        }
-        this.c2d.stroke();
+	if (setLineColour)
+            this.c2d.strokeStyle = this.linecolour;
         this.c2d.beginPath();
         this.links.forEach(otherNode => {
             this.c2d.moveTo(this.x, this.y);
             this.c2d.lineTo(otherNode.x, otherNode.y);
         });
 
-        this.c2d.stroke();
+	if (setLineColour)
+            this.c2d.stroke();
     }
 
     status() {

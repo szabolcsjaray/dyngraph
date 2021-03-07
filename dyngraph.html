@@ -13,9 +13,10 @@
 	  function config() {
 	      check_tracer();
 	      sel_fillcol.dispatchEvent(new Event("change"));
+	      sel_outlicol.dispatchEvent(new Event("change"));
 	      sel_linecol.dispatchEvent(new Event("change"));
-	      sel_tracefill.dispatchEvent(new Event("change"));
-	      sel_traceline.dispatchEvent(new Event("change"));
+	      // sel_tracefill.dispatchEvent(new Event("change"));
+	      // sel_traceline.dispatchEvent(new Event("change"));
 	  }
 	  function remove_unconnected() {
 	      const edge_list = get_edge_list();
@@ -104,6 +105,10 @@
 	      <td><input id="nu_nodes" type="number" value="100" min="2" max="1000"></input></td>
 	    </tr>
 	    <tr>
+	      <td><label>size</label></td>
+	      <td><input id="sz_nodes" type="number" value="5" min="1" max="100"></input></td>
+	    </tr>
+	    <tr>
 	      <td><label>edges</label></td>
 	      <td><input id="nu_edges" type="number" value="100" min="1" max="1000"></input></td>
 	    </tr>
@@ -114,27 +119,38 @@
 		    <th class="button1"></th>
 		    <th>colour</th>
 		    <th>random</th>
+		    <th>off</th>
 		  </tr>
 		  <tr>
 		    <td><label>fill</label></td>
 		    <td class="centred"><input id="fill_col" type="color" value="#48929B"></input></td> <!-- 浅葱色「あさぎいろ」 -->
 		    <td class="centred"><input id="cb_randfillcol" class="cb" type="checkbox" onchange="col_sel_change('cb_randfillcol','fill_col','rnd_fil_col')"></input></td>
+		    <td class="centred"><input id="cb_fillcoloff" class="cb" type="checkbox" onchange="col_off_change('cb_fillcoloff','cb_randfillcol','fill_col','fil_col_off')"></input></td>
+		  </tr>
+		  <tr>
+		    <td><label>outline</label></td>
+		    <td class="centred"><input id="outli_col" type="color" value="#48929B"></input></td> <!-- 浅葱色「あさぎいろ」 -->
+		    <td class="centred"><input id="cb_randoutlicol" class="cb" type="checkbox" onchange="col_sel_change('cb_randoutlicol','outli_col','rnd_oli_col')"></input></td>
+		    <td class="centred"><input id="cb_outlicoloff" class="cb" type="checkbox" onchange="col_off_change('cb_outlicoloff','cb_randoutlicol','outli_col','oli_col_off')"></input></td>
 		  </tr>
 		  <tr>
 		    <td><label>line</label></td>
 		    <td class="centred"><input id="line_col" type="color" value="#344D56"></input></td> <!-- 熨斗目花色「のしめはないろ」 -->
 		    <td class="centred"><input id="cb_randlinecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randlinecol','line_col','rnd_lin_col')"></input></td>
+		    <td class="centred"><input id="cb_linecoloff" class="cb" type="checkbox" onchange="col_off_change('cb_linecoloff','cb_randlinecol','line_col','lin_col_off')"></input></td>
 		  </tr>
-		  <tr>
-		    <td><label>trace fill</label></td>
-		    <td class="centred"><input id="trace_fill" type="color" value="#2B3736"></input></td> <!-- 鉄御納戸「てつおなんど」 -->
-		    <td class="centred"><input id="cb_randtracecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randtracecol','trace_fill','rnd_trc_fil')"></input></td>
-		  </tr>
-		  <tr>
-		    <td><label>trace line</label></td>
-		    <td class="centred"><input id="trace_line" type="color" value="#86ABA5"></input></td> <!-- 水色「みずいろ」 -->
-		    <td class="centred"><input id="cb_randtraceline" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceline','trace_line','rnd_trc_col')"></input></td>
-		  </tr>
+		  <!-- <tr> -->
+		  <!--   <td><label>trace fill</label></td> -->
+		  <!--   <td class="centred"><input id="trace_fill" type="color" value="#2B3736"></input></td> <\!-- 鉄御納戸「てつおなんど」 -\-> -->
+		  <!--   <td class="centred"><input id="cb_randtracecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randtracecol','trace_fill','rnd_trc_fil')" disabled></input></td> -->
+		  <!--   <td class="centred"><input id="cb_tracecoloff" class="cb" type="checkbox" onchange="col_off_change('cb_tracecoloff','cb_randtracecol','trace_fill','trc_fil_off')" disabled></input></td> -->
+		  <!-- </tr> -->
+		  <!-- <tr> -->
+		  <!--   <td><label>trace line</label></td> -->
+		  <!--   <td class="centred"><input id="trace_line" type="color" value="#86ABA5"></input></td> <\!-- 水色「みずいろ」 -\-> -->
+		  <!--   <td class="centred"><input id="cb_randtraceline" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceline','trace_line','rnd_trc_col')" disabled></input></td> -->
+		  <!--   <td class="centred"><input id="cb_tracefilloff" class="cb" type="checkbox" onchange="col_off_change('cb_tracefilloff','cb_randtraceline','trace_line','trc_col_off')" disabled></input></td> -->
+		  <!-- </tr> -->
 		</table>
 	      </td>
 	    </tr>
@@ -176,6 +192,8 @@
       <script type="text/javascript">
 	const tracer = document.getElementById("cb_tracing");
 	tracer.addEventListener("change",function() { check_tracer(); });
+	const nd_size = document.getElementById("sz_nodes");
+	nd_size.addEventListener("change",function() {node_size = Number(nd_size.value)});
 	const txt_nodes = document.getElementById("nu_nodes");
 	const txt_edges = document.getElementById("nu_edges");
 	const btn_start = document.getElementById("btn_start");
@@ -183,13 +201,15 @@
 	const btn_pause = document.getElementById("btn_pause");
 	const btn_cont = document.getElementById("btn_cont");
 	const sel_fillcol = document.getElementById("fill_col");
-	sel_fillcol.addEventListener("change",function() { fill_colour = sel_fillcol.value; });
+	sel_fillcol.addEventListener("change",function() { colours["fill_colour"] = sel_fillcol.value; });
 	const sel_linecol = document.getElementById("line_col");
-	sel_linecol.addEventListener("change",function() { line_colour = sel_linecol.value; });
-	const sel_tracefill = document.getElementById("trace_fill");
-	sel_tracefill.addEventListener("change",function() { trace_fill_colour = sel_tracefill.value; });
-	const sel_traceline = document.getElementById("trace_line");
-	sel_traceline.addEventListener("change",function() { trace_line_colour = sel_traceline.value; });
+	sel_linecol.addEventListener("change",function() { colours["line_colour"] = sel_linecol.value; });
+	const sel_outlicol = document.getElementById("outli_col");
+	sel_outlicol.addEventListener("change",function() { colours["outline_col"] = sel_outlicol.value; });
+	// const sel_tracefill = document.getElementById("trace_fill");
+	// sel_tracefill.addEventListener("change",function() { trace_fill_colour = sel_tracefill.value; });
+	// const sel_traceline = document.getElementById("trace_line");
+	// sel_traceline.addEventListener("change",function() { trace_line_colour = sel_traceline.value; });
 	const area_edgelist = document.getElementById("edge_list");
 	area_edgelist.placeholder = "n1 n2\nn2 n3\nn3 n1";
       </script>
