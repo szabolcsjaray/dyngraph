@@ -105,62 +105,68 @@ function get_node_list(edges) {
     return nodes;
 }
 
+function make_r2r_graph(nuno,nued) {
+    const gr = new Graph('r2r'); 
+    add_nodes(gr,nuno);
+    for(let i = 0;i<nued;++i) {
+	let n1 = Math.floor(Math.random()*nuno);
+	let n2 = Math.floor(Math.random()*nuno);
+	if (!gr.ns[n1].is_connected(gr.ns[n2]) && n1 != n2)
+	    gr.addLink(n1,n2);
+    }
+    return(gr);
+}
+
+function make_s2r_graph(nuno,nued) {
+    const gr = new Graph('s2r');
+    add_nodes(gr,nuno);
+    let n = 0;
+    for(let i = 0;i < nued;++i,++n) {
+	if (n == nuno)
+	    n = 0;
+	let n1 = n;
+	let n2 = Math.floor(Math.random()*nuno);
+	if (!gr.ns[n1].is_connected(gr.ns[n2]) && n1 != n2)
+	    gr.addLink(n1,n2);
+    }
+    return(gr);
+}
+
+function make_el_graph() {
+    const gr = new Graph('el');
+	const edges = get_edge_list();
+	const nodes = get_node_list(edges);
+	add_named_nodes(gr,nodes);
+	for(let i in edges) {
+	    if (edges[i].length != 2)
+		continue;
+	    gr.addLink(nodes.indexOf(edges[i][0]),nodes.indexOf(edges[i][1]));
+	}
+    return(gr);
+}
+
 function start(canv_name="c",
 	       nnodes=100,
 	       nedges=100) {
     canv = document.getElementById(canv_name);
     c2d = canv.getContext("2d");
     const num_nodes = nnodes;
-    //console.log("nodes: " + num_nodes);
     const num_edges = nedges;
-    //console.log("edges: " + num_edges);
     btn_stop.disabled = false;
     btn_pause.disabled = false;
     btn_cont.disabled = true;
 
     clear_canvas();
-    g = new Graph('trygraph');
 
     switch(graph_algorithm) {
     case 0:
-	//console.log("Random to random algorithm.");
-	add_nodes(g,num_nodes);
-	//console.log(g.ns);
-	for(let i = 0;i<num_edges;++i) {
-	    let n1 = Math.floor(Math.random()*num_nodes);
-	    let n2 = Math.floor(Math.random()*num_nodes);
-	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2)
-		g.addLink(n1,n2);
-	}
+	g = make_r2r_graph(num_nodes,num_edges);
 	break;
     case 1:
-	//console.log("Sequential to random algorithm.");
-	add_nodes(g,num_nodes);
-	let n = 0;
-	for(let i = 0;i < num_edges;++i,++n) {
-	    if (n == num_nodes)
-		n = 0;
-	    let n1 = n;
-	    let n2 = Math.floor(Math.random()*num_nodes);
-	    if (!g.ns[n1].is_connected(g.ns[n2]) && n1 != n2)
-		g.addLink(n1,n2);
-	}
+	g = make_s2r_graph(num_nodes,num_edges);
 	break;
     case 2:
-	//console.log("Graph from edge list.");
-	const edges = get_edge_list();
-	//console.log("number of edges: " + edges.length);
-	const nodes = get_node_list(edges);
-	//console.log("number of nodes: " + nodes.length);
-	//console.log("nodes: " + nodes);
-	add_named_nodes(g,nodes);
-	//console.log("nodes in g: " + g.ns);
-	for(let i in edges) {
-	    if (edges[i].length != 2)
-		continue;
-	    //console.log(edges[i]);
-	    g.addLink(nodes.indexOf(edges[i][0]),nodes.indexOf(edges[i][1]));
-	}
+	g = make_el_graph();
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorigthm);
@@ -234,7 +240,6 @@ function check_tracer(t=tracer) {
 }
 
 function animPhase() {
-    
     g.draw(drw_pairs,true);
     g.calcForces();
     g.step();
