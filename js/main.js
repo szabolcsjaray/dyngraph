@@ -127,6 +127,17 @@ function make_s2r_graph(nuno,nued) {
     return(gr);
 }
 
+function make_a2a_graph(nuno) {
+    const gr = new Graph('a2a');
+    add_nodes(gr,nuno);
+
+    for(let i = 0;i < nuno;++i)
+	for (let j = i; j < nuno; ++j)
+	     gr.addLink(i,j);
+	     
+    return(gr);
+}
+
 function make_tree_graph(nuno,nubr) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     const queue = [];
@@ -185,9 +196,12 @@ function start(canv_name="c",
 	g = make_s2r_graph(num_nodes,num_edges);
 	break;
     case 2:
-	g = make_tree_graph(num_nodes,num_branches);
+	g = make_a2a_graph(num_nodes);
 	break;
     case 3:
+	g = make_tree_graph(num_nodes,num_branches);
+	break;
+    case 4:
 	g = make_el_graph();
 	break;
     default:

@@ -38,6 +38,23 @@
 		  brch_inp.disabled = true;
 	      }
 	  }
+	  function set_scenario(scen,node_id="nu_nodes",edge_id="nu_edges",brch_id="nu_branches") {
+	      //     nodes,  edges, branch
+	      //       0       1      2
+	      const scen_map = {
+		  0: [true,  true,  false],
+		  1: [true,  false, true ],
+		  2: [true,  false, false],
+		  3: [false, false, false]
+	      };
+	      const params = {
+		  0: document.getElementById(node_id),
+		  1: document.getElementById(edge_id),
+		  2: document.getElementById(brch_id)
+	      };
+	      for( let a_key of Object.keys(params))
+	       	  params[a_key].disabled = !scen_map[scen][a_key];
+	  }
 	</script>
 	<style type="text/css">
 	  body {
@@ -194,17 +211,20 @@
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>How to build graph?</label></td></tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="is_tree(false);set_graph_alg(0);" checked>Random:Random</label></td>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="set_scenario(0);set_graph_alg(0);" checked>Random:Random</label></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="is_tree(false);set_graph_alg(1);" />Serial:Random</label></td>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_scenario(0);set_graph_alg(1);" />Serial:Random</label></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_a2a" onClick="set_scenario(2);set_graph_alg(2);" />All:All</label></td>
 	    </tr>
 	    <tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_tree" onClick="is_tree(true);set_graph_alg(2);" />Tree</label></td>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_tree" onClick="set_scenario(1);set_graph_alg(3);" />Tree</label></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="is_tree(false);set_graph_alg(3);" />from Edge List</label></td>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="set_scenario(3);set_graph_alg(4);" />from Edge List</label></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2" class="centred"><textarea id="edge_list" rows="20" cols="41"></textarea>
