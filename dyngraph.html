@@ -285,12 +285,19 @@
 			btn_cont.dispatchEvent(new Event("click"));
 		}
 	    }
-	    if (event.ctrlKey && event.altKey &&  keyName == 'p')
-		btn_print.dispatchEvent(new Event("click"));
 	    if (event.ctrlKey && event.altKey && event.key == 'c')
 		btn_clear.dispatchEvent(new Event("click"));
+	    if (event.ctrlKey && event.altKey &&  keyName == 'p')
+		btn_print.dispatchEvent(new Event("click"));
 	    if (event.ctrlKey && event.altKey && event.key == 'r')
 		btn_rm_lone.dispatchEvent(new Event("click"));
+	    if (event.ctrlKey && event.altKey && event.key == 't') {
+		if(tracer.checked)
+		    tracer.checked = false;
+		else
+		    tracer.checked = true;
+		tracer.dispatchEvent(new Event("change"));
+	    }
 	}, false);
       </script>
     </body>
