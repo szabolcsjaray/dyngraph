@@ -44,6 +44,28 @@
 	      for( let a_key of Object.keys(params))
 	       	  params[a_key].disabled = !scen_map[scen][a_key];
 	  }
+	  function proc_sel_graphalg(sel_id) {
+	      const selg = document.getElementById(sel_id);
+	      const seli = selg.selectedIndex;
+	      switch (seli) {
+	      case 0:
+	      case 1:
+		  set_scenario(0);
+		  break;
+	      case 2:
+		  set_scenario(2);
+		  break;
+	      case 3:
+		  set_scenario(1);
+		  break;
+	      case 4:
+		  set_scenario(3);
+		  break;
+	      default:
+		  console.log("Unhandled selection");
+	      }
+	      set_graph_alg(seli);
+	  }
 	</script>
 	<style type="text/css">
 	  body {
@@ -52,7 +74,7 @@
 	  h1 {
 	      text-align: center;
 	  }
-	  input, button, label {
+	  input, button, label, select {
 	      font-size: 1.8vw;
 	      vertical-align: middle;
 	  }
@@ -204,20 +226,13 @@
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>How to build graph?</label></td></tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="set_scenario(0);set_graph_alg(0);" checked>Random:Random</label></td>
-	    </tr>
-	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_scenario(0);set_graph_alg(1);" />Serial:Random</label></td>
-	    </tr>
-	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_a2a" onClick="set_scenario(2);set_graph_alg(2);" />All:All</label></td>
-	    </tr>
-	    <tr>
-	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_tree" onClick="set_scenario(1);set_graph_alg(3);" />Tree</label></td>
-	    </tr>
-	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="set_scenario(3);set_graph_alg(4);" />from Edge List</label></td>
+	      <td colspan="2"><select class="button2" id="sel_graphalgs" onchange="proc_sel_graphalg('sel_graphalgs')">
+		  <option value="0" selected>Random:Random</option>
+		  <option value="1">Serial:Random</option>
+		  <option value="2">All:All</option>
+		  <option value="3">Tree</option>
+		  <option value="4">from Edge List</option>
+	      </select></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2" class="centred"><textarea id="edge_list" rows="20" cols="41"></textarea>
