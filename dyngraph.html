@@ -275,7 +275,7 @@
 	document.addEventListener('keydown', (event) => {
 	    const keyName = event.key;
 	    console.log(keyName);
-	    if (keyName == 'Enter')
+	    if (event.ctrlKey && keyName == 'Enter')
 		btn_start.dispatchEvent(new Event("click"));
 	    if (keyName == 'Pause') {
 		if (!btn_pause.disabled)
@@ -285,11 +285,11 @@
 			btn_cont.dispatchEvent(new Event("click"));
 		}
 	    }
-	    if (keyName == 'p')
+	    if (event.ctrlKey && event.altKey &&  keyName == 'p')
 		btn_print.dispatchEvent(new Event("click"));
-	    if (event.ctrlKey && event.key == 'c')
+	    if (event.ctrlKey && event.altKey && event.key == 'c')
 		btn_clear.dispatchEvent(new Event("click"));
-	    if (event.key == 'r')
+	    if (event.ctrlKey && event.altKey && event.key == 'r')
 		btn_rm_lone.dispatchEvent(new Event("click"));
 	}, false);
       </script>
