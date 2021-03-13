@@ -27,6 +27,17 @@
 	      }
 	      area_edgelist.value = output_string;
 	  }
+	  function is_tree(isTree,edge_id="nu_edges",brch_id="nu_branches") {
+	      const edge_inp = document.getElementById(edge_id);
+	      const brch_inp = document.getElementById(brch_id);
+	      if (isTree) {
+		  edge_inp.disabled = true;
+		  brch_inp.disabled = false;
+	      } else {
+		  edge_inp.disabled = false;
+		  brch_inp.disabled = true;
+	      }
+	  }
 	</script>
 	<style type="text/css">
 	  body {
@@ -114,6 +125,10 @@
 	      <td><input id="nu_edges" type="number" value="100" min="1" max="1000"></input></td>
 	    </tr>
 	    <tr>
+	      <td><label>branches</label></td>
+	      <td><input id="nu_branches" type="number" value="2" min="1" max="10" disabled></input></td>
+	    </tr>
+	    <tr>
 	      <td colspan="2">
 		<table id="tbl_col_select">
 		  <tr>
@@ -174,18 +189,22 @@
 	      <td><input type="button" class="button1" id="btn_cont" onClick="go_on();" value="Continue" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv_name,Number(txt_nodes.value),Number(txt_edges.value));" value="Restart" /></td>
+	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv_name,Number(inp_nodes.value),Number(inp_edges.value),Number(inp_branches.value));" value="Restart" /></td>
 	      <td><input type="button" class="button1" id="btn_stop" onClick="stop();" value="Stop" /></td>
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>How to build graph?</label></td></tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="set_graph_alg(0);" checked>Random:Random</label></td>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_r2r" onClick="is_tree(false);set_graph_alg(0);" checked>Random:Random</label></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="set_graph_alg(1);" />Serial:Random</label></td>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_s2r" onClick="is_tree(false);set_graph_alg(1);" />Serial:Random</label></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="set_graph_alg(2);" />from Edge List</label></td>
+	    <tr>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_tree" onClick="is_tree(true);set_graph_alg(2);" />Tree</label></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><label><input type="radio" name="graphalgs" class="rb" id="rb_e2g" onClick="is_tree(false);set_graph_alg(3);" />from Edge List</label></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2" class="centred"><textarea id="edge_list" rows="20" cols="41"></textarea>
@@ -201,8 +220,9 @@
 	tracer.addEventListener("change",function() { check_tracer(); });
 	const nd_size = document.getElementById("sz_nodes");
 	nd_size.addEventListener("change",function() {node_size = Number(nd_size.value)});
-	const txt_nodes = document.getElementById("nu_nodes");
-	const txt_edges = document.getElementById("nu_edges");
+	const inp_nodes = document.getElementById("nu_nodes");
+	const inp_edges = document.getElementById("nu_edges");
+	const inp_branches = document.getElementById("nu_branches");
 	const btn_start = document.getElementById("btn_start");
 	const btn_stop = document.getElementById("btn_stop");
 	const btn_pause = document.getElementById("btn_pause");

@@ -13,7 +13,8 @@ const colours = {
 };
 let graph_algorithm = 0;
 let animate;
-let time_out = 10;
+const node_shape = 'c';
+const time_out = 10;
 const min_num = 0;
 const drw_pairs = {
     fill: true,
@@ -54,32 +55,26 @@ function set_graph_alg(a) {
     graph_algorithm = Number(a);
 }
 
+function add_node_at_random_pos(gr,name,shape,size) {
+        gr.addNode(new Node(name, shape, size,
+			    colours,
+			    rnd_pairs,
+			    Math.random()*800+100,
+			    Math.random()*800+100, c2d));
+}
+
 function print_edges(target) {
     target.value = g.get_edge_list();
 }
 
 function add_nodes(g, num) {
-    for(let i = 0;i<num;i++) {
-        g.addNode(new Node('n'+i, 'c', node_size,
-			   // rnd_pairs["rnd_fil_col"] ? gen_colour() : colours["fill_colour"],
-			   // rnd_pairs["rnd_oli_col"] ? gen_colour() : colours["outline_col"],
-			   // rnd_pairs["rnd_lin_col"] ? gen_colour() : colours["line_colour"],
-			   colours,
-			   rnd_pairs,
-			   Math.random()*800+100,
-			   Math.random()*800+100, c2d));
-    }
+    for(let i = 0;i<num;i++)
+	add_node_at_random_pos(g,'n'+i,node_shape,node_size);
 }
 
 function add_named_nodes(g,node_names) {
-    for(let i in node_names) {
-	// console.log("node name: " + node_names[i]);
-	g.addNode(new Node(node_names[i], 'c', node_size,
-			   colours,
-			   rnd_pairs,
-			   Math.random()*800+100,
-			   Math.random()*800+100, c2d));
-    }
+    for(let i in node_names)
+	add_node_at_random_pos(g,node_names[i],node_shape,node_size);
 }
 
 function get_edge_list() {
@@ -132,6 +127,28 @@ function make_s2r_graph(nuno,nued) {
     return(gr);
 }
 
+function make_tree_graph(nuno,nubr) {
+    const gr = new Graph(Number(nubr).toString() + 'tree');
+    const queue = [];
+    gr.addNode(new Node('n0', node_shape, node_size,
+			colours,
+			rnd_pairs,
+			canv.width/2,
+			canv.height/2, c2d));
+    queue.push(0);
+    for(let i = 1; i < nuno; ++i) {
+	while(queue.length) {
+	    const ni = queue.shift();
+	    for(let b = 0; b < nubr && i < nuno; ++b,++i) {
+		add_node_at_random_pos(gr,'n'+i,node_shape,node_size);
+		queue.push(i);
+		gr.addLink(ni,i);
+	    }
+	}
+    }
+    return(gr);
+}
+
 function make_el_graph() {
     const gr = new Graph('el');
 	const edges = get_edge_list();
@@ -147,11 +164,13 @@ function make_el_graph() {
 
 function start(canv_name="c",
 	       nnodes=100,
-	       nedges=100) {
+	       nedges=100,
+	       nbranches=2) {
     canv = document.getElementById(canv_name);
     c2d = canv.getContext("2d");
     const num_nodes = nnodes;
     const num_edges = nedges;
+    const num_branches = nbranches;
     btn_stop.disabled = false;
     btn_pause.disabled = false;
     btn_cont.disabled = true;
@@ -166,6 +185,9 @@ function start(canv_name="c",
 	g = make_s2r_graph(num_nodes,num_edges);
 	break;
     case 2:
+	g = make_tree_graph(num_nodes,num_branches);
+	break;
+    case 3:
 	g = make_el_graph();
 	break;
     default:
