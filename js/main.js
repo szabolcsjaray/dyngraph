@@ -13,6 +13,9 @@ const colours = {
 };
 let graph_algorithm = 0;
 let animate;
+let scatter = 0.8;
+let scat = 800;
+let offs = 100;
 const node_shape = 'c';
 const time_out = 10;
 const min_num = 0;
@@ -51,16 +54,24 @@ function gen_colour() {
     return the_colour;
 }
 
+function update_scatter(scatter_id) {
+    const sc = document.getElementById(scatter_id);
+    scatter = Math.abs(Number(sc.value) / 100);
+    const sc_off = Math.abs(1 - scatter) / 2;
+    scat = canv.width * scatter;
+    offs = canv.width * sc_off;
+}
+
 function set_graph_alg(a) {
     graph_algorithm = Number(a);
 }
 
 function add_node_at_random_pos(gr,name,shape,size) {
-        gr.addNode(new Node(name, shape, size,
-			    colours,
-			    rnd_pairs,
-			    Math.random()*800+100,
-			    Math.random()*800+100, c2d));
+    gr.addNode(new Node(name, shape, size,
+			colours,
+			rnd_pairs,
+			Math.random()*scat+offs,
+			Math.random()*scat+offs, c2d));
 }
 
 function print_edges(target) {

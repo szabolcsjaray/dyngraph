@@ -27,17 +27,6 @@
 	      }
 	      area_edgelist.value = output_string;
 	  }
-	  function is_tree(isTree,edge_id="nu_edges",brch_id="nu_branches") {
-	      const edge_inp = document.getElementById(edge_id);
-	      const brch_inp = document.getElementById(brch_id);
-	      if (isTree) {
-		  edge_inp.disabled = true;
-		  brch_inp.disabled = false;
-	      } else {
-		  edge_inp.disabled = false;
-		  brch_inp.disabled = true;
-	      }
-	  }
 	  function set_scenario(scen,node_id="nu_nodes",edge_id="nu_edges",brch_id="nu_branches") {
 	      //     nodes,  edges, branch
 	      //       0       1      2
@@ -144,6 +133,10 @@
 	    <tr>
 	      <td><label>branches</label></td>
 	      <td><input id="nu_branches" type="number" value="2" min="1" max="10" disabled></input></td>
+	    </tr>
+	    <tr>
+	      <td><label>scatter</label></td>
+	      <td><input id="nu_scatter" type="number" value="80" min="1" max="100" onchange="update_scatter('nu_scatter')"></input><label>%</label></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2">
