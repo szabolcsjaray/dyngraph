@@ -213,8 +213,8 @@
 	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button2" onClick="print_edges(area_edgelist);" value="Print" /></td>
-	      <td><input type="button" class="button2" onClick="clear_canvas();" value="Clear" /></td>
+	      <td><input type="button" class="button2" id="btn_print" onClick="print_edges(area_edgelist);" value="Print" /></td>
+	      <td><input type="button" class="button2" id="btn_clear" onClick="clear_canvas();" value="Clear" /></td>
 	    </tr>
 	    <tr>
 	      <td><input type="button" class="button1" id="btn_pause" onClick="pause();" value="Pause" /></td>
@@ -238,7 +238,7 @@
 	      <td colspan="2" class="centred"><textarea id="edge_list" rows="20" cols="41"></textarea>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><input type="button" class="button2" onClick="remove_unconnected();" value="Remove Lone Nodes" /></td>
+	      <td colspan="2"><input type="button" class="button2" id="btn_rm_lone" onClick="remove_unconnected();" value="Remove Lone Nodes" /></td>
 	    </tr>
 	  </table>
 	</div>
@@ -255,6 +255,9 @@
 	const btn_stop = document.getElementById("btn_stop");
 	const btn_pause = document.getElementById("btn_pause");
 	const btn_cont = document.getElementById("btn_cont");
+	const btn_print = document.getElementById("btn_print");
+	const btn_clear = document.getElementById("btn_clear");
+	const btn_rm_lone = document.getElementById("btn_rm_lone");
 	const sel_fillcol = document.getElementById("fill_col");
 	sel_fillcol.addEventListener("change",function() { colours["fill_colour"] = sel_fillcol.value; });
 	const sel_linecol = document.getElementById("line_col");
@@ -269,6 +272,26 @@
 	sel_traceline.addEventListener("change",function() { colours["trc_lin_col"] = sel_traceline.value; });
 	const area_edgelist = document.getElementById("edge_list");
 	area_edgelist.placeholder = "n1 n2\nn2 n3\nn3 n1";
+	document.addEventListener('keydown', (event) => {
+	    const keyName = event.key;
+	    console.log(keyName);
+	    if (keyName == 'Enter')
+		btn_start.dispatchEvent(new Event("click"));
+	    if (keyName == 'Pause') {
+		if (!btn_pause.disabled)
+		    btn_pause.dispatchEvent(new Event("click"));
+		else {
+		    if (!btn_cont.disabled)
+			btn_cont.dispatchEvent(new Event("click"));
+		}
+	    }
+	    if (keyName == 'p')
+		btn_print.dispatchEvent(new Event("click"));
+	    if (event.ctrlKey && event.key == 'c')
+		btn_clear.dispatchEvent(new Event("click"));
+	    if (event.key == 'r')
+		btn_rm_lone.dispatchEvent(new Event("click"));
+	}, false);
       </script>
     </body>
 </html>
