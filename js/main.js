@@ -5,10 +5,10 @@ let tracing;
 let node_size = 5;
 const colours = {
     fill_colour: "#48929B", // 浅葱色「あさぎいろ」
-    outline_col: "#48929B", // 同じ
+    outline_col: "#1D697C", // 浅葱色「あさぎいろ」
     line_colour: "#86ABA5", // 水色「みずいろ」
     trc_fil_col: "#2B3736", // 鉄御納戸「てつおなんど」
-    trc_oli_col: "#2B3736", // 同じ
+    trc_oli_col: "#364141", // 御納戸色「おなんどいろ」
     trc_lin_col: "#344D56", // 熨斗目花色「のしめはないろ」
     alpha: 0.9
 };
