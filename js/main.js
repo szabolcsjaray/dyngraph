@@ -4,12 +4,13 @@ let c2d;
 let tracing;
 let node_size = 5;
 const colours = {
-    fill_colour: "#000000",
-    outline_col: "#000000",
-    line_colour: "#ffffff",
-    trc_fil_col: "#777777",
-    trc_oli_col: "#555555",
-    trc_lin_col: "#333333"
+    fill_colour: "#48929B", // 浅葱色「あさぎいろ」
+    outline_col: "#48929B", // 同じ
+    line_colour: "#86ABA5", // 水色「みずいろ」
+    trc_fil_col: "#2B3736", // 鉄御納戸「てつおなんど」
+    trc_oli_col: "#2B3736", // 同じ
+    trc_lin_col: "#344D56", // 熨斗目花色「のしめはないろ」
+    alpha: 0.9
 };
 let graph_algorithm = 0;
 let animate;
@@ -49,9 +50,16 @@ function gen_colour() {
     red = gen_num(255);
     green = gen_num(255);
     blue = gen_num(255);
-    the_colour = "#"+Number(red).toString(16).padStart(2,'0')+Number(green).toString(16).padStart(2,'0')+Number(blue).toString(16).padStart(2,'0');
+    alpha = colours["alpha"];
+    //the_colour = "#"+Number(red).toString(16).padStart(2,'0')+Number(green).toString(16).padStart(2,'0')+Number(blue).toString(16).padStart(2,'0');
+    //the_colour = "rgba("+red+","+green+","+blue+","+alpha+")";
     //console.log("colour: " + the_colour);
+    the_colour = "rgb("+red+","+green+","+blue+")";
     return the_colour;
+}
+
+function update_alpha(alpha_value) {
+    colours["alpha"] = Math.abs(Number(alpha_value)) / 100;
 }
 
 function update_scatter(scatter_id) {
@@ -190,6 +198,7 @@ function start(canv_name="c",
 	       nbranches=2) {
     canv = document.getElementById(canv_name);
     c2d = canv.getContext("2d");
+    c2d.globalAlpha = colours["alpha"];
     const num_nodes = nnodes;
     const num_edges = nedges;
     const num_branches = nbranches;
