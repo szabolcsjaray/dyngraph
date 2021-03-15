@@ -124,7 +124,7 @@
 
     <body onload="config();start();">
       <div id="main_container">
-	<div class="column" id="canvas_space"><canvas id="c" width="1000" height="1000"></canvas></div>
+	<div class="column" id="canvas_space"><canvas id="c" width="1000" height="1000" onclick="pause_or_continue()" ondblclick="clear_canvas()"></canvas></div>
         <div class="column" id="panel_space">
 	  <table>
 	    <tr>
@@ -259,6 +259,14 @@
 	    trc_oli_col: document.getElementById("trace_outline"),
 	    trc_lin_col: document.getElementById("trace_line")
 	};
+	function pause_or_continue() {
+	    if (!btn_pause.disabled)
+		btn_pause.dispatchEvent(new Event("click"));
+	    else {
+		if (!btn_cont.disabled)
+		    btn_cont.dispatchEvent(new Event("click"));
+	    }
+	}
 	for (let it in col_sels)
 	    col_sels[it].addEventListener("change",function(){colours[it] = col_sels[it].value;});
 	const area_edgelist = document.getElementById("edge_list");
@@ -269,12 +277,7 @@
 	    if (event.ctrlKey && keyName == 'Enter')
 		btn_start.dispatchEvent(new Event("click"));
 	    if (keyName == 'Pause') {
-		if (!btn_pause.disabled)
-		    btn_pause.dispatchEvent(new Event("click"));
-		else {
-		    if (!btn_cont.disabled)
-			btn_cont.dispatchEvent(new Event("click"));
-		}
+		pause_or_continue();
 	    }
 	    if (event.ctrlKey && event.altKey && event.key == 'c')
 		btn_clear.dispatchEvent(new Event("click"));
