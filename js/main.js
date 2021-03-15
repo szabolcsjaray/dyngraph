@@ -46,15 +46,25 @@ function gen_num(nmax,nmin=min_num) {
     return(Math.floor((Math.random() * (nmax-nmin+1)) + nmin));
 }
 
-function gen_colour() {
-    red = gen_num(255);
-    green = gen_num(255);
-    blue = gen_num(255);
-    alpha = colours["alpha"];
-    //the_colour = "#"+Number(red).toString(16).padStart(2,'0')+Number(green).toString(16).padStart(2,'0')+Number(blue).toString(16).padStart(2,'0');
-    //the_colour = "rgba("+red+","+green+","+blue+","+alpha+")";
-    //console.log("colour: " + the_colour);
-    the_colour = "rgb("+red+","+green+","+blue+")";
+function gen_colour(type=2) {
+    const red = gen_num(255);
+    const green = gen_num(255);
+    const blue = gen_num(255);
+    const alpha = colours["alpha"];
+    let the_colour;
+    switch(type) {
+    case 0:
+	the_colour = "#"+Number(red).toString(16).padStart(2,'0')+Number(green).toString(16).padStart(2,'0')+Number(blue).toString(16).padStart(2,'0');
+	break;
+    case 1:
+	the_colour = "rgba("+red+","+green+","+blue+","+alpha+")";
+	break;
+    case 2:
+	the_colour = "rgb("+red+","+green+","+blue+")";
+	break;
+    default:
+	console.log("Invalid colour type: " + type);
+    }
     return the_colour;
 }
 
