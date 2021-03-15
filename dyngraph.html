@@ -217,7 +217,7 @@
 		    <td class="centred"><input id="cb_tracecoloff" class="cb" type="checkbox" onchange="col_off_change('cb_tracecoloff','cb_randtracecol','trace_fill','tfil')" disabled></input></td>
 		  </tr>
 		  <tr>
-		    <td><label>trace outline</label></td>
+		    <td><label>trace outl.</label></td>
 		    <td class="centred"><input id="trace_outline" type="color"></input></td>
 		    <td class="centred"><input id="cb_randtraceoutl" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceoutl','trace_outline','rnd_trc_oli')"></input></td>
 		    <td class="centred"><input id="cb_traceoutloff" class="cb" type="checkbox" onchange="col_off_change('cb_traceoutloff','cb_randtraceoutl','trace_outline','toli')" disabled></input></td>
@@ -328,15 +328,9 @@
 	    trc_oli_col: document.getElementById("trace_outline"),
 	    trc_lin_col: document.getElementById("trace_line")
 	};
-	const map_node_params = {
-	    link_max_length: [],
-	    link_min_length: [],
-	    dist_modifier:   [],
-	    large_dist_div:  [],
-	    small_dist_div:  [],
-	    dist_threshold:  [],
-	};
-	for (let it in map_node_params) {
+	const map_node_params = {};
+	for (let it in node_params) {
+	    map_node_params[it] = [];
 	    map_node_params[it].push(document.getElementById("slider_"+it));
 	    map_node_params[it].push(document.getElementById("span_"+it));
 	    map_node_params[it][0].oninput = function() {
