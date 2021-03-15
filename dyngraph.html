@@ -124,6 +124,7 @@
 
     <body onload="config();start();">
       <div id="main_container">
+	<div class="column" id="canvas_space"><canvas id="c" width="1000" height="1000"></canvas></div>
         <div class="column" id="panel_space">
 	  <table>
 	    <tr>
@@ -232,7 +233,6 @@
 	    </tr>
 	  </table>
 	</div>
-	<div class="column" id="canvas_space"><canvas id="c" width="1000" height="1000"></canvas></div>
       </div>
       <script type="text/javascript">
 	const tracer = document.getElementById("cb_tracing");
