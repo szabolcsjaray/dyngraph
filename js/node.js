@@ -1,5 +1,19 @@
-const LINKMAXLENGTH = 30;
-const LINKMINLENGTH = 20;
+const node_params = {
+    link_max_length: 30,
+    link_min_length: 20,
+    dist_modifier:   10,
+    large_dist_div:  40,
+    small_dist_div:  30,
+    dist_threshold: 100,
+};
+
+function modify_params(param,value) {
+    //console.log("param: " + param + ", value: " + value);
+    if (Object.keys(node_params).indexOf(param) != -1) {
+	node_params[param] = value;
+    } else
+	console.log("Invalid node_param has been received: " + param);
+}
 
 class Node {
     constructor( name, shape, size, cols, rnd, x, y, c2d) {
@@ -32,16 +46,16 @@ class Node {
         if ((this.links.indexOf(otherNode)!=-1) ||
             (this.backLinks.indexOf(otherNode)!=-1)) {
             //console.log('Linked node force:' + this.name + ' - ' + otherNode.name);
-            if (dist>LINKMAXLENGTH) {
-                this.fx += (otherNode.x-this.x)/dist*(dist-10)/40;
-                this.fy += (otherNode.y-this.y)/dist*(dist-10)/40;
-            } else if (dist<LINKMINLENGTH) {
-                this.fx += (this.x-otherNode.x)/dist*(LINKMINLENGTH-dist)/30;
-                this.fy += (this.y-otherNode.y)/dist*(LINKMINLENGTH-dist)/30;
+            if (dist>node_params.link_max_length) {
+                this.fx += (otherNode.x-this.x)/dist*(dist-node_params.dist_modifier)/node_params.large_dist_div;
+                this.fy += (otherNode.y-this.y)/dist*(dist-node_params.dist_modifier)/node_params.large_dist_div;
+            } else if (dist<node_params.link_min_length) {
+                this.fx += (this.x-otherNode.x)/dist*(node_params.link_min_length-dist)/node_params.small_dist_div;
+                this.fy += (this.y-otherNode.y)/dist*(node_params.link_min_length-dist)/node_params.small_dist_div;
             }
         } else {
             //console.log('Not linked node force:' + this.name + ' - ' + otherNode.name);
-            if (dist<100) {
+            if (dist<node_params.dist_threshold) {
                 this.fx += (this.x-otherNode.x)/dist;
                 this.fy += (this.y-otherNode.y)/dist;
             }
