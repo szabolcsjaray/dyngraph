@@ -1,5 +1,4 @@
 let g;
-let canv;
 let c2d;
 let tracing;
 let node_size = 5;
@@ -72,12 +71,12 @@ function update_alpha(alpha_value) {
     colours["alpha"] = Math.abs(Number(alpha_value)) / 100;
 }
 
-function update_scatter(scatter_id) {
+function update_scatter(scatter_id,c=canv) {
     const sc = document.getElementById(scatter_id);
     scatter = Math.abs(Number(sc.value) / 100);
     const sc_off = Math.abs(1 - scatter) / 2;
-    scat = canv.width * scatter;
-    offs = canv.width * sc_off;
+    scat = Math.round(c.width * scatter);
+    offs = Math.round(c.width * sc_off);
 }
 
 function set_graph_alg(a) {
@@ -167,14 +166,14 @@ function make_a2a_graph(nuno) {
     return(gr);
 }
 
-function make_tree_graph(nuno,nubr) {
+function make_tree_graph(nuno,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     const queue = [];
     gr.addNode(new Node('n0', node_shape, node_size,
 			colours,
 			rnd_pairs,
-			canv.width/2,
-			canv.height/2, c2d));
+			c.width/2,
+			c.height/2, c2d));
     queue.push(0);
     for(let i = 1; i < nuno; ++i) {
 	while(queue.length) {
@@ -202,12 +201,11 @@ function make_el_graph() {
     return(gr);
 }
 
-function start(canv_name="c",
+function start(c=canv,
 	       nnodes=100,
 	       nedges=100,
 	       nbranches=2) {
-    canv = document.getElementById(canv_name);
-    c2d = canv.getContext("2d");
+    c2d = c.getContext("2d");
     c2d.globalAlpha = colours["alpha"];
     const num_nodes = nnodes;
     const num_edges = nedges;
@@ -246,8 +244,7 @@ function clear_canvas(from_x=0,
 		      from_y=0,
 		      to_x=canv.width,
 		      to_y=canv.height,
-		      c=canv) {
-    const ctx = c.getContext('2d');
+		      ctx=c2d) {
     ctx.clearRect(from_x, from_y, to_x, to_y);
 }
 
