@@ -9,7 +9,6 @@
         <script src="js/node.js"></script>
         <script src="js/graph.js"></script>
 	<script type="text/javascript">
-	  const canv_name = "c";
 	  function config() {
 	      check_tracer();
 	      // document.getElementById("sel_graphalgs").value = '0'; // does not help when tabs are restored
@@ -64,6 +63,11 @@
 		  console.log("Unhandled selection");
 	      }
 	      set_graph_alg(seli);
+	  }
+	  function resize_canvas(c,sz,sc_id="nu_scatter") {
+	      c.width = sz;
+	      c.height = sz;
+	      update_scatter(sc_id);
 	  }
 	</script>
 	<style type="text/css">
@@ -156,21 +160,28 @@
 
     <body onload="config();start();">
       <div id="main_container">
-	<div class="column" id="canvas_space"><canvas id="c" width="1000" height="1000" onclick="pause_or_continue()" ondblclick="clear_canvas()"></canvas></div>
         <div class="column" id="panel_space">
 	  <table>
+	    <tr>
+	      <td><label>canvas</label></td>
+	      <td><input id="sz_canvas" type="number" value="1000" min="100" max="8192"></input></td>
+	    </tr>
 	    <tr>
 	      <td><label>nodes</label></td>
 	      <td><input id="nu_nodes" type="number" value="100" min="2" max="1000"></input></td>
 	    </tr>
 	    <tr>
-	      <td><label>size</label></td>
+	      <td><label>node size</label></td>
 	      <td><input id="sz_nodes" type="number" value="5" min="1" max="100"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
 	      <td><input id="nu_edges" type="number" value="100" min="1" max="1000"></input></td>
 	    </tr>
+	    <!-- <tr> -->
+	    <!--   <td><label>edge width</label></td> -->
+	    <!--   <td><input id="nu_edges" type="number" value="100" min="1" max="1000"></input></td> -->
+	    <!-- </tr> -->
 	    <tr>
 	      <td><label>branches</label></td>
 	      <td><input id="nu_branches" type="number" value="2" min="1" max="10" disabled></input></td>
@@ -244,7 +255,7 @@
 	      <td><input type="button" class="button1" id="btn_cont" onClick="go_on();" value="Continue" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv_name,Number(inp_nodes.value),Number(inp_edges.value),Number(inp_branches.value));" value="Restart" /></td>
+	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv,Number(inp_nodes.value),Number(inp_edges.value),Number(inp_branches.value));" value="Restart" /></td>
 	      <td><input type="button" class="button1" id="btn_stop" onClick="stop();" value="Stop" /></td>
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>Physics Parameters</label></td></tr>
@@ -302,10 +313,14 @@
 	    </tr>
 	  </table>
 	</div>
+	<div class="column" id="canvas_space"><canvas id="cv_canv" width="1000" height="1000" onclick="pause_or_continue()" ondblclick="clear_canvas()"></canvas></div>
       </div>
       <script type="text/javascript">
+	const canv = document.getElementById("cv_canv");
 	const tracer = document.getElementById("cb_tracing");
 	tracer.addEventListener("change",function() { check_tracer(); });
+	const cv_size = document.getElementById("sz_canvas");
+	cv_size.addEventListener("change",function() {resize_canvas(canv,this.value);});
 	const nd_size = document.getElementById("sz_nodes");
 	nd_size.addEventListener("change",function() {node_size = Number(nd_size.value)});
 	const inp_nodes = document.getElementById("nu_nodes");
