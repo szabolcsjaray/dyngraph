@@ -92,12 +92,6 @@ class Node {
 	    this.c2d.fillStyle = draw_trace ? this.tracefillcolour : this.fillcolour;
 	if (p.outl)
             this.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
-        this.c2d.beginPath();
-        this.c2d.arc(this.x, this.y, this.size, 0, 2*Math.PI);
-	if (p.fill)
-            this.c2d.fill();
-	if (p.outl)
-	    this.c2d.stroke();
 
 	if (p.line)
             this.c2d.strokeStyle = draw_trace ? this.tracelinecolour : this.linecolour;
@@ -106,9 +100,16 @@ class Node {
             this.c2d.moveTo(this.x, this.y);
             this.c2d.lineTo(otherNode.x, otherNode.y);
         });
-
 	if (p.line)
             this.c2d.stroke();
+
+	this.c2d.beginPath();
+        this.c2d.arc(this.x, this.y, this.size, 0, 2*Math.PI);
+	if (p.fill)
+            this.c2d.fill();
+	if (p.outl)
+	    this.c2d.stroke();
+
     }
 
     status() {
