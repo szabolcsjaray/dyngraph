@@ -67,6 +67,11 @@ function gen_colour(type=2) {
     return the_colour;
 }
 
+
+function resize_linewidth(sz) {
+    c2d.lineWidth = sz;
+}
+
 function update_alpha(alpha_value) {
     colours["alpha"] = Math.abs(Number(alpha_value)) / 100;
 }
