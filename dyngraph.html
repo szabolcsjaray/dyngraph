@@ -251,13 +251,13 @@
 	      <td><input type="button" class="button1" id="btn_clear" onClick="clear_canvas();" value="Clear" /></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_pause" onClick="pause();" value="Pause" /></td>
-	      <td><input type="button" class="button1" id="btn_cont" onClick="go_on();" value="Continue" disabled></td>
-	    </tr>
-	    <tr>
+	      <td><input type="button" class="button1" id="btn_pause_conti" value="Pause" /></td>
 	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv,Number(inp_nodes.value),Number(inp_edges.value),Number(inp_branches.value));" value="Restart" /></td>
-	      <td><input type="button" class="button1" id="btn_stop" onClick="stop();" value="Stop" /></td>
+	      <!-- <td><input type="button" class="button1" id="btn_cont" onClick="go_on();" value="Continue" disabled></td> -->
 	    </tr>
+	    <!-- <tr> -->
+	      <!-- <td><input type="button" class="button1" id="btn_stop" onClick="stop();" value="Stop" /></td> -->
+	    <!-- </tr> -->
 	    <tr><td colspan="2" class="centred"><label>Physics Parameters</label></td></tr>
 	    <tr>
 	      <td colspan="2">
@@ -334,9 +334,13 @@
 	const inp_alpha = document.getElementById("nu_alpha");
 	inp_alpha.addEventListener("change",function(){update_alpha(inp_alpha.value)});
 	const btn_start = document.getElementById("btn_start");
-	const btn_stop = document.getElementById("btn_stop");
-	const btn_pause = document.getElementById("btn_pause");
-	const btn_cont = document.getElementById("btn_cont");
+	//const btn_stop = document.getElementById("btn_stop");
+	//const btn_pause = document.getElementById("btn_pause");
+	//const btn_cont = document.getElementById("btn_cont");
+	const btn_pause_conti = document.getElementById("btn_pause_conti");
+	btn_pause_conti.addEventListener("click",function(){
+	    pause_or_continue(this);
+	});
 	const btn_print = document.getElementById("btn_print");
 	const btn_clear = document.getElementById("btn_clear");
 	const btn_rm_lone = document.getElementById("btn_rm_lone");
@@ -358,13 +362,14 @@
 		map_node_params[it][1].innerHTML = this.value;
 	    }
 	}
-	function pause_or_continue() {
-	    if (!btn_pause.disabled)
-		btn_pause.dispatchEvent(new Event("click"));
-	    else {
-		if (!btn_cont.disabled)
-		    btn_cont.dispatchEvent(new Event("click"));
-	    }
+	function pause_or_continue(btn) {
+	    if (btn.value == "Pause") {
+		pause();
+		btn.value = "Continue";
+	    } else {
+		go_on();
+		btn.value = "Pause";
+	    }	    
 	}
 	for (let it in col_sels)
 	    col_sels[it].addEventListener("change",function(){colours[it] = col_sels[it].value;});
@@ -376,7 +381,7 @@
 	    if (event.ctrlKey && keyName == 'Enter')
 		btn_start.dispatchEvent(new Event("click"));
 	    if (keyName == 'Pause') {
-		pause_or_continue();
+		pause_or_continue(btn_pause_conti);
 	    }
 	    if (event.ctrlKey && event.altKey && event.key == 'c')
 		btn_clear.dispatchEvent(new Event("click"));
