@@ -1,7 +1,7 @@
 let g;
 let c2d;
 let tracing;
-let node_size = 5;
+let node_radius = 5;
 const colours = {
     fill_colour: "#48929B", // 浅葱色「あさぎいろ」
     outline_col: "#1D697C", // 浅葱色「あさぎいろ」
@@ -76,6 +76,10 @@ function update_alpha(alpha_value) {
     colours["alpha"] = Math.abs(Number(alpha_value)) / 100;
 }
 
+function resize_nodes(sz) {
+    g.resize_nodes(sz);
+}
+
 function update_scatter(scatter_id,c=canv) {
     const sc = document.getElementById(scatter_id);
     scatter = Math.abs(Number(sc.value) / 100);
@@ -102,12 +106,12 @@ function print_edges(target) {
 
 function add_nodes(g, num) {
     for(let i = 0;i<num;i++)
-	add_node_at_random_pos(g,'n'+i,node_shape,node_size);
+	add_node_at_random_pos(g,'n'+i,node_shape,node_radius);
 }
 
 function add_named_nodes(g,node_names) {
     for(let i in node_names)
-	add_node_at_random_pos(g,node_names[i],node_shape,node_size);
+	add_node_at_random_pos(g,node_names[i],node_shape,node_radius);
 }
 
 function get_edge_list() {
@@ -174,7 +178,7 @@ function make_a2a_graph(nuno) {
 function make_tree_graph(nuno,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     const queue = [];
-    gr.addNode(new Node('n0', node_shape, node_size,
+    gr.addNode(new Node('n0', node_shape, node_radius,
 			colours,
 			rnd_pairs,
 			c.width/2,
@@ -184,7 +188,7 @@ function make_tree_graph(nuno,nubr,c=canv) {
 	while(queue.length) {
 	    const ni = queue.shift();
 	    for(let b = 0; b < nubr && i < nuno; ++b,++i) {
-		add_node_at_random_pos(gr,'n'+i,node_shape,node_size);
+		add_node_at_random_pos(gr,'n'+i,node_shape,node_radius);
 		queue.push(i);
 		gr.addLink(ni,i);
 	    }

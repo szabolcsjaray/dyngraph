@@ -44,6 +44,12 @@ class Graph {
         });
     }
 
+    resize_nodes(new_size) {
+	this.ns.forEach( node => {
+            node.radius=new_size;
+        });
+    }
+
     get_edge_list() {
 	let output_string = "";
 	for(let i in this.ns) {

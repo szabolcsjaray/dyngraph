@@ -16,10 +16,10 @@ function modify_params(param,value) {
 }
 
 class Node {
-    constructor( name, shape, size, cols, rnd, x, y, c2d) {
+    constructor( name, shape, radius, cols, rnd, x, y, c2d) {
         this.name = name;
         this.shape = shape;
-	this.size = size;
+	this.radius = radius;
         this.fillcolour = rnd.rnd_fil_col ? gen_colour() : cols.fill_colour;
 	this.outlcolour = rnd.rnd_oli_col ? gen_colour() : cols.outline_col;
         this.linecolour = rnd.rnd_lin_col ? gen_colour() : cols.line_colour;
@@ -106,7 +106,7 @@ class Node {
             this.c2d.stroke();
 
 	this.c2d.beginPath();
-        this.c2d.arc(this.x, this.y, this.size, 0, 2*Math.PI);
+        this.c2d.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
 	if (p.fill)
             this.c2d.fill();
 	if (p.outl)
@@ -125,8 +125,8 @@ class Node {
     getPointOnCircle(radians) {
 	radians = radians - Math.PI/2; // 0 becomes the top
 	// Calculate the outter point of the line
-	return [Math.round(this.x + Math.cos(radians) * this.size),  // pos x
-		Math.round(this.y + Math.sin(radians) * this.size)]; // pos y
+	return [Math.round(this.x + Math.cos(radians) * this.radius),  // pos x
+		Math.round(this.y + Math.sin(radians) * this.radius)]; // pos y
     }
 
     status() {

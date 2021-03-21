@@ -172,7 +172,7 @@
 	    </tr>
 	    <tr>
 	      <td><label>radius</label></td>
-	      <td><input id="sz_nodes" type="number" value="5" min="0" max="100"></input></td>
+	      <td><input id="sz_radius" type="number" value="5" min="0" max="100"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
@@ -321,8 +321,11 @@
 	tracer.addEventListener("change",function() { check_tracer(); });
 	const cv_size = document.getElementById("sz_canvas");
 	cv_size.addEventListener("change",function() {resize_canvas(canv,this.value);});
-	const nd_size = document.getElementById("sz_nodes");
-	nd_size.addEventListener("change",function() {node_size = Number(nd_size.value)});
+	const nd_radius = document.getElementById("sz_radius");
+	nd_radius.addEventListener("change",function() {
+	    node_radius = Number(nd_radius.value);
+	    resize_nodes(node_radius);
+	});
 	const ln_width = document.getElementById("wd_line");
 	ln_width.addEventListener("change",function() {resize_linewidth(Number(this.value));});
 	const inp_nodes = document.getElementById("nu_nodes");
