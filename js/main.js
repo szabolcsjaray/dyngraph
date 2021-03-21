@@ -219,9 +219,6 @@ function start(c=canv,
     const num_nodes = nnodes;
     const num_edges = nedges;
     const num_branches = nbranches;
-    btn_stop.disabled = false;
-    btn_pause.disabled = false;
-    btn_cont.disabled = true;
 
     clear_canvas();
 
@@ -263,16 +260,11 @@ function stop() {
 
 function pause() {
     animate=false;
-    btn_cont.disabled = false;
-    btn_pause.disabled = true;
 }
 
 function go_on() {
     animate = true;
     animPhase();
-    btn_cont.disabled = true;
-    btn_pause.disabled = false;
-    btn_stop.disabled = false;
 }
 
 function col_sel_change(cb_id,sel_id,v) {
@@ -318,10 +310,6 @@ function animPhase() {
     if(!tracing)
 	clear_canvas();
     g.draw(drw_pairs,false);
-    if (animate) {
+    if (animate)
         setTimeout(animPhase, time_out);
-    } else {
-	btn_stop.disabled = true;
-	btn_pause.disabled = true;
-    }
 }
