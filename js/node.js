@@ -97,8 +97,10 @@ class Node {
             this.c2d.strokeStyle = draw_trace ? this.tracelinecolour : this.linecolour;
         this.c2d.beginPath();
         this.links.forEach(otherNode => {
-            this.c2d.moveTo(this.x, this.y);
-            this.c2d.lineTo(otherNode.x, otherNode.y);
+	    const coords1 = this.getPointOnCircle(this.angleBetween(otherNode));
+            this.c2d.moveTo(coords1[0], coords1[1]);
+	    const coords2 = otherNode.getPointOnCircle(otherNode.angleBetween(this));
+            this.c2d.lineTo(coords2[0], coords2[1]);
         });
 	if (p.line)
             this.c2d.stroke();
@@ -110,6 +112,21 @@ class Node {
 	if (p.outl)
 	    this.c2d.stroke();
 
+    }
+
+    angleBetween(other) {
+	// Calculate the angle...
+	// This is our "0" or start angle..
+	let rotation = -Math.atan2(other.x - this.x, other.y - this.y);
+	rotation = rotation + Math.PI; // 180 degrees
+
+	return rotation;
+    }
+    getPointOnCircle(radians) {
+	radians = radians - Math.PI/2; // 0 becomes the top
+	// Calculate the outter point of the line
+	return [Math.round(this.x + Math.cos(radians) * this.size),  // pos x
+		Math.round(this.y + Math.sin(radians) * this.size)]; // pos y
     }
 
     status() {
