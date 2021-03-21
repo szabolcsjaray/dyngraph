@@ -1,5 +1,4 @@
 let g;
-let c2d;
 let tracing;
 let node_radius = 5;
 const colours = {
@@ -9,7 +8,6 @@ const colours = {
     trc_fil_col: "#2B3736", // 鉄御納戸「てつおなんど」
     trc_oli_col: "#364141", // 御納戸色「おなんどいろ」
     trc_lin_col: "#344D56", // 熨斗目花色「のしめはないろ」
-    alpha: 0.9
 };
 let graph_algorithm = 0;
 let animate;
@@ -45,11 +43,10 @@ function gen_num(nmax,nmin=min_num) {
     return(Math.floor((Math.random() * (nmax-nmin+1)) + nmin));
 }
 
-function gen_colour(type=2) {
+function gen_colour(type=2,alpha=0.9) {
     const red = gen_num(255);
     const green = gen_num(255);
     const blue = gen_num(255);
-    const alpha = colours["alpha"];
     let the_colour;
     switch(type) {
     case 0:
@@ -70,10 +67,6 @@ function gen_colour(type=2) {
 
 function resize_linewidth(sz) {
     c2d.lineWidth = sz;
-}
-
-function update_alpha(alpha_value) {
-    colours["alpha"] = Math.abs(Number(alpha_value)) / 100;
 }
 
 function resize_nodes(sz) {
@@ -210,12 +203,16 @@ function make_el_graph() {
     return(gr);
 }
 
-function start(c=canv,
+function update_global_alpha(nalpha) {
+    c2d.globalAlpha = nalpha;
+}
+
+function start(c2d,
 	       nnodes=100,
 	       nedges=100,
-	       nbranches=2) {
-    c2d = c.getContext("2d");
-    c2d.globalAlpha = colours["alpha"];
+	       nbranches=2,
+	       nalpha=0.9) {
+    c2d.globalAlpha = nalpha;
     const num_nodes = nnodes;
     const num_edges = nedges;
     const num_branches = nbranches;

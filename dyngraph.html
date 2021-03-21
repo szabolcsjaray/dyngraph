@@ -14,7 +14,7 @@
 	      // document.getElementById("sel_graphalgs").value = '0'; // does not help when tabs are restored
 	      for (let it in col_sels)
 	       	  col_sels[it].value = colours[it];
-	      inp_alpha.dispatchEvent(new Event("change"));
+	      inp_vals_map.nu_alpha.dispatchEvent(new Event("change"));
 	  }
 	  function remove_unconnected() {
 	      const edge_list = get_edge_list();
@@ -77,8 +77,12 @@
 	  h1 {
 	      text-align: center;
 	  }
-	  input, button, label, select {
-	      font-size: 1.8vw;
+	  label {
+	      font-size: 1.5vw;
+	      vertical-align: middle;
+	  }
+	  input, button, select {
+	      font-size: 1vw;
 	      vertical-align: middle;
 	  }
 	  input.cb {
@@ -157,8 +161,7 @@
 	  }
 	</style>
     </head>
-
-    <body onload="config();start();">
+    <body onload="config();start(c2d);">
       <div id="main_container">
         <div class="column" id="panel_space">
 	  <table>
@@ -247,17 +250,20 @@
 	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_print" onClick="print_edges(area_edgelist);" value="Print" /></td>
-	      <td><input type="button" class="button1" id="btn_clear" onClick="clear_canvas();" value="Clear" /></td>
+	      <td><input type="button" class="button1" id="btn_store" onClick="save_settings();" value="Save Settings" /></td>
+	      <td><input type="button" class="button1" id="btn_clear" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	    </tr>
 	    <tr>
 	      <td><input type="button" class="button1" id="btn_pause_conti" value="Pause" /></td>
-	      <td><input type="button" class="button1" id="btn_start" onClick="start(canv,Number(inp_nodes.value),Number(inp_edges.value),Number(inp_branches.value));" value="Restart" /></td>
+	      <td><input type="button" class="button1" id="btn_start" onClick="start(c2d,Number(inp_vals_map.nu_nodes.value,inp_vals_map.nu_alpha.value),Number(inp_vals_map.nu_edges.value),Number(inp_vals_map.nu_branches.value));" value="Restart" /></td>
 	      <!-- <td><input type="button" class="button1" id="btn_cont" onClick="go_on();" value="Continue" disabled></td> -->
 	    </tr>
-	    <!-- <tr> -->
-	      <!-- <td><input type="button" class="button1" id="btn_stop" onClick="stop();" value="Stop" /></td> -->
-	    <!-- </tr> -->
+	    <tr>
+	      <td colspan="2"><input type="file" id="infilename" /></td>
+	    </tr>
+	    <tr>
+	      
+	    </tr>
 	    <tr><td colspan="2" class="centred"><label>Physics Parameters</label></td></tr>
 	    <tr>
 	      <td colspan="2">
@@ -306,10 +312,11 @@
 	      </select></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2" class="centred"><textarea id="edge_list" rows="10" cols="41"></textarea>
+	      <td><input type="button" class="button1" id="btn_print" onClick="print_edges(area_edgelist);" value="Print Edges" /></td>
+	      <td><input type="button" class="button1" id="btn_rm_lone" onClick="remove_unconnected();" value="Rem Lone Nodes" /></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><input type="button" class="button2" id="btn_rm_lone" onClick="remove_unconnected();" value="Remove Lone Nodes" /></td>
+	      <td colspan="2" class="centred"><textarea id="edge_list" rows="10" cols="41"></textarea>
 	    </tr>
 	  </table>
 	</div>
@@ -317,26 +324,33 @@
       </div>
       <script type="text/javascript">
 	const canv = document.getElementById("cv_canv");
+	const c2d = canv.getContext("2d");
+	const inp_vals = {
+	    sz_canvas: 1000,
+	    nu_nodes:   100,
+	    sz_radius:    5,
+	    nu_edges:   100,
+	    wd_line:      1,
+	    nu_branches:  2,
+	    nu_alpha:     0.9,
+	}
+	function update_alpha(alpha_value) {
+	    inp_vals["nu_alpha"] = Math.abs(Number(alpha_value)) / 100;
+	    update_global_alpha(inp_vals.nu_alpha);
+	}
+	const inp_vals_map = {};
+	for (let a_val in inp_vals) {
+	    inp_vals_map[a_val] = document.getElementById(a_val);
+	}
+	inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(canv,this.value);});
+	inp_vals_map.sz_radius.addEventListener("change",function() {resize_nodes(Number(this.value));});
+	inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
+	inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});
+	
 	const tracer = document.getElementById("cb_tracing");
 	tracer.addEventListener("change",function() { check_tracer(); });
-	const cv_size = document.getElementById("sz_canvas");
-	cv_size.addEventListener("change",function() {resize_canvas(canv,this.value);});
-	const nd_radius = document.getElementById("sz_radius");
-	nd_radius.addEventListener("change",function() {
-	    node_radius = Number(nd_radius.value);
-	    resize_nodes(node_radius);
-	});
-	const ln_width = document.getElementById("wd_line");
-	ln_width.addEventListener("change",function() {resize_linewidth(Number(this.value));});
-	const inp_nodes = document.getElementById("nu_nodes");
-	const inp_edges = document.getElementById("nu_edges");
-	const inp_branches = document.getElementById("nu_branches");
-	const inp_alpha = document.getElementById("nu_alpha");
-	inp_alpha.addEventListener("change",function(){update_alpha(inp_alpha.value)});
+
 	const btn_start = document.getElementById("btn_start");
-	//const btn_stop = document.getElementById("btn_stop");
-	//const btn_pause = document.getElementById("btn_pause");
-	//const btn_cont = document.getElementById("btn_cont");
 	const btn_pause_conti = document.getElementById("btn_pause_conti");
 	btn_pause_conti.addEventListener("click",function(){
 	    pause_or_continue(this);
@@ -350,7 +364,7 @@
 	    line_colour: document.getElementById("line_col"),
 	    trc_fil_col: document.getElementById("trace_fill"),
 	    trc_oli_col: document.getElementById("trace_outline"),
-	    trc_lin_col: document.getElementById("trace_line")
+	    trc_lin_col: document.getElementById("trace_line"),
 	};
 	const map_node_params = {};
 	for (let it in node_params) {
@@ -362,6 +376,29 @@
 		map_node_params[it][1].innerHTML = this.value;
 	    }
 	}
+	function load_cols(cols) {
+	    for(a_col in cols) {
+		colours[a_col] = cols[a_col];
+		col_sels[a_col].value = cols[a_col];
+	    }
+	}
+	const infn = document.getElementById("infilename");
+	const freader = new FileReader();
+	freader.onload = function( ev ) {
+	    const contents = JSON.parse( decodeURIComponent( ev.target.result ) );
+	    //console.log(contents);
+	    load_cols(contents);
+	    
+	    // execute follow-up work here...
+	};
+	// when it changes (ie: user selects a file)
+	infn.addEventListener("change", function() {
+	    // get the file item from the input field
+	    const file = this.files[0];
+	    // read the file as text
+	    freader.readAsText( file );
+	    // and then then load event will trigger ...
+	});
 	function pause_or_continue(btn) {
 	    if (btn.value == "Pause") {
 		pause();
@@ -373,8 +410,19 @@
 	}
 	for (let it in col_sels)
 	    col_sels[it].addEventListener("change",function(){colours[it] = col_sels[it].value;});
+
 	const area_edgelist = document.getElementById("edge_list");
 	area_edgelist.placeholder = "n1 n2\nn2 n3\nn3 n1";
+
+	function save_settings() {
+	    let hiddenElement = document.createElement('a');
+	    
+	    hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(JSON.stringify(colours));
+	    hiddenElement.target = '_blank';
+	    hiddenElement.download = 'settings.txt';
+	    hiddenElement.click();
+	}
+
 	document.addEventListener('keydown', (event) => {
 	    const keyName = event.key;
 	    //console.log(keyName);
