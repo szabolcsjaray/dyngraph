@@ -1,0 +1,3 @@
+1. after node size is changed: node size changes
+2. restart, however brings the old values (sync back to inp_vals is probably
+missing)
