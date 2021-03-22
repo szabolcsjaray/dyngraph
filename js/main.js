@@ -73,9 +73,8 @@ function resize_nodes(sz) {
     g.resize_nodes(sz);
 }
 
-function update_scatter(scatter_id,c=canv) {
-    const sc = document.getElementById(scatter_id);
-    scatter = Math.abs(Number(sc.value) / 100);
+function update_scatter(scatter_value,c=canv) {
+    scatter = Math.abs(Number(scatter_value) / 100);
     const sc_off = Math.abs(1 - scatter) / 2;
     scat = Math.round(c.width * scatter);
     offs = Math.round(c.width * sc_off);

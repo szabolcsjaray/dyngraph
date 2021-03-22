@@ -191,7 +191,7 @@
 	    </tr>
 	    <tr>
 	      <td><label>scatter</label></td>
-	      <td><input id="nu_scatter" type="number" value="80" min="1" max="100" onchange="update_scatter('nu_scatter')"></input><label>%</label></td>
+	      <td><input id="nu_scatter" type="number" value="80" min="1" max="100"></input><label>%</label></td>
 	    </tr>
 	    <tr>
 	      <td><label>alpha</label></td>
@@ -246,12 +246,16 @@
 	      </td>
 	    </tr>
 	    <tr>
-	      <td><label>tracing</label></td>
-	      <td><input id="cb_tracing" class="cb" type="checkbox" checked></input></td>
+	      <td><label>Tracing: <input id="cb_tracing" class="cb" type="checkbox" checked></input></label></td>
+	      <td><input type="button" class="button1" id="btn_reset" onClick="reset_values();" value="Reset Values" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_store" onClick="save_settings();" value="Save Settings" /></td>
+	      <td><label>Output file:</label></td>
+	      <td><input type="text" class="button1" id="out_fn" value="settings.json" /></label></td>
+	    </tr>
+	    <tr>
 	      <td><input type="button" class="button1" id="btn_clear" onClick="clear_canvas();" value="Clear Canvas" /></td>
+	      <td><input type="button" class="button1" id="btn_store" onClick="save_settings('out_fn');" value="Save Settings" /></td>
 	    </tr>
 	    <tr>
 	      <td><input type="button" class="button1" id="btn_pause_conti" value="Pause" /></td>
@@ -331,7 +335,8 @@
 	    nu_edges:   100,
 	    wd_line:      1,
 	    nu_branches:  2,
-	    nu_alpha:     0.9,
+	    nu_scatter:   80,
+	    nu_alpha:     90,
 	}
 	function update_alpha(alpha_value) {
 	    inp_vals["nu_alpha"] = Math.abs(Number(alpha_value)) / 100;
@@ -344,6 +349,7 @@
 	inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(canv,this.value);});
 	inp_vals_map.sz_radius.addEventListener("change",function() {resize_nodes(Number(this.value));});
 	inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
+	inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
 	inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});
 	
 	const tracer = document.getElementById("cb_tracing");
@@ -376,6 +382,8 @@
 	    }
 	}
 	function restart() {
+	    if (btn_pause_conti.value == "Continue")
+		pause_or_continue(btn_pause_conti);
 	    start(c2d,
 		  Number(inp_vals_map.nu_nodes.value),
 		  Number(inp_vals_map.nu_edges.value),
@@ -422,12 +430,13 @@
 	const area_edgelist = document.getElementById("edge_list");
 	area_edgelist.placeholder = "n1 n2\nn2 n3\nn3 n1";
 
-	function save_settings() {
+	function save_settings(fn_id) {
+	    const fn = document.getElementById(fn_id).value;
 	    let hiddenElement = document.createElement('a');
 	    
 	    hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(JSON.stringify(colours));
 	    hiddenElement.target = '_blank';
-	    hiddenElement.download = 'settings.txt';
+	    hiddenElement.download = fn;
 	    hiddenElement.click();
 	}
 

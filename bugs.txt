@@ -1,3 +1,4 @@
-1. after node size is changed: node size changes
-2. restart, however brings the old values (sync back to inp_vals is probably
-missing)
+1. inp_vals is not refreshed
+2. settings/restore is very limited
+3. a reset button is also needed to work
+
