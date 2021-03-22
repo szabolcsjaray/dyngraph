@@ -85,8 +85,8 @@ function set_graph_alg(a) {
     graph_algorithm = Number(a);
 }
 
-function add_node_at_random_pos(gr,name,shape,size) {
-    gr.addNode(new Node(name, shape, size,
+function add_node_at_random_pos(gr,name,shape,radius) {
+    gr.addNode(new Node(name, shape, radius,
 			colours,
 			rnd_pairs,
 			Math.random()*scat+offs,
@@ -97,14 +97,14 @@ function print_edges(target) {
     target.value = g.get_edge_list();
 }
 
-function add_nodes(g, num) {
+function add_nodes(g, num, rad) {
     for(let i = 0;i<num;i++)
-	add_node_at_random_pos(g,'n'+i,node_shape,node_radius);
+	add_node_at_random_pos(g,'n'+i,node_shape,rad);
 }
 
-function add_named_nodes(g,node_names) {
+function add_named_nodes(g,node_names,rad) {
     for(let i in node_names)
-	add_node_at_random_pos(g,node_names[i],node_shape,node_radius);
+	add_node_at_random_pos(g,node_names[i],node_shape,rad);
 }
 
 function get_edge_list() {
@@ -130,9 +130,9 @@ function get_node_list(edges) {
     return nodes;
 }
 
-function make_r2r_graph(nuno,nued) {
+function make_r2r_graph(nuno,nued,rad) {
     const gr = new Graph('r2r'); 
-    add_nodes(gr,nuno);
+    add_nodes(gr,nuno,rad);
     for(let i = 0;i<nued;++i) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
@@ -142,9 +142,9 @@ function make_r2r_graph(nuno,nued) {
     return(gr);
 }
 
-function make_s2r_graph(nuno,nued) {
+function make_s2r_graph(nuno,nued,rad) {
     const gr = new Graph('s2r');
-    add_nodes(gr,nuno);
+    add_nodes(gr,nuno,rad);
     let n = 0;
     for(let i = 0;i < nued;++i,++n) {
 	if (n == nuno)
@@ -157,9 +157,9 @@ function make_s2r_graph(nuno,nued) {
     return(gr);
 }
 
-function make_a2a_graph(nuno) {
+function make_a2a_graph(nuno,rad) {
     const gr = new Graph('a2a');
-    add_nodes(gr,nuno);
+    add_nodes(gr,nuno,rad);
 
     for(let i = 0;i < nuno;++i)
 	for (let j = i; j < nuno; ++j)
@@ -168,10 +168,10 @@ function make_a2a_graph(nuno) {
     return(gr);
 }
 
-function make_tree_graph(nuno,nubr,c=canv) {
+function make_tree_graph(nuno,rad,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     const queue = [];
-    gr.addNode(new Node('n0', node_shape, node_radius,
+    gr.addNode(new Node('n0', node_shape, rad,
 			colours,
 			rnd_pairs,
 			c.width/2,
@@ -181,7 +181,7 @@ function make_tree_graph(nuno,nubr,c=canv) {
 	while(queue.length) {
 	    const ni = queue.shift();
 	    for(let b = 0; b < nubr && i < nuno; ++b,++i) {
-		add_node_at_random_pos(gr,'n'+i,node_shape,node_radius);
+		add_node_at_random_pos(gr,'n'+i,node_shape,rad);
 		queue.push(i);
 		gr.addLink(ni,i);
 	    }
@@ -190,16 +190,16 @@ function make_tree_graph(nuno,nubr,c=canv) {
     return(gr);
 }
 
-function make_el_graph() {
+function make_el_graph(rad) {
     const gr = new Graph('el');
-	const edges = get_edge_list();
-	const nodes = get_node_list(edges);
-	add_named_nodes(gr,nodes);
-	for(let i in edges) {
-	    if (edges[i].length != 2)
-		continue;
-	    gr.addLink(nodes.indexOf(edges[i][0]),nodes.indexOf(edges[i][1]));
-	}
+    const edges = get_edge_list();
+    const nodes = get_node_list(edges);
+    add_named_nodes(gr,nodes,rad);
+    for(let i in edges) {
+	if (edges[i].length != 2)
+	    continue;
+	gr.addLink(nodes.indexOf(edges[i][0]),nodes.indexOf(edges[i][1]));
+    }
     return(gr);
 }
 
@@ -211,29 +211,31 @@ function start(c2d,
 	       nnodes=100,
 	       nedges=100,
 	       nbranches=2,
+	       nradius=5,
 	       nalpha=0.9) {
     c2d.globalAlpha = nalpha;
     const num_nodes = nnodes;
     const num_edges = nedges;
+    const node_radius = nradius;
     const num_branches = nbranches;
 
     clear_canvas();
 
     switch(graph_algorithm) {
     case 0:
-	g = make_r2r_graph(num_nodes,num_edges);
+	g = make_r2r_graph(num_nodes,num_edges,node_radius);
 	break;
     case 1:
-	g = make_s2r_graph(num_nodes,num_edges);
+	g = make_s2r_graph(num_nodes,num_edges,node_radius);
 	break;
     case 2:
-	g = make_a2a_graph(num_nodes);
+	g = make_a2a_graph(num_nodes,node_radius);
 	break;
     case 3:
-	g = make_tree_graph(num_nodes,num_branches);
+	g = make_tree_graph(num_nodes,node_radius,num_branches);
 	break;
     case 4:
-	g = make_el_graph();
+	g = make_el_graph(node_radius);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorigthm);
