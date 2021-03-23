@@ -1,4 +1,4 @@
 1. inp_vals is not refreshed
-2. settings/restore is very limited
-3. a reset button is also needed to work
+2. restore does not yet work
+
 
