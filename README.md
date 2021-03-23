@@ -10,10 +10,15 @@ The grouping of the nodes peaked my interest. For this reason, simple controls h
       * Unfortunately, Math.random() cannot be seeded by users. Alternative algorithm needs to be adopted.
       * One such: https://github.com/davidbau/seedrandom
 2. physics parameters tweak (attraction, repulsion)
-3. node size/shape
-4. input from file (node + edge list, or edge list only)
+      * Parameters are on slides, not really physics looking, though
+4. node size/shape
+      * size: OK, shape: still to go
+5. input from file (node + edge list, or edge list only)
      * textarea input has been added as an easy start 
-5. adding graph layout algorithms (or additional physics rules)
+6. adding graph layout algorithms (or additional physics rules)
+     * some have been added, some more can still be good
+7. save and restore settings:
+     * work in progress. need to finish
 
 ## Limitations ##
 
