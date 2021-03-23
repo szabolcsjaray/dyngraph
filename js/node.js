@@ -20,12 +20,12 @@ class Node {
         this.name = name;
         this.shape = shape;
 	this.radius = radius;
-        this.fillcolour = rnd.rnd_fil_col ? gen_colour() : cols.fill_colour;
-	this.outlcolour = rnd.rnd_oli_col ? gen_colour() : cols.outline_col;
-        this.linecolour = rnd.rnd_lin_col ? gen_colour() : cols.line_colour;
-	this.tracefillcolour = rnd.rnd_trc_fil ? gen_colour() : cols.trc_fil_col;
-	this.traceoutlcolour = rnd.rnd_trc_oli ? gen_colour() : cols.trc_oli_col;
-	this.tracelinecolour = rnd.rnd_trc_lin ? gen_colour() : cols.trc_lin_col;
+        this.fillcolour = rnd.fill_colour ? gen_colour() : cols.fill_colour;
+	this.outlcolour = rnd.outline_col ? gen_colour() : cols.outline_col;
+        this.linecolour = rnd.line_colour ? gen_colour() : cols.line_colour;
+	this.tracefillcolour = rnd.trc_fil_col ? gen_colour() : cols.trc_fil_col;
+	this.traceoutlcolour = rnd.trc_oli_col ? gen_colour() : cols.trc_oli_col;
+	this.tracelinecolour = rnd.trc_lin_col ? gen_colour() : cols.trc_lin_col;
         this.x = x;
         this.y = y;
         this.links = [];
@@ -88,12 +88,10 @@ class Node {
     }
 
     draw(p,draw_trace) {
-        if (p.fill)
+        if (!p.fill_colour)
 	    this.c2d.fillStyle = draw_trace ? this.tracefillcolour : this.fillcolour;
-	if (p.outl)
-            this.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
 
-	if (p.line)
+	if (!p.line_colour)
             this.c2d.strokeStyle = draw_trace ? this.tracelinecolour : this.linecolour;
         this.c2d.beginPath();
         this.links.forEach(otherNode => {
@@ -102,14 +100,17 @@ class Node {
 	    const coords2 = otherNode.getPointOnCircle(otherNode.angleBetween(this));
             this.c2d.lineTo(coords2[0], coords2[1]);
         });
-	if (p.line)
+	if (!p.line_colour)
             this.c2d.stroke();
 
+	if (!p.outline_col)
+            this.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
+	
 	this.c2d.beginPath();
         this.c2d.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
-	if (p.fill)
+	if (!p.fill_colour)
             this.c2d.fill();
-	if (p.outl)
+	if (!p.outline_col)
 	    this.c2d.stroke();
 
     }

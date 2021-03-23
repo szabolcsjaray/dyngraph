@@ -17,22 +17,12 @@ let offs = 100;
 const node_shape = 'c';
 const time_out = 10;
 const min_num = 0;
-const drw_pairs = {
-    fill: true,
-    outl: true,
-    line: true,
-    tfil: true,
-    toli: true,
-    tlin: true
+const off_pairs = {};
+const rnd_pairs = {};
+for (let a_key in colours) {
+    off_pairs[a_key] = false;
+    rnd_pairs[a_key] = false;
 }
-const rnd_pairs = {
-    rnd_fil_col: false,
-    rnd_oli_col: false,
-    rnd_lin_col: false,
-    rnd_trc_fil: false,
-    rnd_trc_oli: false,
-    rnd_trc_lin: false
-};
 
 function gen_num(nmax,nmin=min_num) {
     if (nmax < nmin) {
@@ -265,26 +255,26 @@ function go_on() {
     animPhase();
 }
 
-function col_sel_change(cb_id,sel_id,v) {
-    const cb = document.getElementById(cb_id);
+function col_sel_change(sel_id) {
+    const cb = document.getElementById('rnd_' + sel_id);
     const sel = document.getElementById(sel_id);
     sel.disabled = cb.checked ? true : false;
-    rnd_pairs[v] = cb.checked ? true : false;
+    rnd_pairs[sel_id] = cb.checked ? true : false;
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
 
-function col_off_change(off_cb_id,rnd_cb_id,sel_id,v) {
-    const off_cb = document.getElementById(off_cb_id);
-    const rnd_cb = document.getElementById(rnd_cb_id);
+function col_off_change(sel_id) {
+    const off_cb = document.getElementById(sel_id + "_off");
+    const rnd_cb = document.getElementById("rnd_" + sel_id);
     const sel = document.getElementById(sel_id);
     if (off_cb.checked) {
 	sel.disabled = true;
 	rnd_cb.disabled = true;
-	drw_pairs[v] = false;
+	off_pairs[sel_id] = true;
     } else {
 	sel.disabled = false;
 	rnd_cb.disabled = false;
-	drw_pairs[v] = true;
+	off_pairs[sel_id] = false;
     }
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
@@ -302,12 +292,12 @@ function check_tracer(t=tracer) {
 }
 
 function animPhase() {
-    g.draw(drw_pairs,true);
+    g.draw(off_pairs,true);
     g.calcForces();
     g.step();
     if(!tracing)
 	clear_canvas();
-    g.draw(drw_pairs,false);
+    g.draw(off_pairs,false);
     if (animate)
         setTimeout(animPhase, time_out);
 }
