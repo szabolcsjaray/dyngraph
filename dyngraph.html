@@ -167,35 +167,35 @@
 	  <table>
 	    <tr>
 	      <td><label>canvas</label></td>
-	      <td><input id="sz_canvas" type="number" value="1000" min="100" max="8192"></input></td>
+	      <td><input id="sz_canvas" type="number" min="100" max="8192"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>nodes</label></td>
-	      <td><input id="nu_nodes" type="number" value="100" min="2" max="1000"></input></td>
+	      <td><input id="nu_nodes" type="number" min="2" max="1000"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>radius</label></td>
-	      <td><input id="sz_radius" type="number" value="5" min="0" max="100"></input></td>
+	      <td><input id="sz_radius" type="number" min="0" max="100"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
-	      <td><input id="nu_edges" type="number" value="100" min="1" max="1000"></input></td>
+	      <td><input id="nu_edges" type="number" min="1" max="1000"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>line width</label></td>
-	      <td><input id="wd_line" type="number" value="1" min="1" max="32"></input></td>
+	      <td><input id="wd_line" type="number" min="1" max="32"></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>branches</label></td>
-	      <td><input id="nu_branches" type="number" value="2" min="1" max="10" disabled></input></td>
+	      <td><input id="nu_branches" type="number" min="1" max="10" disabled></input></td>
 	    </tr>
 	    <tr>
 	      <td><label>scatter</label></td>
-	      <td><input id="nu_scatter" type="number" value="80" min="1" max="100"></input><label>%</label></td>
+	      <td><input id="nu_scatter" type="number" min="1" max="100"></input><label>%</label></td>
 	    </tr>
 	    <tr>
 	      <td><label>alpha</label></td>
-	      <td><input id="nu_alpha" type="number" value="90" min="10" max="100"></input><label>%</label></td>
+	      <td><input id="nu_alpha" type="number" min="10" max="100"></input><label>%</label></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2">
@@ -208,39 +208,39 @@
 		  </tr>
 		  <tr>
 		    <td><label>fill</label></td>
-		    <td class="centred"><input id="fill_col" type="color"></input></td>
-		    <td class="centred"><input id="cb_randfillcol" class="cb" type="checkbox" onchange="col_sel_change('cb_randfillcol','fill_col','rnd_fil_col')"></input></td>
-		    <td class="centred"><input id="cb_fillcoloff" class="cb" type="checkbox" onchange="col_off_change('cb_fillcoloff','cb_randfillcol','fill_col','fill')"></input></td>
+		    <td class="centred"><input id="fill_colour" type="color"></input></td>
+		    <td class="centred"><input id="cb_randfillcol" class="cb" type="checkbox" onchange="col_sel_change('cb_randfillcol','fill_colour','rnd_fil_col')"></input></td>
+		    <td class="centred"><input id="cb_fillcoloff" class="cb" type="checkbox" onchange="col_off_change('cb_fillcoloff','cb_randfillcol','fill_colour','fill')"></input></td>
 		  </tr>
 		  <tr>
 		    <td><label>outline</label></td>
-		    <td class="centred"><input id="outli_col" type="color"></input></td>
-		    <td class="centred"><input id="cb_randoutlicol" class="cb" type="checkbox" onchange="col_sel_change('cb_randoutlicol','outli_col','rnd_oli_col')"></input></td>
-		    <td class="centred"><input id="cb_outlicoloff" class="cb" type="checkbox" onchange="col_off_change('cb_outlicoloff','cb_randoutlicol','outli_col','outl')"></input></td>
+		    <td class="centred"><input id="outline_col" type="color"></input></td>
+		    <td class="centred"><input id="cb_randoutlicol" class="cb" type="checkbox" onchange="col_sel_change('cb_randoutlicol','outline_col','rnd_oli_col')"></input></td>
+		    <td class="centred"><input id="cb_outlicoloff" class="cb" type="checkbox" onchange="col_off_change('cb_outlicoloff','cb_randoutlicol','outline_col','outl')"></input></td>
 		  </tr>
 		  <tr>
 		    <td><label>line</label></td>
-		    <td class="centred"><input id="line_col" type="color"></input></td>
-		    <td class="centred"><input id="cb_randlinecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randlinecol','line_col','rnd_lin_col')"></input></td>
-		    <td class="centred"><input id="cb_linecoloff" class="cb" type="checkbox" onchange="col_off_change('cb_linecoloff','cb_randlinecol','line_col','line')"></input></td>
+		    <td class="centred"><input id="line_colour" type="color"></input></td>
+		    <td class="centred"><input id="cb_randlinecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randlinecol','line_colour','rnd_lin_col')"></input></td>
+		    <td class="centred"><input id="cb_linecoloff" class="cb" type="checkbox" onchange="col_off_change('cb_linecoloff','cb_randlinecol','line_colour','line')"></input></td>
 		  </tr>
 		  <tr>
 		    <td><label>trace fill</label></td>
-		    <td class="centred"><input id="trace_fill" type="color"></input></td>
-		    <td class="centred"><input id="cb_randtracecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randtracecol','trace_fill','rnd_trc_fil')"></input></td>
-		    <td class="centred"><input id="cb_tracecoloff" class="cb" type="checkbox" onchange="col_off_change('cb_tracecoloff','cb_randtracecol','trace_fill','tfil')" disabled></input></td>
+		    <td class="centred"><input id="trc_fil_col" type="color"></input></td>
+		    <td class="centred"><input id="cb_randtracecol" class="cb" type="checkbox" onchange="col_sel_change('cb_randtracecol','trc_fil_col','rnd_trc_fil')"></input></td>
+		    <td class="centred"><input id="cb_tracecoloff" class="cb" type="checkbox" onchange="col_off_change('cb_tracecoloff','cb_randtracecol','trc_fil_col','tfil')" disabled></input></td>
 		  </tr>
 		  <tr>
 		    <td><label>trace outl.</label></td>
-		    <td class="centred"><input id="trace_outline" type="color"></input></td>
-		    <td class="centred"><input id="cb_randtraceoutl" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceoutl','trace_outline','rnd_trc_oli')"></input></td>
-		    <td class="centred"><input id="cb_traceoutloff" class="cb" type="checkbox" onchange="col_off_change('cb_traceoutloff','cb_randtraceoutl','trace_outline','toli')" disabled></input></td>
+		    <td class="centred"><input id="trc_oli_col" type="color"></input></td>
+		    <td class="centred"><input id="cb_randtraceoutl" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceoutl','trc_oli_col','rnd_trc_oli')"></input></td>
+		    <td class="centred"><input id="cb_traceoutloff" class="cb" type="checkbox" onchange="col_off_change('cb_traceoutloff','cb_randtraceoutl','trc_oli_col','toli')" disabled></input></td>
 		  </tr>
 		  <tr>
 		    <td><label>trace line</label></td>
-		    <td class="centred"><input id="trace_line" type="color"></input></td>
-		    <td class="centred"><input id="cb_randtraceline" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceline','trace_line','rnd_trc_lin')"></input></td>
-		    <td class="centred"><input id="cb_tracefilloff" class="cb" type="checkbox" onchange="col_off_change('cb_tracefilloff','cb_randtraceline','trace_line','tlin')" disabled></input></td>
+		    <td class="centred"><input id="trc_lin_col" type="color"></input></td>
+		    <td class="centred"><input id="cb_randtraceline" class="cb" type="checkbox" onchange="col_sel_change('cb_randtraceline','trc_lin_col','rnd_trc_lin')"></input></td>
+		    <td class="centred"><input id="cb_tracefilloff" class="cb" type="checkbox" onchange="col_off_change('cb_tracefilloff','cb_randtraceline','trc_lin_col','tlin')" disabled></input></td>
 		  </tr>
 		</table>
 	      </td>
@@ -345,6 +345,7 @@
 	const inp_vals_map = {};
 	for (let a_val in inp_vals) {
 	    inp_vals_map[a_val] = document.getElementById(a_val);
+	    inp_vals_map[a_val].value = inp_vals[a_val];
 	}
 	inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(canv,this.value);});
 	inp_vals_map.sz_radius.addEventListener("change",function() {resize_nodes(Number(this.value));});
@@ -363,14 +364,10 @@
 	const btn_print = document.getElementById("btn_print");
 	const btn_clear = document.getElementById("btn_clear");
 	const btn_rm_lone = document.getElementById("btn_rm_lone");
-	const col_sels = {
-	    fill_colour: document.getElementById("fill_col"),
-	    outline_col: document.getElementById("outli_col"),
-	    line_colour: document.getElementById("line_col"),
-	    trc_fil_col: document.getElementById("trace_fill"),
-	    trc_oli_col: document.getElementById("trace_outline"),
-	    trc_lin_col: document.getElementById("trace_line"),
-	};
+	const col_sels = {};
+	for (let a_key in colours)
+	    col_sels[a_key] = document.getElementById(a_key);
+
 	const map_node_params = {};
 	for (let it in node_params) {
 	    map_node_params[it] = [];
