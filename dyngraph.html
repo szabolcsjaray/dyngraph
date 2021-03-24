@@ -10,11 +10,13 @@
         <script src="js/graph.js"></script>
 	<script type="text/javascript">
 	  function config() {
-	      check_tracer();
-	      // document.getElementById("sel_graphalgs").value = '0'; // does not help when tabs are restored
 	      for (let it in col_sels)
 	       	  col_sels[it].value = colours[it];
+	      inp_vals_map.sz_canvas.dispatchEvent(new Event('change'));
+	      inp_vals_map.wd_line.dispatchEvent(new Event('change'));
 	      inp_vals_map.nu_alpha.dispatchEvent(new Event("change"));
+	      tracer.dispatchEvent(new Event('change'));
+	      // document.getElementById("sel_graphalgs").value = '0'; // does not help when tabs are restored
 	  }
 	  function remove_unconnected() {
 	      const edge_list = get_edge_list();
@@ -64,10 +66,10 @@
 	      }
 	      set_graph_alg(seli);
 	  }
-	  function resize_canvas(c,sz,sc_id="nu_scatter") {
-	      c.width = sz;
-	      c.height = sz;
-	      update_scatter(sc_id);
+	  function resize_canvas(sz) {
+	      canv.width = sz;
+	      canv.height = sz;
+	      update_scatter(inp_vals_map.nu_scatter.value);
 	  }
 	</script>
 	<style type="text/css">
@@ -263,7 +265,7 @@
 	      <td><input type="button" class="button1" id="btn_start" onClick="restart()" value="Restart" /></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><input type="file" id="infilename" disabled></td>
+	      <td colspan="2"><input type="file" id="infilename"></td>
 	    </tr>
 	    <tr>
 	      
@@ -324,10 +326,10 @@
 	    </tr>
 	  </table>
 	</div>
-	<div class="column" id="canvas_space"><canvas id="cv_canv" width="1000" height="1000" onclick="pause_or_continue(btn_pause_conti)" ondblclick="clear_canvas()"></canvas></div>
+	<div class="column" id="canvas_space"><canvas id="cv_canv" onclick="pause_or_continue(btn_pause_conti)" ondblclick="clear_canvas()"></canvas></div>
       </div>
       <script type="text/javascript">
-	const canv = document.getElementById("cv_canv");
+	const canv = document.getElementById("cv_canv")
 	const c2d = canv.getContext("2d");
 	const inp_vals = {
 	    sz_canvas: 1000,
@@ -347,12 +349,17 @@
 	    inp_vals_map[a_val] = document.getElementById(a_val);
 	    inp_vals_map[a_val].value = inp_vals[a_val];
 	}
-	inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(canv,this.value);});
+	inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(this.value);});
 	inp_vals_map.sz_radius.addEventListener("change",function() {resize_nodes(Number(this.value));});
 	inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
 	inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
 	inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});
 
+	function save_to_inp_vals() {
+	    for (let a_val in inp_vals)
+		 inp_vals[a_val] = inp_vals_map[a_val].value;
+	}
+	
 	const tracer = document.getElementById("cb_tracing");
 	tracer.addEventListener("change",function() { check_tracer(); });
 
@@ -407,9 +414,16 @@
 	freader.onload = function( ev ) {
 	    const contents = JSON.parse( decodeURIComponent( ev.target.result ) );
 	    //console.log(contents);
-	    load_cols(contents);
-	    
-	    // execute follow-up work here...
+	    infn.value = "";
+	    for(let a_key in inp_vals)
+		inp_vals_map[a_key].value = contents.inp_vals[a_key];
+	    load_cols(contents.colours);
+	    for(let a_key in node_params) {
+		node_params[a_key] = contents.node_params[a_key];
+		map_node_params[a_key][0].value = contents.node_params[a_key];
+	    }
+	    config();
+	    restart();
 	};
 	// when it changes (ie: user selects a file)
 	infn.addEventListener("change", function() {
@@ -438,6 +452,7 @@
 	    const fn = document.getElementById(fn_id).value;
 	    let hiddenElement = document.createElement('a');
 	    const out_val = {};
+	    save_to_inp_vals();
 	    out_val.inp_vals = inp_vals;
 	    out_val.colours = colours;
 	    out_val.node_params = node_params;
