@@ -157,6 +157,24 @@ function make_a2a_graph(nuno,rad) {
     return(gr);
 }
 
+function make_circular_graph(nuno,rad) {
+    const gr = new Graph('circular');
+    add_nodes(gr,nuno,rad);
+    let i;
+    for(i = 1; i < nuno; ++i)
+	gr.addLink(i-1,i);
+    gr.addLink(i-1,0);
+    return(gr);
+}
+
+function make_central_graph(nuno,rad) {
+    const gr = new Graph('central');
+    add_nodes(gr,nuno,rad);
+    for(let i = 1; i < nuno; ++i)
+	gr.addLink(0,i);
+    return(gr);
+}
+
 function make_tree_graph(nuno,rad,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     const queue = [];
@@ -225,6 +243,12 @@ function start(c2d,
 	break;
     case 4:
 	g = make_el_graph(node_radius);
+	break;
+    case 5:
+	g = make_circular_graph(num_nodes,node_radius);
+	break;
+    case 6:
+	g = make_central_graph(num_nodes,node_radius);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorigthm);
