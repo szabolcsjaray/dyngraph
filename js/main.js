@@ -167,6 +167,15 @@ function make_circular_graph(nuno,rad) {
     return(gr);
 }
 
+function make_linear_graph(nuno,rad) {
+    const gr = new Graph('circular');
+    add_nodes(gr,nuno,rad);
+    for(let i = 1; i < nuno; ++i)
+	gr.addLink(i-1,i);
+    return(gr);
+}
+
+
 function make_central_graph(nuno,rad) {
     const gr = new Graph('central');
     add_nodes(gr,nuno,rad);
@@ -249,6 +258,9 @@ function start(c2d,
 	break;
     case 6:
 	g = make_central_graph(num_nodes,node_radius);
+	break;
+    case 7:
+	g = make_linear_graph(num_nodes,node_radius);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorigthm);
