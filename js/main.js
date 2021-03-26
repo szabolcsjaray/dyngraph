@@ -184,6 +184,38 @@ function make_central_graph(nuno,rad) {
     return(gr);
 }
 
+function make_ladder_graph(nuno,rad) {
+    const gr = new Graph('ladder');
+    if (nuno % 2 != 0)
+	++nuno;
+    add_nodes(gr,nuno,rad);
+    if (nuno == 0)
+	return gr;
+    gr.addLink(0,1);
+    for (let i = 2; i < nuno; i+=2) {
+	gr.addLink(i-2,i);
+	gr.addLink(i-1,i+1);
+	gr.addLink(i,i+1);
+	}
+    return(gr);
+}
+
+function make_matrix_graph(nuno,rad) {
+    const gr = new Graph('ladder');
+    const d = Math.ceil(Math.sqrt(nuno));
+    add_nodes(gr,Math.pow(d,2),rad);
+    let n = 0;
+    for(let i = 0; i < d; ++i) {
+	for(let j = 0; j < d; ++j,++n) {
+	    if(j>0)
+		gr.addLink(n-1,n);
+	    if(i>0)
+		gr.addLink(n-d,n);
+	}
+    }
+    return(gr);
+}
+
 function make_tree_graph(nuno,rad,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     const queue = [];
@@ -261,6 +293,12 @@ function start(c2d,
 	break;
     case 7:
 	g = make_linear_graph(num_nodes,node_radius);
+	break;
+    case 8:
+	g = make_ladder_graph(num_nodes,node_radius);
+	break;
+    case 9:
+	g = make_matrix_graph(num_nodes,node_radius);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorigthm);
