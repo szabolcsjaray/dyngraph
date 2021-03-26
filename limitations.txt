@@ -1,0 +1,1 @@
+1. only numeric values are saved (not checkboxes, figure, edges)
