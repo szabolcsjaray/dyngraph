@@ -184,6 +184,21 @@ function make_central_graph(nuno,rad) {
     return(gr);
 }
 
+function make_triangulated_graph(nuno,rad) {
+    const gr = new Graph('triangulated');
+    add_nodes(gr,nuno,rad);
+    if (nuno <= 1)
+	return(gr);
+    gr.addLink(0,1);
+    let i;
+    for(i = 2; i < nuno; ++i) {
+	gr.addLink(0,i);
+	gr.addLink(i-1,i);
+    }
+    gr.addLink(i-1,1);
+    return(gr);
+}
+
 function make_ladder_graph(nuno,rad) {
     const gr = new Graph('ladder');
     if (nuno % 2 != 0)
@@ -299,6 +314,9 @@ function start(c2d,
 	break;
     case 9:
 	g = make_matrix_graph(num_nodes,node_radius);
+	break;
+    case 10:
+	g = make_triangulated_graph(num_nodes,node_radius);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorigthm);
