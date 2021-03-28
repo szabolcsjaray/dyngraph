@@ -24,6 +24,10 @@ for (let a_key in colours) {
     rnd_pairs[a_key] = false;
 }
 
+function nudge(dir) {
+    g.nudge(dir);
+}
+
 function gen_num(nmax,nmin=min_num) {
     if (nmax < nmin) {
 	const tmp = nmax;

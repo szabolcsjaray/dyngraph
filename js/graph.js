@@ -37,6 +37,27 @@ class Graph {
 
     }
 
+    nudge(dir) {
+	this.ns.forEach( node => {
+	    switch(dir) {
+	    case 'up':
+		node.move_up();
+		break;
+	    case 'down':
+		node.move_down();
+		break;
+	    case 'left':
+		node.move_left();
+		break;
+	    case 'right':
+		node.move_right();
+		break;
+	    default:
+		console.log("Undefined direction: " + dir);
+	    }
+        });
+    }
+    
     step() {
         this.calcForces();
         this.ns.forEach( node => {

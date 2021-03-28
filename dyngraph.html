@@ -310,6 +310,11 @@
 		    <td><input type="range" min="0" max="200" value="100" step="10" class="slider" id="slider_dist_threshold")></td>
 		    <td class="right"><span id="span_dist_threshold">100</span></td>
 		  </tr>
+		  <tr>
+		    <td>Nudge size</td>
+		    <td><input type="range" min="1" max="20" value="5" step="1" class="slider" id="slider_nudge_size")></td>
+		    <td class="right"><span id="span_nudge_size">5</span></td>
+		  </tr>
 		</table>
 	      </td>
 	    </tr>
@@ -474,7 +479,7 @@
 	    hiddenElement.download = fn;
 	    hiddenElement.click();
 	}
-
+	
 	document.addEventListener('keydown', (event) => {
 	    const keyName = event.key;
 	    //console.log(keyName);
@@ -483,19 +488,32 @@
 	    if (keyName == 'Pause') {
 		pause_or_continue(btn_pause_conti);
 	    }
-	    if (event.ctrlKey && event.altKey && event.key == 'c')
+	    if (event.ctrlKey && event.altKey && keyName == 'c')
 		btn_clear.dispatchEvent(new Event("click"));
 	    if (event.ctrlKey && event.altKey &&  keyName == 'p')
 		btn_print.dispatchEvent(new Event("click"));
-	    if (event.ctrlKey && event.altKey && event.key == 'r')
+	    if (event.ctrlKey && event.altKey && keyName == 'r')
 		btn_rm_lone.dispatchEvent(new Event("click"));
-	    if (event.ctrlKey && event.altKey && event.key == 't') {
+	    if (event.ctrlKey && event.altKey && keyName == 't') {
 		if(tracer.checked)
 		    tracer.checked = false;
 		else
 		    tracer.checked = true;
 		tracer.dispatchEvent(new Event("change"));
 	    }
+	    if (event.ctrlKey && event.shiftKey && keyName == 'ArrowUp') {
+		nudge('up');
+	    }
+	    if (event.ctrlKey && event.shiftKey && keyName == 'ArrowDown') {
+		nudge('down');
+	    }
+	    if (event.ctrlKey && event.shiftKey && keyName == 'ArrowLeft') {
+		nudge('left');
+	    }
+	    if (event.ctrlKey && event.shiftKey && keyName == 'ArrowRight') {
+		nudge('right');
+	    }
+
 	}, false);
       </script>
     </body>

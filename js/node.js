@@ -5,6 +5,7 @@ const node_params = {
     large_dist_div:  40,
     small_dist_div:  30,
     dist_threshold: 100,
+    nudge_size: 5,
 };
 
 function modify_params(param,value) {
@@ -68,6 +69,23 @@ class Node {
         this.resetForce();
     }
 
+    move_up() {
+	this.y -= node_params.nudge_size;
+    }
+
+    move_down() {
+	this.y += node_params.nudge_size;
+    }
+
+    move_left() {
+	this.x -= node_params.nudge_size;
+    }
+
+    move_right() {
+	this.x += node_params.nudge_size;
+    }
+
+    
     addLink(otherNode) {
         this.links.push(otherNode);
         otherNode.addBacklink(this);
