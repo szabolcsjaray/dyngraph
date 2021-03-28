@@ -282,38 +282,38 @@
 		<table>
 		  <tr>
 		    <td>Max Link Threshold</td>
-		    <td><input type="range" min="0" max="200" value="30" step="10" class="slider" id="slider_link_max_length")></td>
-		    <td class="right"><span id="span_link_max_length">30</span></td>
+		    <td><input type="range" min="0" max="200" step="10" class="slider" id="slider_link_max_length")></td>
+		    <td class="right"><span id="span_link_max_length"></span></td>
 		  </tr>
 		  <tr>
 		    <td>Min Link Threshold</td>
-		    <td><input type="range" min="0" max="200" value="20" step="10" class="slider" id="slider_link_min_length")></td>
-		    <td class="right"><span id="span_link_min_length">20</span></td>
+		    <td><input type="range" min="0" max="200" step="10" class="slider" id="slider_link_min_length")></td>
+		    <td class="right"><span id="span_link_min_length"></span></td>
 		  </tr>
 		  <tr>
 		    <td>Distance Modifier</td>
-		    <td><input type="range" min="0" max="600" value="10" step="10" class="slider" id="slider_dist_modifier")></td>
-		    <td class="right"><span id="span_dist_modifier">20</span></td>
+		    <td><input type="range" min="0" max="600" step="10" class="slider" id="slider_dist_modifier")></td>
+		    <td class="right"><span id="span_dist_modifier"></span></td>
 		  </tr>
 		  <tr>
 		    <td>Large Distance Divisor</td>
-		    <td><input type="range" min="0" max="200" value="40" step="10" class="slider" id="slider_large_dist_div")></td>
-		    <td class="right"><span id="span_large_dist_div">40</span></td>
+		    <td><input type="range" min="0" max="200" step="10" class="slider" id="slider_large_dist_div")></td>
+		    <td class="right"><span id="span_large_dist_div"></span></td>
 		  </tr>
 		  <tr>
 		    <td>Small Distance Divisor</td>
-		    <td><input type="range" min="0" max="200" value="30" step="10" class="slider" id="slider_small_dist_div")></td>
-		    <td class="right"><span id="span_small_dist_div">30</span></td>
+		    <td><input type="range" min="0" max="200" step="10" class="slider" id="slider_small_dist_div")></td>
+		    <td class="right"><span id="span_small_dist_div"></span></td>
 		  </tr>
 		  <tr>
 		    <td>Distance Threshold</td>
-		    <td><input type="range" min="0" max="200" value="100" step="10" class="slider" id="slider_dist_threshold")></td>
-		    <td class="right"><span id="span_dist_threshold">100</span></td>
+		    <td><input type="range" min="0" max="200" step="10" class="slider" id="slider_dist_threshold")></td>
+		    <td class="right"><span id="span_dist_threshold"></span></td>
 		  </tr>
 		  <tr>
 		    <td>Nudge size</td>
-		    <td><input type="range" min="1" max="20" value="5" step="1" class="slider" id="slider_nudge_size")></td>
-		    <td class="right"><span id="span_nudge_size">5</span></td>
+		    <td><input type="range" min="1" max="20" step="1" class="slider" id="slider_nudge_size")></td>
+		    <td class="right"><span id="span_nudge_size"></span></td>
 		  </tr>
 		</table>
 	      </td>
@@ -403,7 +403,9 @@
 	for (let it in node_params) {
 	    map_node_params[it] = [];
 	    map_node_params[it].push(document.getElementById("slider_"+it));
+	    map_node_params[it][0].value = node_params[it];
 	    map_node_params[it].push(document.getElementById("span_"+it));
+	    map_node_params[it][1].innerHTML = node_params[it];
 	    map_node_params[it][0].oninput = function() {
 		modify_params(it,Number(this.value));
 		map_node_params[it][1].innerHTML = this.value;
