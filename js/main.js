@@ -14,7 +14,7 @@ let animate;
 let scatter = 0.8;
 let scat = 800;
 let offs = 100;
-const node_shape = 'c';
+let node_shape;
 const time_out = 10;
 const min_num = 0;
 const off_pairs = {};
@@ -26,6 +26,12 @@ for (let a_key in colours) {
 
 function nudge(dir) {
     g.nudge(dir);
+}
+
+function change_shape(sel_id) {
+    const sels = document.getElementById(sel_id);
+    const seli = sels.selectedIndex;
+    node_shape = sels[seli].value;
 }
 
 function gen_num(nmax,nmin=min_num) {

@@ -16,6 +16,7 @@
 	      inp_vals_map.wd_line.dispatchEvent(new Event('change'));
 	      inp_vals_map.nu_alpha.dispatchEvent(new Event("change"));
 	      tracer.dispatchEvent(new Event('change'));
+	      document.getElementById("sel_shape").dispatchEvent(new Event("change"));
 	      // document.getElementById("sel_graphalgs").value = '0'; // does not help when tabs are restored
 	  }
 	  function remove_unconnected() {
@@ -44,8 +45,7 @@
 	       	  params[a_key].disabled = !scen_map[scen][a_key];
 	  }
 	  function proc_sel_graphalg(sel_id) {
-	      const selg = document.getElementById(sel_id);
-	      const seli = selg.selectedIndex;
+	      const seli = document.getElementById(sel_id).selectedIndex;
 	      console.log("alg selected: " + seli);
 	      switch (seli) {
 	      case 0:
@@ -172,18 +172,10 @@
     <body onload="config();restart();">
       <div id="main_container">
         <div class="column" id="panel_space">
-	  <table>
+	  <table id="tbl_shape">
 	    <tr>
-	      <td><label>canvas</label></td>
+	      <td class="button1"><label>canvas</label></td>
 	      <td><input id="sz_canvas" type="number" min="100" max="8192" /></td>
-	    </tr>
-	    <tr>
-	      <td><label>nodes</label></td>
-	      <td><input id="nu_nodes" type="number" min="2" max="1000" /></td>
-	    </tr>
-	    <tr>
-	      <td><label>radius</label></td>
-	      <td><input id="sz_radius" type="number" min="0" max="100" /></td>
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
@@ -194,7 +186,28 @@
 	      <td><input id="wd_line" type="number" min="1" max="32" /></td>
 	    </tr>
 	    <tr>
-	      <td><label>branches</label></td>
+	      <td><label>nodes</label></td>
+	      <td><input id="nu_nodes" type="number" min="2" max="1000" /></td>
+	    </tr>
+	    <tr>
+	      <td><label>shape</label></td>
+	      <td><select class="button1" id="sel_shape" onchange="proc_shape_sel('sel_shape','node_dim_target')">
+		  <option value="c" selected>circle</option>
+		  <option value="s">square</option>
+		  <option value="e">ellipse</option>
+		  <option value="r">rectangle</option>
+		</select></td>
+	    </tr>
+	  </table>
+	  <div id="node_dim_target">
+	  </div>
+	  <table id="tbl_graph">
+	    <tr>
+	      <td><label>radius</label></td>
+	      <td><input id="sz_radius" type="number" min="0" max="100" /></td>
+	    </tr>
+	    <tr>
+	      <td class="button1"><label>branches</label></td>
 	      <td><input id="nu_branches" type="number" min="1" max="10" disabled></td>
 	    </tr>
 	    <tr>
@@ -502,6 +515,79 @@
 	    hiddenElement.target = '_blank';
 	    hiddenElement.download = fn;
 	    hiddenElement.click();
+	}
+
+	function add_table_rows(tbl,row_data) {
+	    const tbdy = tbl.createTBody();
+	    for(let rowind in row_data) {
+		const tr = tbdy.insertRow();
+		for(let rowtxt in row_data[rowind]) {
+		    console.log(rowtxt);
+		    const td = tr.insertCell();
+		    td.setAttribute("class","button1");
+		    const lbl = document.createElement("label");
+		    lbl.innerHTML = rowtxt;
+		    //const txt = document.createTextNode(rowtxt);
+		    td.appendChild(lbl);
+		    for(let celltag in row_data[rowind][rowtxt]) {
+			const td = tr.insertCell();
+			const cellcont = document.createElement(celltag);
+			for(let attrib in row_data[rowind][rowtxt][celltag])
+			    cellcont.setAttribute(attrib,row_data[rowind][rowtxt][celltag][attrib]);
+			td.appendChild(cellcont);
+		    }
+		}
+	    }
+	}
+	function create_table(target_id,tr_data) {
+	    target = document.getElementById(target_id);
+	    while(target.childNodes.length > 0)
+		target.removeChild(target.childNodes[0]);
+	    const t = document.createElement("table");
+	    const thead = t.createTHead();
+	    t.appendChild(thead);
+	    add_table_rows(t,tr_data);
+	    target.appendChild(t);
+	}
+	function set_shape_params(shape) {
+	    switch (shape) {
+	    case 'c':
+		return(['radius']);
+	    case 'e':
+		return(['radius1','radius2']);
+	    case 'r':
+		return(['width','height']);
+	    case 's':
+		return(['side']);
+	    default:
+		console.log("Unknown shape:"+shape);
+	    }
+	}
+	function prep_tr_data(labels) {
+	    const out_arr = [];
+	    const def_tag = "input";
+	    const def_attribs = {
+		"type" : "number",
+		"id"   : "inp_",
+		"min"  : "0",
+		"max"  : "100",
+		"value": "5"
+	    }
+	    for(let i in labels) {
+		const it = {};
+		it[labels[i]] = {};
+		it[labels[i]][def_tag] = {};
+		for(let attr in def_attribs) {
+		    it[labels[i]][def_tag][attr] = (attr == "id") ? def_attribs[attr] + labels[i] : def_attribs[attr];
+		}
+		out_arr.push(it);
+	    }
+	    return(out_arr);
+	}
+	
+	function proc_shape_sel(sel_id,targ_id) {
+	    change_shape(sel_id);
+	    create_table(targ_id,prep_tr_data(set_shape_params(node_shape)));
 	}
 	
 	document.addEventListener('keydown', (event) => {
