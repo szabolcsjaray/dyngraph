@@ -65,9 +65,10 @@ class Graph {
         });
     }
 
-    resize_nodes(new_size) {
+    resize_nodes(new_size0,new_size1) {
 	this.ns.forEach( node => {
-            node.radius=new_size;
+            node.size0=new_size0;
+	    node.size1=new_size1;
         });
     }
 

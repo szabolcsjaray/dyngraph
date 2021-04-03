@@ -17,10 +17,11 @@ function modify_params(param,value) {
 }
 
 class Node {
-    constructor( name, shape, radius, cols, rnd, x, y, c2d) {
+    constructor( name, shape, size0, size1, cols, rnd, x, y, c2d) {
         this.name = name;
         this.shape = shape;
-	this.radius = radius;
+	this.size0 = size0;
+	this.size1 = size1;
         this.fillcolour = rnd.fill_colour ? gen_colour() : cols.fill_colour;
 	this.outlcolour = rnd.outline_col ? gen_colour() : cols.outline_col;
         this.linecolour = rnd.line_colour ? gen_colour() : cols.line_colour;
@@ -125,7 +126,16 @@ class Node {
             this.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
 	
 	this.c2d.beginPath();
-        this.c2d.arc(this.x, this.y, this.radius, 0, 2*Math.PI);
+	switch(this.shape) {
+	case 'c':
+	case 'e':
+            this.c2d.ellipse(this.x, this.y, this.size0, this.size1, 0, 0, 2*Math.PI);
+	    break;
+	case 's':
+	case 'r':
+	    this.c2d.rect(this.x, this.y, this.size0, this.size1);
+	    break;
+	}
 	if (!p.fill_colour)
             this.c2d.fill();
 	if (!p.outline_col)
@@ -144,8 +154,8 @@ class Node {
     getPointOnCircle(radians) {
 	radians = radians - Math.PI/2; // 0 becomes the top
 	// Calculate the outter point of the line
-	return [Math.round(this.x + Math.cos(radians) * this.radius),  // pos x
-		Math.round(this.y + Math.sin(radians) * this.radius)]; // pos y
+	return [Math.round(this.x + Math.cos(radians) * this.size0),  // pos x
+		Math.round(this.y + Math.sin(radians) * this.size0)]; // pos y
     }
 
     status() {

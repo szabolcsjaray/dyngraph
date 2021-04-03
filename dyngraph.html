@@ -12,11 +12,12 @@
 	  function config() {
 	      for (let it in col_sels)
 	       	  col_sels[it].value = colours[it];
+	      tracer.dispatchEvent(new Event('change'));
+	      document.getElementById("sel_shape").dispatchEvent(new Event("change"));
+	      setup_inp_vals_map();
 	      inp_vals_map.sz_canvas.dispatchEvent(new Event('change'));
 	      inp_vals_map.wd_line.dispatchEvent(new Event('change'));
 	      inp_vals_map.nu_alpha.dispatchEvent(new Event("change"));
-	      tracer.dispatchEvent(new Event('change'));
-	      document.getElementById("sel_shape").dispatchEvent(new Event("change"));
 	      // document.getElementById("sel_graphalgs").value = '0'; // does not help when tabs are restored
 	  }
 	  function remove_unconnected() {
@@ -202,10 +203,10 @@
 	  <div id="node_dim_target">
 	  </div>
 	  <table id="tbl_graph">
-	    <tr>
-	      <td><label>radius</label></td>
-	      <td><input id="sz_radius" type="number" min="0" max="100" /></td>
-	    </tr>
+	    <!-- <tr> -->
+	    <!--   <td><label>radius</label></td> -->
+	    <!--   <td><input id="sz_radius" type="number" min="0" max="100" /></td> -->
+	    <!-- </tr> -->
 	    <tr>
 	      <td class="button1"><label>branches</label></td>
 	      <td><input id="nu_branches" type="number" min="1" max="10" disabled></td>
@@ -384,12 +385,12 @@
 	const canv = document.getElementById("cv_canv")
 	const c2d = canv.getContext("2d");
 	const inp_vals = {
-	    sz_canvas: 1000,
-	    nu_nodes:   100,
-	    sz_radius:    5,
-	    nu_edges:   100,
-	    wd_line:      1,
-	    nu_branches:  2,
+	    sz_canvas:  1000,
+	    nu_nodes:    100,
+	    inp_nodesize0: 5,
+	    nu_edges:    100,
+	    wd_line:       1,
+	    nu_branches:   2,
 	    nu_scatter:   80,
 	    nu_alpha:     90,
 	}
@@ -397,15 +398,17 @@
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);
 	}
 	const inp_vals_map = {};
-	for (let a_val in inp_vals) {
-	    inp_vals_map[a_val] = document.getElementById(a_val);
-	    inp_vals_map[a_val].value = inp_vals[a_val];
+	function setup_inp_vals_map() {
+	    for (let a_val in inp_vals) {
+		inp_vals_map[a_val] = document.getElementById(a_val);
+		inp_vals_map[a_val].value = inp_vals[a_val];
+	    }
+	    inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(this.value);});
+	    //inp_vals_map.inp_nodesize0.addEventListener("change",function() {resize_nodes(Number(this.value));});
+	    inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
+	    inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
+	    inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});
 	}
-	inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(this.value);});
-	inp_vals_map.sz_radius.addEventListener("change",function() {resize_nodes(Number(this.value));});
-	inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
-	inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
-	inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});
 
 	function save_to_inp_vals() {
 	    for (let a_val in inp_vals)
@@ -453,7 +456,8 @@
 		  Number(inp_vals_map.nu_nodes.value),
 		  Number(inp_vals_map.nu_edges.value),
 		  Number(inp_vals_map.nu_branches.value),
-		  Number(inp_vals_map.sz_radius.value),
+		  Number(inp_vals_map.inp_nodesize0.value),
+		  Number(inp_vals_map.inp_nodesize0.value),
 		  Number(inp_vals_map.nu_alpha.value)
 		 );
 	}
@@ -568,17 +572,18 @@
 	    const def_tag = "input";
 	    const def_attribs = {
 		"type" : "number",
-		"id"   : "inp_",
+		"id"   : "inp_nodesize",
 		"min"  : "0",
 		"max"  : "100",
-		"value": "5"
+		"value": "5",
+		"onchange" : "resize_nodes('inp_nodesize0','inp_nodesize1')",
 	    }
 	    for(let i in labels) {
 		const it = {};
 		it[labels[i]] = {};
 		it[labels[i]][def_tag] = {};
 		for(let attr in def_attribs) {
-		    it[labels[i]][def_tag][attr] = (attr == "id") ? def_attribs[attr] + labels[i] : def_attribs[attr];
+		    it[labels[i]][def_tag][attr] = (attr == "id") ? def_attribs[attr] + i : def_attribs[attr];
 		}
 		out_arr.push(it);
 	    }

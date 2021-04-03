@@ -69,8 +69,12 @@ function resize_linewidth(sz) {
     c2d.lineWidth = sz;
 }
 
-function resize_nodes(sz) {
-    g.resize_nodes(sz);
+function resize_nodes(sz_id0,sz_id1) {
+    const sz0 = document.getElementById(sz_id0);
+    let sz1 = document.getElementById(sz_id1);
+    if (!sz1)
+	sz1 = sz0;
+    g.resize_nodes(sz0.value,sz1.value);
 }
 
 function update_scatter(scatter_value,c=canv) {
@@ -84,8 +88,8 @@ function set_graph_alg(a) {
     graph_algorithm = Number(a);
 }
 
-function add_node_at_random_pos(gr,name,shape,radius) {
-    gr.addNode(new Node(name, shape, radius,
+function add_node_at_random_pos(gr,name,shape,size0,size1=0) {
+    gr.addNode(new Node(name, shape, size0, size1,
 			colours,
 			rnd_pairs,
 			Math.random()*scat+offs,
@@ -96,9 +100,9 @@ function print_edges(target) {
     target.value = g.get_edge_list();
 }
 
-function add_nodes(g, num, rad) {
+function add_nodes(g, num, siz0, siz1) {
     for(let i = 0;i<num;i++)
-	add_node_at_random_pos(g,'n'+i,node_shape,rad);
+	add_node_at_random_pos(g,'n'+i,node_shape,siz0,siz1);
 }
 
 function add_named_nodes(g,node_names,rad) {
@@ -129,9 +133,9 @@ function get_node_list(edges) {
     return nodes;
 }
 
-function make_r2r_graph(nuno,nued,rad) {
+function make_r2r_graph(nuno,nued,siz0,siz1) {
     const gr = new Graph('r2r'); 
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
     for(let i = 0;i<nued;++i) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
@@ -141,9 +145,9 @@ function make_r2r_graph(nuno,nued,rad) {
     return(gr);
 }
 
-function make_s2r_graph(nuno,nued,rad) {
+function make_s2r_graph(nuno,nued,siz0,siz1) {
     const gr = new Graph('s2r');
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
     let n = 0;
     for(let i = 0;i < nued;++i,++n) {
 	if (n == nuno)
@@ -156,9 +160,9 @@ function make_s2r_graph(nuno,nued,rad) {
     return(gr);
 }
 
-function make_a2a_graph(nuno,rad) {
+function make_a2a_graph(nuno,siz0,siz1) {
     const gr = new Graph('a2a');
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
 
     for(let i = 0;i < nuno;++i)
 	for (let j = i; j < nuno; ++j)
@@ -167,9 +171,9 @@ function make_a2a_graph(nuno,rad) {
     return(gr);
 }
 
-function make_circular_graph(nuno,rad) {
+function make_circular_graph(nuno,siz0,siz1) {
     const gr = new Graph('circular');
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
     let i;
     for(i = 1; i < nuno; ++i)
 	gr.addLink(i-1,i);
@@ -177,26 +181,26 @@ function make_circular_graph(nuno,rad) {
     return(gr);
 }
 
-function make_linear_graph(nuno,rad) {
+function make_linear_graph(nuno,siz0,siz1) {
     const gr = new Graph('circular');
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
     for(let i = 1; i < nuno; ++i)
 	gr.addLink(i-1,i);
     return(gr);
 }
 
 
-function make_central_graph(nuno,rad) {
+function make_central_graph(nuno,siz0,siz1) {
     const gr = new Graph('central');
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
     for(let i = 1; i < nuno; ++i)
 	gr.addLink(0,i);
     return(gr);
 }
 
-function make_triangulated_graph(nuno,rad) {
+function make_triangulated_graph(nuno,siz0,siz1) {
     const gr = new Graph('triangulated');
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
     if (nuno <= 1)
 	return(gr);
     gr.addLink(0,1);
@@ -209,11 +213,11 @@ function make_triangulated_graph(nuno,rad) {
     return(gr);
 }
 
-function make_ladder_graph(nuno,rad) {
+function make_ladder_graph(nuno,siz0,siz1) {
     const gr = new Graph('ladder');
     if (nuno % 2 != 0)
 	++nuno;
-    add_nodes(gr,nuno,rad);
+    add_nodes(gr,nuno,siz0,siz1);
     if (nuno == 0)
 	return gr;
     gr.addLink(0,1);
@@ -225,10 +229,10 @@ function make_ladder_graph(nuno,rad) {
     return(gr);
 }
 
-function make_matrix_graph(nuno,rad) {
+function make_matrix_graph(nuno,siz0,siz1) {
     const gr = new Graph('ladder');
     const d = Math.ceil(Math.sqrt(nuno));
-    add_nodes(gr,Math.pow(d,2),rad);
+    add_nodes(gr,Math.pow(d,2),siz0,siz1);
     let n = 0;
     for(let i = 0; i < d; ++i) {
 	for(let j = 0; j < d; ++j,++n) {
@@ -241,10 +245,10 @@ function make_matrix_graph(nuno,rad) {
     return(gr);
 }
 
-function make_tree_graph(nuno,rad,nubr,c=canv) {
+function make_tree_graph(nuno,siz0,siz1,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     const queue = [];
-    gr.addNode(new Node('n0', node_shape, rad,
+    gr.addNode(new Node('n0', node_shape, siz0, siz1,
 			colours,
 			rnd_pairs,
 			c.width/2,
@@ -263,11 +267,11 @@ function make_tree_graph(nuno,rad,nubr,c=canv) {
     return(gr);
 }
 
-function make_el_graph(rad) {
+function make_el_graph(nsize0,nsize1) {
     const gr = new Graph('el');
     const edges = get_edge_list();
     const nodes = get_node_list(edges);
-    add_named_nodes(gr,nodes,rad);
+    add_named_nodes(gr,nodes,nsize0,nsize1);
     for(let i in edges) {
 	if (edges[i].length != 2)
 	    continue;
@@ -284,49 +288,49 @@ function start(c2d,
 	       nnodes=100,
 	       nedges=100,
 	       nbranches=2,
-	       nradius=5,
+	       nsize0=5,
+	       nsize1=5,
 	       nalpha=0.9) {
     c2d.globalAlpha = nalpha;
     const num_nodes = nnodes;
     const num_edges = nedges;
-    const node_radius = nradius;
     const num_branches = nbranches;
 
     clear_canvas();
 
     switch(graph_algorithm) {
     case 0:
-	g = make_r2r_graph(num_nodes,num_edges,node_radius);
+	g = make_r2r_graph(num_nodes,num_edges,nsize0,nsize1);
 	break;
     case 1:
-	g = make_s2r_graph(num_nodes,num_edges,node_radius);
+	g = make_s2r_graph(num_nodes,num_edges,nsize0,nsize1);
 	break;
     case 2:
-	g = make_a2a_graph(num_nodes,node_radius);
+	g = make_a2a_graph(num_nodes,nsize0,nsize1);
 	break;
     case 3:
-	g = make_tree_graph(num_nodes,node_radius,num_branches);
+	g = make_tree_graph(num_nodes,nsize0,nsize1,num_branches);
 	break;
     case 4:
-	g = make_el_graph(node_radius);
+	g = make_el_graph(nsize0,nsize1);
 	break;
     case 5:
-	g = make_circular_graph(num_nodes,node_radius);
+	g = make_circular_graph(num_nodes,nsize0,nsize1);
 	break;
     case 6:
-	g = make_central_graph(num_nodes,node_radius);
+	g = make_central_graph(num_nodes,nsize0,nsize1);
 	break;
     case 7:
-	g = make_linear_graph(num_nodes,node_radius);
+	g = make_linear_graph(num_nodes,nsize0,nsize1);
 	break;
     case 8:
-	g = make_ladder_graph(num_nodes,node_radius);
+	g = make_ladder_graph(num_nodes,nsize0,nsize1);
 	break;
     case 9:
-	g = make_matrix_graph(num_nodes,node_radius);
+	g = make_matrix_graph(num_nodes,nsize0,nsize1);
 	break;
     case 10:
-	g = make_triangulated_graph(num_nodes,node_radius);
+	g = make_triangulated_graph(num_nodes,nsize0,nsize1);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorigthm);
