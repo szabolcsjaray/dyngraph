@@ -34,7 +34,12 @@ class Graph {
                 }
             })
         });
+    }
 
+    refresh_colours(cols,rnd) {
+        this.ns.forEach( node => {
+            node.refresh_colours(cols,rnd);
+        });
     }
 
     nudge(dir) {

@@ -32,6 +32,10 @@ function nudge(dir) {
     g.nudge(dir);
 }
 
+function refresh_colours() {
+    g.refresh_colours(colours,rnd_pairs);
+}
+
 function change_shape(sel_id) {
     const sels = document.getElementById(sel_id);
     const seli = sels.selectedIndex;

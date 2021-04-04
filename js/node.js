@@ -22,12 +22,7 @@ class Node {
         this.shape = shape;
 	this.size0 = size0;
 	this.size1 = size1;
-        this.fillcolour = rnd.fill_colour ? gen_colour() : cols.fill_colour;
-	this.outlcolour = rnd.outline_col ? gen_colour() : cols.outline_col;
-        this.linecolour = rnd.line_colour ? gen_colour() : cols.line_colour;
-	this.tracefillcolour = rnd.trc_fil_col ? gen_colour() : cols.trc_fil_col;
-	this.traceoutlcolour = rnd.trc_oli_col ? gen_colour() : cols.trc_oli_col;
-	this.tracelinecolour = rnd.trc_lin_col ? gen_colour() : cols.trc_lin_col;
+	this.refresh_colours(cols,rnd);
         this.x = x;
         this.y = y;
         this.links = [];
@@ -35,6 +30,15 @@ class Node {
         this.c2d = c2d;
         this.fx = 0;
         this.fy = 0;
+    }
+
+    refresh_colours(cols,rnd) {
+        this.fillcolour = rnd.fill_colour ? gen_colour() : cols.fill_colour;
+	this.outlcolour = rnd.outline_col ? gen_colour() : cols.outline_col;
+        this.linecolour = rnd.line_colour ? gen_colour() : cols.line_colour;
+	this.tracefillcolour = rnd.trc_fil_col ? gen_colour() : cols.trc_fil_col;
+	this.traceoutlcolour = rnd.trc_oli_col ? gen_colour() : cols.trc_oli_col;
+	this.tracelinecolour = rnd.trc_lin_col ? gen_colour() : cols.trc_lin_col;
     }
 
     resetForce() {
