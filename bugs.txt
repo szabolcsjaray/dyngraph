@@ -1,3 +1,4 @@
-no very irritating ones currently
+1. line connectors do not fit shapes other than circle
+
 
 
