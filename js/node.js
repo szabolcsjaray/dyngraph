@@ -1,10 +1,10 @@
 const node_params = {
-    link_max_length: 30,
-    link_min_length: 20,
-    dist_modifier:   10,
-    large_dist_div:  40,
-    small_dist_div:  30,
-    dist_threshold: 100,
+    link_max_length: 30, // 30
+    link_min_length: 40, // 20
+    dist_modifier:   540, // 10
+    large_dist_div:  40, // 40
+    small_dist_div:  30, // 30
+    dist_threshold: 100, // 100
     nudge_size: 5,
 };
 
@@ -16,12 +16,16 @@ function modify_params(param,value) {
 	console.log("Invalid node_param has been received: " + param);
 }
 
+function rad_to_deg(rad) {
+    return(rad * (180 / Math.PI));
+}
+
 class Node {
     constructor( name, shape, size0, size1, cols, rnd, x, y, c2d) {
         this.name = name;
         this.shape = shape;
 	this.size0 = size0;
-	this.size1 = size1;
+	this.size1 = (shape == 'c' || shape == 's') ? size0 : size1;
 	this.refresh_colours(cols,rnd);
         this.x = x;
         this.y = y;
@@ -117,12 +121,39 @@ class Node {
 	if (!p.line_colour)
             this.c2d.strokeStyle = draw_trace ? this.tracelinecolour : this.linecolour;
         this.c2d.beginPath();
-        this.links.forEach(otherNode => {
-	    const coords1 = this.getPointOnCircle(this.angleBetween(otherNode));
-            this.c2d.moveTo(coords1[0], coords1[1]);
-	    const coords2 = otherNode.getPointOnCircle(otherNode.angleBetween(this));
-            this.c2d.lineTo(coords2[0], coords2[1]);
-        });
+	switch(this.shape) {
+	case 'c':
+            this.links.forEach(otherNode => {
+		const coords1 = this.getPointOnCircle(this.angleBetween(otherNode));
+		this.c2d.moveTo(coords1[0], coords1[1]);
+		const coords2 = otherNode.getPointOnCircle(otherNode.angleBetween(this));
+		this.c2d.lineTo(coords2[0], coords2[1]);
+            });
+	    break;
+	case 'e':
+	    this.links.forEach(otherNode => {
+		const coords1 = this.getPointOnEllipse(this.angleBetween(otherNode));
+		this.c2d.moveTo(coords1[0], coords1[1]);
+		const coords2 = otherNode.getPointOnEllipse(otherNode.angleBetween(this));
+		this.c2d.lineTo(coords2[0], coords2[1]);
+            });
+	    break;
+	case 'r':
+	case 's':
+	    this.links.forEach(otherNode => {
+		const coords1 = this.getConnectionPoint(otherNode);
+		this.c2d.moveTo(coords1[0], coords1[1]);
+		const coords2 = otherNode.getConnectionPoint(this);
+		this.c2d.lineTo(coords2[0], coords2[1]);
+            });
+	    break;
+	default:
+	    this.links.forEach(otherNode => {
+		this.c2d.moveTo(otherNode.x, otherNode.y);
+		this.c2d.lineTo(this.x, this.y);
+		//console.log("angle between " + otherNode.name + " and " + this.name + " is " + rad_to_deg(otherNode.angleBetween(this)));
+            });
+	}
 	if (!p.line_colour)
             this.c2d.stroke();
 
@@ -160,6 +191,33 @@ class Node {
 	// Calculate the outter point of the line
 	return [Math.round(this.x + Math.cos(radians) * this.size0),  // pos x
 		Math.round(this.y + Math.sin(radians) * this.size0)]; // pos y
+    }
+    getPointOnEllipse(radians) {
+	radians = radians - Math.PI/2; // 0 becomes the top
+	//const multipx = this.size0 >= this.size1 ? this.size0 : this.size1;
+	//const multipy = this.size1 >= this.size0 ? this.size1 : this.size0;
+	// Calculate the outter point of the line
+	return [Math.round(this.x + Math.cos(radians) * this.size0),  // pos x
+		Math.round(this.y + Math.sin(radians) * this.size1)]; // pos y
+    }
+
+    getConnectionPoint(otherNode) {
+	// full over
+	if (otherNode.y + otherNode.size1 < this.y)
+	    return [this.x + this.size0 / 2, this.y];
+	// full below
+	if (otherNode.y > this.y + this.size1)
+	    return [this.x + this.size0 / 2, this.y + this.size1];
+	// full left
+	if (otherNode.x + otherNode.size0 < this.x)
+	    return [this.x, this.y + this.size1 / 2];
+	// full right
+	if (otherNode.x > this.x + this.size0)
+	    return [this.x + this.size0, this.y + this.size1 / 2];
+
+	const x = (otherNode.x < this.x) ? this.x : (this.x + this.size0);
+	const y = (otherNode.y < this.y) ? this.y : (this.y + this.size1);
+	return [x,y];
     }
 
     status() {

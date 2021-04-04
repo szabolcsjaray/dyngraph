@@ -16,8 +16,8 @@ let scat = 800;
 let offs = 100;
 let node_shape;
 const node_size = {
-    s0: 5,
-    s1: 5
+    s0: 150,
+    s1: 100
 };
 const time_out = 10;
 const min_num = 0;
@@ -313,11 +313,7 @@ function update_global_alpha(nalpha) {
     c2d.globalAlpha = nalpha;
 }
 
-function start(c2d,
-	       nnodes=100,
-	       nedges=100,
-	       nbranches=2,
-	       nalpha=0.9) {
+function start(c2d,nnodes,nedges,nbranches,nalpha) {
     c2d.globalAlpha = nalpha;
     const num_nodes = nnodes;
     const num_edges = nedges;
@@ -414,11 +410,11 @@ function col_off_change(sel_id) {
 
 function check_tracer(t=tracer) {
     if(t.checked) {
-	console.log("trace: on");
+	//console.log("trace: on");
 	tracing = true;
 	return true;
     } else {
-	console.log("trace: off");
+	//console.log("trace: off");
 	tracing = false;
 	return false;
     }
