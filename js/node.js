@@ -1,7 +1,7 @@
 const node_params = {
     link_max_length: 30, // 30
-    link_min_length: 40, // 20
-    dist_modifier:   540, // 10
+    link_min_length: 20, // 20
+    dist_modifier:   10, // 10
     large_dist_div:  40, // 40
     small_dist_div:  30, // 30
     dist_threshold: 100, // 100

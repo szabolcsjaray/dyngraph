@@ -268,7 +268,7 @@
 	      </td>
 	    </tr>
 	    <tr>
-	      <td><label>Tracing: <input id="cb_tracing" class="cb" type="checkbox"></label></td>
+	      <td><label>Tracing: <input id="cb_tracing" class="cb" type="checkbox" checked></label></td>
 	      <td><input type="button" class="button1" id="btn_refresh_colours" onClick="refresh_colours();" value="Refresh Colours" /></td>
 	    </tr>
 	    <tr>
@@ -284,7 +284,7 @@
 	      <td><input type="button" class="button1" id="btn_start" onClick="restart()" value="Restart" /></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><input type="file" id="infilename" /></td>
+	      <td colspan="2"><input type="file" id="infilename" disabled></td>
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>Physics Parameters</label></td></tr>
 	    <tr>
@@ -386,12 +386,12 @@
 	const c2d = canv.getContext("2d");
 	const inp_vals = {
 	    sz_canvas:  1000,
-	    nu_nodes:    10,
+	    nu_nodes:    100,
 	    nu_edges:    100,
 	    wd_line:       1,
 	    nu_branches:   2,
 	    nu_scatter:   80,
-	    nu_alpha:     50,
+	    nu_alpha:     70,
 	}
 	function update_alpha(alpha_value) {
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);

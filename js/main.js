@@ -16,8 +16,8 @@ let scat = 800;
 let offs = 100;
 let node_shape;
 const node_size = {
-    s0: 150,
-    s1: 100
+    s0: 5,
+    s1: 5
 };
 const time_out = 10;
 const min_num = 0;
