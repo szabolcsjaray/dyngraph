@@ -387,7 +387,6 @@
 	const inp_vals = {
 	    sz_canvas:  1000,
 	    nu_nodes:    100,
-	    inp_nodesize0: 5,
 	    nu_edges:    100,
 	    wd_line:       1,
 	    nu_branches:   2,
@@ -456,8 +455,6 @@
 		  Number(inp_vals_map.nu_nodes.value),
 		  Number(inp_vals_map.nu_edges.value),
 		  Number(inp_vals_map.nu_branches.value),
-		  Number(inp_vals_map.inp_nodesize0.value),
-		  Number(inp_vals_map.inp_nodesize0.value),
 		  Number(inp_vals_map.nu_alpha.value)
 		 );
 	}
@@ -480,6 +477,11 @@
 		node_params[a_key] = contents.node_params[a_key];
 		map_node_params[a_key][0].value = contents.node_params[a_key];
 	    }
+	    for(let a_key in node_size) {
+		node_size[a_key] = contents.node_size[a_key];
+	    }
+	    node_shape = contents.node_shape;
+	    sync_back_shape_selection("sel_shape");
 	    config();
 	    restart();
 	};
@@ -514,6 +516,8 @@
 	    out_val.inp_vals = inp_vals;
 	    out_val.colours = colours;
 	    out_val.node_params = node_params;
+	    out_val.node_size = node_size;
+	    out_val.node_shape = node_shape;
 	    
 	    hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(JSON.stringify(out_val));
 	    hiddenElement.target = '_blank';
@@ -574,7 +578,7 @@
 		"type" : "number",
 		"id"   : "inp_nodesize",
 		"min"  : "0",
-		"max"  : "100",
+		"max"  : "200",
 		"value": "5",
 		"onchange" : "resize_nodes('inp_nodesize0','inp_nodesize1')",
 	    }
@@ -593,6 +597,7 @@
 	function proc_shape_sel(sel_id,targ_id) {
 	    change_shape(sel_id);
 	    create_table(targ_id,prep_tr_data(set_shape_params(node_shape)));
+	    sync_back_node_sizes('inp_nodesize0','inp_nodesize1');
 	}
 	
 	document.addEventListener('keydown', (event) => {
