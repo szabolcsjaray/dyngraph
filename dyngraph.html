@@ -358,27 +358,22 @@
 	<div class="column" id="canvas_space">
 	  <table>
 	    <tr>
+	      <td colspan="2"><input type="button" id="btn_save_as_img" value="Save as image" onclick="download_as_image('inp_img_fn');"> <input type="text" id="inp_img_fn" value="dyngraph.png" /></td>
+	    </tr>
+	    <tr>
 	      <td rowspan="4">
 		<canvas id="cv_canv" title="click: pause/continue; double-click: clear" onclick="pause_or_continue(btn_pause_conti)" ondblclick="clear_canvas()"></canvas>
 	      </td>
-	      <td>
-		<input type="button" title="うえ (Ctrl+Shift+UpArrow)" id="btn_up" onClick="nudge('up');" value="上" />
-	      </td>
+	      <td><input type="button" title="うえ (Ctrl+Shift+UpArrow)" id="btn_up" onClick="nudge('up');" value="上" /></td>
 	    </tr>
 	    <tr>
-	      <td>
-		<input type="button" title="ひだり (Ctrl+Shift+LeftArrow)" id="btn_left" onClick="nudge('left');" value="左" />
-	      </td>
+	      <td><input type="button" title="ひだり (Ctrl+Shift+LeftArrow)" id="btn_left" onClick="nudge('left');" value="左" /></td>
 	    </tr>
 	    <tr>
-	      <td>
-		<input type="button" title="みぎ (Ctrl+Shift+RightArrow)" id="btn_right" onClick="nudge('right');" value="右" />
-	      </td>
+	      <td><input type="button" title="みぎ (Ctrl+Shift+RightArrow)" id="btn_right" onClick="nudge('right');" value="右" /></td>
 	    </tr>
 	    <tr>
-	      <td>
-		<input type="button" title="した (Ctrl+Shift+DownArrow)" id="btn_down" onClick="nudge('down');" value="下" />
-	      </td>
+	      <td><input type="button" title="した (Ctrl+Shift+DownArrow)" id="btn_down" onClick="nudge('down');" value="下" /></td>
 	    </tr>
 	  </table>
 	</div>
@@ -397,6 +392,21 @@
 	}
 	function update_alpha(alpha_value) {
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);
+	}
+	function download_as_image(id_inp){
+	    // get canvas data  
+	    const img = canv.toDataURL();
+	    const fn = document.getElementById(id_inp).value;
+	    
+	    // create temporary link  
+	    const tmpLink = document.createElement('a');  
+	    tmpLink.download = fn; // set the name of the download file 
+	    tmpLink.href = img;  
+	    
+	    // temporarily add link to body and initiate the download  
+	    document.body.appendChild( tmpLink );  
+	    tmpLink.click();  
+	    document.body.removeChild( tmpLink );  
 	}
 	const inp_vals_map = {};
 	function setup_inp_vals_map() {
