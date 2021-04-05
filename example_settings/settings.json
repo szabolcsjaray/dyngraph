@@ -1,36 +1,38 @@
 {
-  "inp_vals": {
-    "sz_canvas": 1050,
-    "nu_nodes": 10,
-    "nu_edges": 50,
-    "wd_line": 2,
-    "nu_branches": 3,
-    "nu_scatter": 30,
-    "nu_alpha": 50
-  },
-  "colours": {
-    "fill_colour": "#ff0000",
-    "outline_col": "#00ff00",
-    "line_colour": "#0000ff",
-    "trc_fil_col": "#2B3736",
-    "trc_oli_col": "#364141",
-    "trc_lin_col": "#344D56"
-  },
-  "node_params": {
-    "link_max_length": 30,
-    "link_min_length": 40,
-    "dist_modifier": 150,
-    "large_dist_div": 40,
-    "small_dist_div": 30,
-    "dist_threshold": 120,
-    "nudge_size": 5
-  },
-  "node_size": {
-    "s0": 30,
-    "s1": 20
-  },
-  "tracing": false,
-  "labelling": true,
-  "node_shape": "e",
-  "graphalg_index": 3
+    "inp_vals": {
+      "sz_canvas": 1050,
+      "sz_font": 10,
+      "nu_nodes": 10,
+      "nu_edges": 50,
+      "wd_line": 2,
+      "nu_branches": 3,
+      "nu_scatter": 30,
+      "nu_alpha": 50
+    },
+    "colours": {
+	"fill_colour": "#ff0000",
+	"font_colour": "#89729E",
+	"outline_col": "#00ff00",
+	"line_colour": "#0000ff",
+	"trc_fil_col": "#2B3736",
+	"trc_oli_col": "#364141",
+	"trc_lin_col": "#344D56"
+    },
+    "node_params": {
+	"link_max_length": 30,
+	"link_min_length": 40,
+	"dist_modifier": 150,
+	"large_dist_div": 40,
+	"small_dist_div": 30,
+	"dist_threshold": 120,
+	"nudge_size": 5
+    },
+    "node_size": {
+	"s0": 30,
+	"s1": 20
+    },
+    "tracing": false,
+    "labelling": true,
+    "node_shape": "e",
+    "graphalg_index": 3
 }
