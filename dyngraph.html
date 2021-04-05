@@ -16,6 +16,8 @@
 	      fill_in_colours();
 	      tracer.dispatchEvent(new Event('change'));
 	      document.getElementById("sel_shape").dispatchEvent(new Event("change"));
+	      update_inp_vals();
+	      update_node_params();
 	      inp_vals_map.sz_canvas.dispatchEvent(new Event('change'));
 	      inp_vals_map.wd_line.dispatchEvent(new Event('change'));
 	      inp_vals_map.nu_alpha.dispatchEvent(new Event("change"));
@@ -408,6 +410,10 @@
 	    inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
 	    inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});
 	}
+	function update_inp_vals() {
+	    for (let a_val in inp_vals)
+		inp_vals_map[a_val].value = inp_vals[a_val];
+	}
 
 	function save_to_inp_vals() {
 	    for (let a_val in inp_vals)
@@ -451,6 +457,12 @@
 	    map_node_params[it][0].oninput = function() {
 		modify_params(it,Number(this.value));
 		map_node_params[it][1].innerHTML = this.value;
+	    }
+	}
+	function update_node_params() {
+	    for (let it in node_params) {
+		map_node_params[it][0].value = node_params[it];
+		map_node_params[it][1].innerHTML = node_params[it];
 	    }
 	}
 	function restart() {
