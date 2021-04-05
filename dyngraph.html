@@ -9,16 +9,20 @@
         <script src="js/node.js"></script>
         <script src="js/graph.js"></script>
 	<script type="text/javascript">
+	  function init() {
+	      setup_inp_vals_map();
+	  }
 	  function config() {
-	      for (let it in col_sels)
-	       	  col_sels[it].value = colours[it];
+	      fill_in_colours();
 	      tracer.dispatchEvent(new Event('change'));
 	      document.getElementById("sel_shape").dispatchEvent(new Event("change"));
-	      setup_inp_vals_map();
 	      inp_vals_map.sz_canvas.dispatchEvent(new Event('change'));
 	      inp_vals_map.wd_line.dispatchEvent(new Event('change'));
 	      inp_vals_map.nu_alpha.dispatchEvent(new Event("change"));
-	      // document.getElementById("sel_graphalgs").value = '0'; // does not help when tabs are restored
+	  }
+	  function fill_in_colours() {
+	      for (let it in col_sels)
+	       	  col_sels[it].value = colours[it];
 	  }
 	  function remove_unconnected() {
 	      const edge_list = get_edge_list();
@@ -45,8 +49,8 @@
 	      for( let a_key of Object.keys(params))
 	       	  params[a_key].disabled = !scen_map[scen][a_key];
 	  }
-	  function proc_sel_graphalg(sel_id) {
-	      const seli = document.getElementById(sel_id).selectedIndex;
+	  function proc_sel_graphalg(sel_graphalg) {
+	      const seli = sel_graphalg.selectedIndex;
 	      console.log("alg selected: " + seli);
 	      switch (seli) {
 	      case 0:
@@ -170,32 +174,32 @@
 	  }
 	</style>
     </head>
-    <body onload="config();restart();">
+    <body onload="init();config();restart();">
       <div id="main_container">
         <div class="column" id="panel_space">
 	  <table id="tbl_shape">
 	    <tr>
 	      <td class="button1"><label>canvas</label></td>
-	      <td><input id="sz_canvas" type="number" min="100" max="8192" /></td>
+	      <td><input title="size of the canvas (in screen pixels)" id="sz_canvas" type="number" min="100" max="8192" /></td>
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
-	      <td><input id="nu_edges" type="number" min="1" max="1000" /></td>
+	      <td><input title="number of edges in the graph" id="nu_edges" type="number" min="1" max="1000" /></td>
 	    </tr>
 	    <tr>
 	      <td><label>line width</label></td>
-	      <td><input id="wd_line" type="number" min="1" max="32" /></td>
+	      <td><input title="line width of edges and node outlines" id="wd_line" type="number" min="1" max="32" /></td>
 	    </tr>
 	    <tr>
 	      <td><label>nodes</label></td>
-	      <td><input id="nu_nodes" type="number" min="2" max="1000" /></td>
+	      <td><input title="number of nodes" id="nu_nodes" type="number" min="2" max="1000" /></td>
 	    </tr>
 	    <tr>
 	      <td><label>shape</label></td>
-	      <td><select class="button1" id="sel_shape" onchange="proc_shape_sel('sel_shape','node_dim_target')">
-		  <option value="c">circle</option>
+	      <td><select class="button1" title="the shape of the nodes" id="sel_shape" onchange="proc_shape_sel('sel_shape','node_dim_target')">
+		  <option value="c" selected>circle</option>
 		  <option value="s">square</option>
-		  <option value="e" selected>ellipse</option>
+		  <option value="e">ellipse</option>
 		  <option value="r">rectangle</option>
 		</select></td>
 	    </tr>
@@ -203,21 +207,17 @@
 	  <div id="node_dim_target">
 	  </div>
 	  <table id="tbl_graph">
-	    <!-- <tr> -->
-	    <!--   <td><label>radius</label></td> -->
-	    <!--   <td><input id="sz_radius" type="number" min="0" max="100" /></td> -->
-	    <!-- </tr> -->
 	    <tr>
-	      <td class="button1"><label>branches</label></td>
+	      <td class="button1" title="number of branches a node can have apart from the incoming one"><label>branches</label></td>
 	      <td><input id="nu_branches" type="number" min="1" max="10" disabled></td>
 	    </tr>
 	    <tr>
 	      <td><label>scatter</label></td>
-	      <td><input id="nu_scatter" type="number" min="1" max="100" /><label>%</label></td>
+	      <td><input title="initial scattering of the nodes" id="nu_scatter" type="number" min="1" max="100" /><label>%</label></td>
 	    </tr>
 	    <tr>
 	      <td><label>alpha</label></td>
-	      <td><input id="nu_alpha" type="number" min="10" max="100" /><label>%</label></td>
+	      <td><input title="transparency" id="nu_alpha" type="number" min="10" max="100" /><label>%</label></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2">
@@ -268,23 +268,23 @@
 	      </td>
 	    </tr>
 	    <tr>
-	      <td><label>Tracing: <input id="cb_tracing" class="cb" type="checkbox" checked></label></td>
-	      <td><input type="button" class="button1" id="btn_refresh_colours" onClick="refresh_colours();" value="Refresh Colours" /></td>
+	      <td><label title="Ctrl+Alt+T">Tracing: <input id="cb_tracing" class="cb" type="checkbox" checked></label></td>
+	      <td><input type="button" title="Ctrl+Alt+R" class="button1" id="btn_refresh_colours" onClick="refresh_colours();" value="Refresh Colours" /></td>
 	    </tr>
 	    <tr>
 	      <td><label>Output file:</label></td>
 	      <td><label><input type="text" class="button1" id="out_fn" value="settings.json" /></label></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_clear" onClick="clear_canvas();" value="Clear Canvas" /></td>
+	      <td><input type="button" title="Ctrl+Alt+C" class="button1" id="btn_clear" onClick="clear_canvas();" value="Clear Canvas" /></td>
 	      <td><input type="button" class="button1" id="btn_store" onClick="save_settings('out_fn');" value="Save Settings" /></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_pause_conti" value="Pause" /></td>
-	      <td><input type="button" class="button1" id="btn_start" onClick="restart()" value="Restart" /></td>
+	      <td><input type="button" title="pause or resume animation (Pause/Break on keyboard)" class="button1" id="btn_pause_conti" value="Pause" /></td>
+	      <td><input type="button" title="restart animation (Ctrl+Alt+Enter)" class="button1" id="btn_start" onClick="restart()" value="Restart" /></td>
 	    </tr>
 	    <tr>
-	      <td colspan="2"><input type="file" id="infilename" disabled></td>
+	      <td colspan="2"><input type="file" id="infilename"></td>
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>Physics Parameters</label></td></tr>
 	    <tr>
@@ -330,7 +330,7 @@
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>How to build graph?</label></td></tr>
 	    <tr>
-	      <td colspan="2"><select class="button2" id="sel_graphalgs" onchange="proc_sel_graphalg('sel_graphalgs')">
+	      <td colspan="2"><select class="button2" id="sel_graphalg">
 		  <option value="0" selected>Random:Random</option>
 		  <option value="1">Serial:Random</option>
 		  <option value="2">All:All</option>
@@ -345,8 +345,8 @@
 	      </select></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" class="button1" id="btn_print" onClick="print_edges(area_edgelist);" value="Print Edges" /></td>
-	      <td><input type="button" class="button1" id="btn_rm_lone" onClick="remove_unconnected();" value="Rem Lone Nodes" /></td>
+	      <td><input type="button" class="button1" title="Ctrl+Alt+P" id="btn_print" onClick="print_edges(area_edgelist);" value="Print Edges" /></td>
+	      <td><input type="button" class="button1" title="Alt+Delete" id="btn_rm_lone" onClick="remove_unconnected();" value="Del Lone Nodes" /></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2" class="centred"><textarea id="edge_list" rows="10" cols="41"></textarea>
@@ -357,25 +357,25 @@
 	  <table>
 	    <tr>
 	      <td rowspan="4">
-		<canvas id="cv_canv" onclick="pause_or_continue(btn_pause_conti)" ondblclick="clear_canvas()"></canvas>
+		<canvas id="cv_canv" title="click: pause/continue; double-click: clear" onclick="pause_or_continue(btn_pause_conti)" ondblclick="clear_canvas()"></canvas>
 	      </td>
 	      <td>
-		<input type="button" id="btn_up" onClick="nudge('up');" value="上" />
-	      </td>
-	    </tr>
-	    <tr>
-	      <td>
-		<input type="button" id="btn_left" onClick="nudge('left');" value="左" />
+		<input type="button" title="うえ (Ctrl+Shift+UpArrow)" id="btn_up" onClick="nudge('up');" value="上" />
 	      </td>
 	    </tr>
 	    <tr>
 	      <td>
-		<input type="button" id="btn_right" onClick="nudge('right');" value="右" />
+		<input type="button" title="ひだり (Ctrl+Shift+LeftArrow)" id="btn_left" onClick="nudge('left');" value="左" />
 	      </td>
 	    </tr>
 	    <tr>
 	      <td>
-		<input type="button" id="btn_down" onClick="nudge('down');" value="下" />
+		<input type="button" title="みぎ (Ctrl+Shift+RightArrow)" id="btn_right" onClick="nudge('right');" value="右" />
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>
+		<input type="button" title="した (Ctrl+Shift+DownArrow)" id="btn_down" onClick="nudge('down');" value="下" />
 	      </td>
 	    </tr>
 	  </table>
@@ -425,6 +425,11 @@
 	const btn_print = document.getElementById("btn_print");
 	const btn_clear = document.getElementById("btn_clear");
 	const btn_rm_lone = document.getElementById("btn_rm_lone");
+	const btn_fresh_cols = document.getElementById("btn_refresh_colours");
+	const sel_graphalg = document.getElementById("sel_graphalg");
+	sel_graphalg.addEventListener("change",function(){
+	    proc_sel_graphalg(this);
+	});
 	const col_sels = {};
 	const rnd_boxes = {};
 	const off_boxes = {};
@@ -482,6 +487,10 @@
 	    }
 	    node_shape = contents.node_shape;
 	    sync_back_shape_selection("sel_shape");
+	    sel_graphalg.selectedIndex = contents.graphalg_index;
+	    sel_graphalg.dispatchEvent(new Event("change"));
+	    tracer.checked = contents.tracing;
+	    tracer.dispatchEvent(new Event("change"));
 	    config();
 	    restart();
 	};
@@ -517,7 +526,9 @@
 	    out_val.colours = colours;
 	    out_val.node_params = node_params;
 	    out_val.node_size = node_size;
+	    out_val.tracing = tracer.checked;
 	    out_val.node_shape = node_shape;
+	    out_val.graphalg_index = sel_graphalg.selectedIndex;
 	    
 	    hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(JSON.stringify(out_val));
 	    hiddenElement.target = '_blank';
@@ -611,8 +622,10 @@
 		btn_clear.dispatchEvent(new Event("click"));
 	    if (event.ctrlKey && event.altKey &&  keyName == 'p')
 		btn_print.dispatchEvent(new Event("click"));
-	    if (event.ctrlKey && event.altKey && keyName == 'r')
+	    if (event.altKey && keyName == 'Delete')
 		btn_rm_lone.dispatchEvent(new Event("click"));
+	    if (event.ctrlKey && event.altKey && keyName == 'r')
+		btn_fresh_cols.dispatchEvent(new Event("click"));
 	    if (event.ctrlKey && event.altKey && keyName == 't') {
 		if(tracer.checked)
 		    tracer.checked = false;
