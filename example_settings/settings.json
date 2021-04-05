@@ -1,0 +1,35 @@
+{
+  "inp_vals": {
+    "sz_canvas": "1000",
+    "nu_nodes": "50",
+    "nu_edges": "100",
+    "wd_line": "2",
+    "nu_branches": "2",
+    "nu_scatter": "30",
+    "nu_alpha": "50"
+  },
+  "colours": {
+    "fill_colour": "#00ffff",
+    "outline_col": "#ffff00",
+    "line_colour": "#ff7f00",
+    "trc_fil_col": "#2B3736",
+    "trc_oli_col": "#364141",
+    "trc_lin_col": "#344D56"
+  },
+  "node_params": {
+    "link_max_length": 30,
+    "link_min_length": 40,
+    "dist_modifier": 150,
+    "large_dist_div": 40,
+    "small_dist_div": 30,
+    "dist_threshold": 100,
+    "nudge_size": 5
+  },
+  "node_size": {
+    "s0": 25,
+    "s1": 15
+  },
+  "tracing": false,
+  "node_shape": "e",
+  "graphalg_index": 5
+}
