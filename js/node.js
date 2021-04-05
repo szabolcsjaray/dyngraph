@@ -24,8 +24,8 @@ class Node {
     constructor( name, shape, size0, size1, cols, rnd, x, y, c2d) {
         this.name = name;
         this.shape = shape;
-	this.size0 = size0;
-	this.size1 = (shape == 'c' || shape == 's') ? size0 : size1;
+	this.size0 = Number(size0);
+	this.size1 = (shape == 'c' || shape == 's') ? Number(size0) : Number(size1);
 	this.refresh_colours(cols,rnd);
         this.x = x;
         this.y = y;
@@ -114,7 +114,7 @@ class Node {
 	return false;
     }
 
-    draw(p,draw_trace) {
+    draw(p,draw_trace,draw_labels) {
         if (!p.fill_colour)
 	    this.c2d.fillStyle = draw_trace ? this.tracefillcolour : this.fillcolour;
 
@@ -151,7 +151,6 @@ class Node {
 	    this.links.forEach(otherNode => {
 		this.c2d.moveTo(otherNode.x, otherNode.y);
 		this.c2d.lineTo(this.x, this.y);
-		//console.log("angle between " + otherNode.name + " and " + this.name + " is " + rad_to_deg(otherNode.angleBetween(this)));
             });
 	}
 	if (!p.line_colour)
@@ -175,7 +174,9 @@ class Node {
             this.c2d.fill();
 	if (!p.outline_col)
 	    this.c2d.stroke();
-
+	if (draw_labels) {
+	    c2d.fillText(this.name, this.x, this.y);
+	}
     }
 
     angleBetween(other) {
@@ -210,13 +211,13 @@ class Node {
 	    return [this.x + this.size0 / 2, this.y + this.size1];
 	// full left
 	if (otherNode.x + otherNode.size0 < this.x)
-	    return [this.x, this.y + this.size1 / 2];
+	    return [Number(this.x), this.y + this.size1 / 2];
 	// full right
 	if (otherNode.x > this.x + this.size0)
 	    return [this.x + this.size0, this.y + this.size1 / 2];
 
-	const x = (otherNode.x < this.x) ? this.x : (this.x + this.size0);
-	const y = (otherNode.y < this.y) ? this.y : (this.y + this.size1);
+	const x = (otherNode.x < this.x) ? this.x : this.x + this.size0;
+	const y = (otherNode.y < this.y) ? this.y : this.y + this.size1;
 	return [x,y];
     }
 

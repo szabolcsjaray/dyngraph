@@ -1,5 +1,6 @@
 let g;
 let tracing;
+let labels;
 let node_radius = 5;
 const colours = {
     fill_colour: "#48929B", // 浅葱色「あさぎいろ」
@@ -93,17 +94,17 @@ function resize_nodes(sz_id0,sz_id1) {
     let sz1 = document.getElementById(sz_id1);
     if (!sz1)
 	sz1 = sz0;
-    node_size.s0 = sz0.value;
-    node_size.s1 = sz1.value;
+    node_size.s0 = Number(sz0.value);
+    node_size.s1 = Number(sz1.value);
     g.resize_nodes(node_size.s0,node_size.s1);
 }
 
 function sync_back_node_sizes(sz_id0,sz_id1) {
     const sz0 = document.getElementById(sz_id0);
     const sz1 = document.getElementById(sz_id1);
-    sz0.value = node_size.s0;
+    sz0.value = Number(node_size.s0);
     if(sz1)
-	sz1.value = node_size.s1;
+	sz1.value = Number(node_size.s1);
 }
 
 function update_scatter(scatter_value,c=canv) {
@@ -408,6 +409,18 @@ function col_off_change(sel_id) {
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
 
+function check_labelling(l=labelling) {
+    if(l.checked) {
+	//console.log("trace: on");
+	labels = true;
+	return true;
+    } else {
+	//console.log("trace: off");
+	labels = false;
+	return false;
+    }
+}
+
 function check_tracer(t=tracer) {
     if(t.checked) {
 	//console.log("trace: on");
@@ -421,12 +434,12 @@ function check_tracer(t=tracer) {
 }
 
 function animPhase() {
-    g.draw(off_pairs,true);
+    g.draw(off_pairs,true,false);
     g.calcForces();
     g.step();
     if(!tracing)
 	clear_canvas();
-    g.draw(off_pairs,false);
+    g.draw(off_pairs,false,labels);
     if (animate)
         setTimeout(animPhase, time_out);
 }

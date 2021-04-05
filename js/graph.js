@@ -16,10 +16,10 @@ class Graph {
         this.ns[index1].addLink(this.ns[index2]);
     }
 
-    draw(params,draw_trace) {
+    draw(params,draw_trace,draw_labels) {
 	//console.log("graph.draw() has been called");
         this.ns.forEach( node => {
-            node.draw(params,draw_trace);
+            node.draw(params,draw_trace,draw_labels);
         });
     }
 
@@ -72,8 +72,8 @@ class Graph {
 
     resize_nodes(new_size0,new_size1) {
 	this.ns.forEach( node => {
-            node.size0=new_size0;
-	    node.size1=new_size1;
+            node.size0=Number(new_size0);
+	    node.size1=Number(new_size1);
         });
     }
 
