@@ -225,6 +225,10 @@
 	      <td><input title="transparency" id="nu_alpha" type="number" min="10" max="100" /><label>%</label></td>
 	    </tr>
 	    <tr>
+	      <td class="button1"><label>font size</label></td>
+	      <td><input title="font size (in screen pixels)" id="sz_font" type="number" min="8" max="48" /></td>
+	    </tr>
+	    <tr>
 	      <td colspan="2">
 		<table id="tbl_col_select">
 		  <tr>
@@ -238,6 +242,12 @@
 		    <td class="centred"><input id="fill_colour" type="color" /></td>
 		    <td class="centred"><input id="rnd_fill_colour" class="cb" type="checkbox" /></td>
 		    <td class="centred"><input id="fill_colour_off" class="cb" type="checkbox" /></td>
+		  </tr>
+		  <tr>
+		    <td><label>font</label></td>
+		    <td class="centred"><input id="font_colour" type="color" /></td>
+		    <td class="centred"><input id="rnd_font_colour" class="cb" type="checkbox" /></td>
+		    <td class="centred"><input id="font_colour_off" class="cb" type="checkbox" /></td>
 		  </tr>
 		  <tr>
 		    <td><label>outline</label></td>
@@ -396,9 +406,9 @@
       <script type="text/javascript">
 	const canv = document.getElementById("cv_canv")
 	const c2d = canv.getContext("2d");
-	c2d.font = '48px sansserif';
 	const inp_vals = {
 	    sz_canvas:  1000,
+	    sz_font:      12, 
 	    nu_nodes:    100,
 	    nu_edges:    100,
 	    wd_line:       1,
@@ -431,6 +441,7 @@
 		inp_vals_map[a_val].value = inp_vals[a_val];
 	    }
 	    inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(this.value);});
+	    inp_vals_map.sz_font.addEventListener("change",function() {c2d.font = this.value + 'px sans-serif';});
 	    inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
 	    inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
 	    inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});

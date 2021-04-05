@@ -4,6 +4,7 @@ let labels;
 let node_radius = 5;
 const colours = {
     fill_colour: "#48929B", // 浅葱色「あさぎいろ」
+    font_colour: "#DC3023", // 猩々緋「しょうじょうひ」
     outline_col: "#1D697C", // 浅葱色「あさぎいろ」
     line_colour: "#86ABA5", // 水色「みずいろ」
     trc_fil_col: "#2B3736", // 鉄御納戸「てつおなんど」

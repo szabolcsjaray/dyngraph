@@ -38,6 +38,7 @@ class Node {
 
     refresh_colours(cols,rnd) {
         this.fillcolour = rnd.fill_colour ? gen_colour() : cols.fill_colour;
+	this.fontcolour = rnd.font_colour ? gen_colour() : cols.font_colour;
 	this.outlcolour = rnd.outline_col ? gen_colour() : cols.outline_col;
         this.linecolour = rnd.line_colour ? gen_colour() : cols.line_colour;
 	this.tracefillcolour = rnd.trc_fil_col ? gen_colour() : cols.trc_fil_col;
@@ -175,7 +176,8 @@ class Node {
 	if (!p.outline_col)
 	    this.c2d.stroke();
 	if (draw_labels) {
-	    c2d.fillText(this.name, this.x, this.y);
+	    this.c2d.fillStyle=this.fontcolour;
+	    this.c2d.fillText(this.name, this.x, this.y);
 	}
     }
 
@@ -195,11 +197,13 @@ class Node {
     }
     getPointOnEllipse(radians) {
 	radians = radians - Math.PI/2; // 0 becomes the top
-	//const multipx = this.size0 >= this.size1 ? this.size0 : this.size1;
-	//const multipy = this.size1 >= this.size0 ? this.size1 : this.size0;
+	//const multipx = this.size0 >= this.size1 ? this.size0 - this.size1 : this.size0;
+	//const multipy = this.size1 >= this.size0 ? this.size1 - this.size0 : this.size1;
 	// Calculate the outter point of the line
 	return [Math.round(this.x + Math.cos(radians) * this.size0),  // pos x
 		Math.round(this.y + Math.sin(radians) * this.size1)]; // pos y
+	//return [Math.round(this.x + Math.cos(radians) * multipx),  // pos x
+	//	Math.round(this.y + Math.sin(radians) * multipy)]; // pos y
     }
 
     getConnectionPoint(otherNode) {
