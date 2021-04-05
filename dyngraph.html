@@ -685,6 +685,13 @@
 		    tracer.checked = true;
 		tracer.dispatchEvent(new Event("change"));
 	    }
+	    if (event.ctrlKey && event.altKey && keyName == 'l') {
+		if(labelling.checked)
+		    labelling.checked = false;
+		else
+		    labelling.checked = true;
+		labelling.dispatchEvent(new Event("change"));
+	    }
 	    if (event.ctrlKey && event.shiftKey && keyName == 'ArrowUp') {
 		nudge('up');
 	    }
