@@ -459,9 +459,14 @@
 	}
 	
 	const tracer = document.getElementById("cb_tracing");
-	tracer.addEventListener("change",function() { check_tracer(this); });
+	tracer.addEventListener("change",function() {
+	    if (this.checked && labelling.checked) {
+		labelling.checked=false;
+		clear_canvas();
+	    }
+	});
 	const labelling =  document.getElementById('cb_labels');
-	labelling.addEventListener("change",function() { check_labelling(this); });
+	labelling.addEventListener("change",function() { if (this.checked && tracer.checked) tracer.checked=false; });
 	
 	const btn_start = document.getElementById("btn_start");
 	const btn_pause_conti = document.getElementById("btn_pause_conti");
@@ -674,11 +679,16 @@
 	}
 
 	function toggle(param) {
-		if(param.checked)
-		    param.checked = false;
-		else
-		    param.checked = true;
-		param.dispatchEvent(new Event("change"));	    
+	    let ret_status;
+	    if(param.checked) {
+		ret_param.checked = false;
+		status = false;
+	    } else {
+		param.checked = true;
+		ret_status = true;
+	    }
+	    param.dispatchEvent(new Event("change"));
+	    return(ret_status);
 	}
 	
 	document.addEventListener('keydown', (event) => {
