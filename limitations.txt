@@ -1,2 +1,1 @@
-label formatting is needed from bottom up
-
+label formatting is manual only
