@@ -672,6 +672,14 @@
 	    create_table(targ_id,prep_tr_data(set_shape_params(node_shape)));
 	    sync_back_node_sizes('inp_nodesize0','inp_nodesize1');
 	}
+
+	function toggle(param) {
+		if(param.checked)
+		    param.checked = false;
+		else
+		    param.checked = true;
+		param.dispatchEvent(new Event("change"));	    
+	}
 	
 	document.addEventListener('keydown', (event) => {
 	    const keyName = event.key;
@@ -690,18 +698,10 @@
 	    if (event.ctrlKey && event.altKey && keyName == 'r')
 		btn_fresh_cols.dispatchEvent(new Event("click"));
 	    if (event.ctrlKey && event.altKey && keyName == 't') {
-		if(tracer.checked)
-		    tracer.checked = false;
-		else
-		    tracer.checked = true;
-		tracer.dispatchEvent(new Event("change"));
+		toggle(tracer);
 	    }
 	    if (event.ctrlKey && event.altKey && keyName == 'l') {
-		if(labelling.checked)
-		    labelling.checked = false;
-		else
-		    labelling.checked = true;
-		labelling.dispatchEvent(new Event("change"));
+		toggle(labelling);
 	    }
 	    if (event.ctrlKey && event.shiftKey && keyName == 'ArrowUp') {
 		nudge('up');
