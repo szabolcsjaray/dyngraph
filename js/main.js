@@ -372,7 +372,8 @@ function clear_canvas(from_x=0,
     ctx.clearRect(from_x, from_y, to_x, to_y);
     if(!off_pairs.back_colour) {
 	const saved_fillStyle = ctx.fillStyle;
-	ctx.fillStyle= rnd_pairs.back_colour ? gen_colour() : colours.back_colour;
+	//ctx.fillStyle= rnd_pairs.back_colour ? gen_colour() : colours.back_colour;
+	ctx.fillStyle= colours.back_colour;
 	ctx.fillRect(from_x, from_y, to_x, to_y);
 	ctx.fillStyle = saved_fillStyle;
     }
