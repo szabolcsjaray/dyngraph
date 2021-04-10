@@ -24,11 +24,11 @@
 	      for (let it in col_sels)
 	       	  col_sels[it].value = colours[it];
 	  }
-	  function remove_unconnected() {
+	  function remove_unconnected(delim=elem_delim) {
 	      const edge_list = get_edge_list();
 	      let output_string = "";
 	      for(let i in edge_list) {
-		  output_string += edge_list[i][0] + " " + edge_list[i][1] + "\n";
+		  output_string += edge_list[i][0] + delim + edge_list[i][1] + "\n";
 	      }
 	      area_edgelist.value = output_string;
 	  }
@@ -394,6 +394,12 @@
 	    <tr>
 	      <td colspan="2" class="centred"><textarea id="edge_list" rows="10" cols="41"></textarea>
 	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="button" id="btn_save_as_csv" value="Save as csv" onclick="save_as_csv('edge_list','inp_csv_fn');"> <input type="text" id="inp_csv_fn" value="edgelist.csv" /></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="file" id="file_csv_in" onchange="read_image(this,'edge_list')"></td>
+	    </tr>
 	  </table>
 	</div>
 	<div class="column" id="canvas_space">
@@ -430,7 +436,7 @@
 	    wd_line:       1,
 	    nu_branches:   2,
 	    nu_scatter:   80,
-	    nu_alpha:     70,
+	    nu_alpha:     90,
 	}
 	function update_alpha(alpha_value) {
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);
@@ -450,6 +456,55 @@
 	    tmpLink.click();  
 	    document.body.removeChild( tmpLink );  
 	}
+	function save_as_csv(dat_id,inp_id,delim=","){
+	    // get canvas data  
+	    const dat = document.getElementById(dat_id).value.trim().split("\n");
+	    const fn = document.getElementById(inp_id).value;
+
+	    let csv = "";
+            dat.forEach( str => {
+		//console.log(str);
+                csv += str.split(" ").join(delim)+"\n";
+            });
+	    
+ 	    const csvData = new Blob([csv], { type: 'text/csv' });  
+            const csvUrl = URL.createObjectURL(csvData);
+	    const hiddenElement = document.createElement('a');
+            hiddenElement.href = csvUrl;
+            hiddenElement.target = '_blank';
+            hiddenElement.download = fn;
+            hiddenElement.click();
+	}
+	const obj_csv = {
+	    size:0,
+	    data_file:[]
+	};
+	function read_image(input,outbox_id) {
+	    //console.log(input)
+	    if (input.files && input.files[0]) {
+		const reader = new FileReader();
+		reader.readAsBinaryString(input.files[0]);
+		reader.onload = function (e) {
+		    //console.log(e);
+		    obj_csv.size = e.total;
+		    obj_csv.data_file = e.target.result
+		    //console.log(obj_csv.dataFile)
+		    parse_csv_data(obj_csv.data_file,outbox_id);
+		}
+	    }
+	}
+ 
+	function parse_csv_data(data,out_id){
+	    const csv_data = [];
+	    document.getElementById(out_id).value = data;
+	    const line_break = data.split("\n");
+	    line_break.forEach(res => {
+		csv_data.push(res.split(","));
+	    });
+	    //console.table(csvData);
+	}
+
+	
 	const inp_vals_map = {};
 	function setup_inp_vals_map() {
 	    for (let a_val in inp_vals) {

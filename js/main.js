@@ -1,3 +1,5 @@
+const elem_delim = ",";
+const elem_quote = '"';
 let g;
 let node_radius = 5;
 const colours = {
@@ -126,8 +128,8 @@ function add_node_at_random_pos(gr,name,shape) {
 			Math.random()*scat+offs, c2d));
 }
 
-function print_edges(target) {
-    target.value = g.get_edge_list();
+function print_edges(target,delim=elem_delim,quot=elem_quote) {
+    target.value = g.get_edge_list(delim,quot);
 }
 
 function add_nodes(g, num) {
@@ -140,11 +142,20 @@ function add_named_nodes(g,node_names) {
 	add_node_at_random_pos(g,node_names[i],node_shape);
 }
 
-function get_edge_list() {
+function rem_spec_chars(str_pair){
+    for(let i in str_pair) {
+	if(str_pair[i] == null || str_pair[i] == '')
+            continue;
+	str_pair[i] = str_pair[i].replace(/[^a-zA-Z0-9 _]/g, '');
+    }
+}
+
+function get_edge_list(delim=elem_delim) {
     const edges = area_edgelist.value.split('\n');
     let split_edges = [];
     for (let i in edges) {
-	const a_pair = edges[i].split(" ");
+	const a_pair = edges[i].split(delim);
+	//rem_spec_chars(a_pair);
 	if (a_pair.length != 2)
 	    continue;
 	split_edges.push(a_pair);
@@ -156,6 +167,7 @@ function get_node_list(edges) {
     let nodes = [];
     for(let i in edges) {
 	const a_pair = edges[i];
+	rem_spec_chars(a_pair);
 	for(let j in a_pair)
 	    if (nodes.indexOf(a_pair[j]) == -1)
 		nodes.push(a_pair[j]);

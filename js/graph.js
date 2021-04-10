@@ -77,15 +77,15 @@ class Graph {
         });
     }
 
-    get_edge_list() {
+    get_edge_list(delim,quot) {
 	let output_string = "";
 	for(let i in this.ns) {
 	    if (this.ns[i].links.length == 0) {
-		output_string = output_string + this.ns[i].name + "\n";
+		output_string += quot + this.ns[i].name + quot + "\n";
 		//console.log(output_string);
 	    } else {
 		for(let j in this.ns[i].links) {
-		    output_string = output_string + this.ns[i].name + " " + this.ns[i].links[j].name + "\n";
+		    output_string += quot + this.ns[i].name + quot + delim + quot + this.ns[i].links[j].name + quot + "\n";
 		    //console.log(output_string);
 		}
 	    }
