@@ -5,6 +5,8 @@ const node_params = {
     large_dist_div:  40, // 40
     small_dist_div:  30, // 30
     dist_threshold: 100, // 100
+    label_offset_x:   0, // 0
+    label_offset_y:   0,
     nudge_size: 5,
 };
 
@@ -177,7 +179,7 @@ class Node {
 	    this.c2d.stroke();
 	if (draw_labels) {
 	    this.c2d.fillStyle=this.fontcolour;
-	    this.c2d.fillText(this.name, this.x, this.y);
+	    this.c2d.fillText(this.name, this.x + node_params.label_offset_x, this.y + node_params.label_offset_y);
 	}
     }
 
