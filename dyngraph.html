@@ -394,11 +394,12 @@
 	    <tr>
 	      <td colspan="2" class="centred"><textarea id="edge_list" rows="10" cols="41"></textarea>
 	    </tr>
-	    <tr>
-	      <td colspan="2"><input type="button" id="btn_save_as_csv" value="Save as csv" onclick="save_as_csv('edge_list','inp_csv_fn');"> <input type="text" id="inp_csv_fn" value="edgelist.csv" /></td>
-	    </tr>
+	    <tr><td colspan="2" class="centred"><label>CSV I/O</label></td></tr>
 	    <tr>
 	      <td colspan="2"><input type="file" id="file_csv_in" onchange="read_image(this,'edge_list')"></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="button" id="btn_save_as_csv" value="Save as csv" onclick="save_as_csv('edge_list','inp_csv_fn');"> <input type="text" id="inp_csv_fn" value="edgelist.csv" /></td>
 	    </tr>
 	  </table>
 	</div>
