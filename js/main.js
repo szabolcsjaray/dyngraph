@@ -1,6 +1,7 @@
 let g;
 let node_radius = 5;
 const colours = {
+    back_colour: "#171412", // 墨色 「すみいろ」
     fill_colour: "#48929B", // 浅葱色「あさぎいろ」
     font_colour: "#DC3023", // 猩々緋「しょうじょうひ」
     outline_col: "#1D697C", // 浅葱色「あさぎいろ」
@@ -369,6 +370,12 @@ function clear_canvas(from_x=0,
 		      to_y=canv.height,
 		      ctx=c2d) {
     ctx.clearRect(from_x, from_y, to_x, to_y);
+    if(!off_pairs.back_colour) {
+	const saved_fillStyle = ctx.fillStyle;
+	ctx.fillStyle= rnd_pairs.back_colour ? gen_colour() : colours.back_colour;
+	ctx.fillRect(from_x, from_y, to_x, to_y);
+	ctx.fillStyle = saved_fillStyle;
+    }
 }
 
 function stop() {
