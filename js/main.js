@@ -1,6 +1,4 @@
 let g;
-let tracing;
-let labels;
 let node_radius = 5;
 const colours = {
     fill_colour: "#48929B", // 浅葱色「あさぎいろ」
@@ -410,37 +408,13 @@ function col_off_change(sel_id) {
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
 
-function check_labelling(l=labelling) {
-    if(l.checked) {
-	//console.log("trace: on");
-	labels = true;
-	return true;
-    } else {
-	//console.log("trace: off");
-	labels = false;
-	return false;
-    }
-}
-
-function check_tracer(t=tracer) {
-    if(t.checked) {
-	//console.log("trace: on");
-	tracing = true;
-	return true;
-    } else {
-	//console.log("trace: off");
-	tracing = false;
-	return false;
-    }
-}
-
 function animPhase() {
     g.draw(off_pairs,true,false);
     g.calcForces();
     g.step();
-    if(!tracing)
+    if(!tracer.checked)
 	clear_canvas();
-    g.draw(off_pairs,false,labels);
+    g.draw(off_pairs,false,labelling.checked);
     if (animate)
         setTimeout(animPhase, time_out);
 }
