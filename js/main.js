@@ -31,6 +31,33 @@ for (let a_key in colours) {
     rnd_pairs[a_key] = false;
 }
 
+// 1. go over node list
+// 2. colour the connected groups with the same colour (links and backLinks of the nodes to be visited)
+// 3. connections discovered -> to queue
+//    (groups will follow each other)
+// 4. connect groups to each other
+//    opt A: chain
+//    opt B: circular
+//    opt C: random
+// 5. lone nodes to be dealt with at the end
+//    opt A: first, connect them to each other, then connect one or two to main chain
+//    opt B: each to be connected to main branch one by one
+// function find_islands() {
+//     let conn = [];
+//     let uncon = [];
+//     let queue = [];
+//     for(let i = 0; i < g.ns.length; ++i) {
+// 	const n = g.ns[i];
+// 	if (n.links.length == 0 && n.backLinks.length == 0)
+// 	    uncon.push(n);
+// 	else {
+// 	    for (let j = 0; j < n.links.length; ++j) {
+// 		const m = n.links[j];
+// 	    }
+// 	}
+//     }
+// }
+
 function nudge(dir) {
     g.nudge(dir);
 }
