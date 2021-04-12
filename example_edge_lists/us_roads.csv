@@ -21,9 +21,9 @@ Oklahoma City,Baton Rouge
 Oklahoma City,Jackson
 Jackson,Atlanta
 Denver,Topeka
-Topeka,Jefferson City 
-Jefferson City ,Springfield
-Jefferson City ,Little Rock
+Topeka,Jefferson City
+Jefferson City,Springfield
+Jefferson City,Little Rock
 Denver,Lincoln
 Cheyenne,Lincoln
 Lincoln,Topeka
@@ -37,8 +37,8 @@ St. Paul,Madison
 Des Moines,Madison
 Des Moines,Springfield
 Springfield,Indianapolis
-Jefferson City ,Indianapolis
-Jefferson City ,Nashville
+Jefferson City,Indianapolis
+Jefferson City,Nashville
 Jackson,Nashville
 Jackson,Montgomery
 Montgomery,Tallahassee
@@ -48,7 +48,7 @@ Atlanta,Columbia
 Nashville,Atlanta
 Columbia,Raleigh
 Nashville,Raleigh
-Jefferson City ,Frankfort
+Jefferson City,Frankfort
 Indianapolis,Columbus
 Frankfort,Columbus
 Indianapolis,Lansing

@@ -28,7 +28,7 @@
 	      const edge_list = get_edge_list();
 	      let output_string = "";
 	      for(let i in edge_list) {
-		  output_string += edge_list[i][0] + delim + edge_list[i][1] + "\n";
+		  output_string += edge_list[i][0] + delim + edge_list[i][1] + elem_endl;
 	      }
 	      area_edgelist.value = output_string;
 	  }
@@ -396,7 +396,7 @@
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>CSV I/O</label></td></tr>
 	    <tr>
-	      <td colspan="2"><input type="file" id="file_csv_in" onchange="read_image(this,'edge_list')"></td>
+	      <td colspan="2"><input type="file" id="file_csv_in" onChange="read_image(this,'edge_list')"></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2"><input type="button" id="btn_save_as_csv" value="Save as csv" onclick="save_as_csv('edge_list','inp_csv_fn');"> <input type="text" id="inp_csv_fn" value="edgelist.csv" /></td>
@@ -457,15 +457,15 @@
 	    tmpLink.click();  
 	    document.body.removeChild( tmpLink );  
 	}
-	function save_as_csv(dat_id,inp_id,delim=","){
+	function save_as_csv(dat_id,inp_id,delim=elem_delim){
 	    // get canvas data  
-	    const dat = document.getElementById(dat_id).value.trim().split("\n");
+	    const dat = document.getElementById(dat_id).value.trim().split(elem_endl);
 	    const fn = document.getElementById(inp_id).value;
 
 	    let csv = "";
             dat.forEach( str => {
 		//console.log(str);
-                csv += str.split(" ").join(delim)+"\n";
+                csv += str.split(" ").join(delim)+elem_endl;
             });
 	    
  	    const csvData = new Blob([csv], { type: 'text/csv' });  
@@ -480,6 +480,32 @@
 	    size:0,
 	    data_file:[]
 	};
+	// const obj_csv_full = {
+	//     size:0,
+	//     data_file:""
+	// };
+
+	// function readFile(input,output_id) {
+	//     const file = input.files[0];
+	    
+	//     const reader = new FileReader();
+	    
+	    //reader.readAsText(file);
+	    //reader.readAsBinaryString(file);
+	    //reader.readAsArrayBuffer(file);
+	    
+	//     reader.onload = function() {
+	// 	console.log(reader.result);
+	// 	document.getElementById(output_id).value = reader.result;
+	// 	obj_csv_full.data_file = reader.result;
+	//     };
+	    
+	//     reader.onerror = function() {
+	// 	console.log(reader.error);
+	//     };
+	    
+	// }
+			
 	function read_image(input,outbox_id) {
 	    //console.log(input)
 	    if (input.files && input.files[0]) {
@@ -498,9 +524,9 @@
 	function parse_csv_data(data,out_id){
 	    const csv_data = [];
 	    document.getElementById(out_id).value = data;
-	    const line_break = data.split("\n");
+	    const line_break = data.split(elem_endl);
 	    line_break.forEach(res => {
-		csv_data.push(res.split(","));
+		csv_data.push(res.split(elem_delim));
 	    });
 	    //console.table(csvData);
 	}
@@ -648,7 +674,7 @@
 	    col_sels[it].addEventListener("change",function(){colours[it] = col_sels[it].value;});
 
 	const area_edgelist = document.getElementById("edge_list");
-	area_edgelist.placeholder = "n1 n2\nn2 n3\nn3 n1";
+	area_edgelist.placeholder = "n1,n2\nn2,n3\nn3,n1";
 
 	function save_settings(fn_id) {
 	    const fn = document.getElementById(fn_id).value;

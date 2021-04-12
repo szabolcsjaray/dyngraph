@@ -1,5 +1,10 @@
 const elem_delim = ",";
 const elem_quote = '"';
+const elem_endl = "\n";
+// const replacements_map = [
+//     [new RegExp('(["][^\"]+?)[\n]?([^\"]*?["])','gm'),"\%n\%"],
+//     [new RegExp('(["][^\"]+?)[,]?([^\"]*?["])','gm'),"\%delim\%"],
+// ];
 let g;
 let node_radius = 5;
 const colours = {
@@ -177,8 +182,17 @@ function rem_spec_chars(str_pair){
     }
 }
 
+// function make_replacements(in_str) {
+//     let out_str = "";
+//     for(let i in replacements_map) {
+// 	out_str = in_str.replace(replacements_map[i][0],"$1"+replacements_map[i][1]+"$2");
+//     }
+//     return(out_str);
+// }
+
 function get_edge_list(delim=elem_delim) {
-    const edges = area_edgelist.value.split('\n');
+    let edgelist_str = area_edgelist.value;
+    const edges = edgelist_str.split(elem_endl);
     let split_edges = [];
     for (let i in edges) {
 	const a_pair = edges[i].split(delim);
