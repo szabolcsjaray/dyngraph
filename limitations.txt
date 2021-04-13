@@ -1,2 +1,2 @@
-csv input does not handle special characters inside the quotes: e.g. comma or linebreak block reading
 label formatting and placement are manual only
+canvas resize resets font size
