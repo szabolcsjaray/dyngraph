@@ -1,10 +1,7 @@
 const elem_delim = ",";
 const elem_quote = '"';
 const elem_endl = "\n";
-// const replacements_map = [
-//     [new RegExp('(["][^\"]+?)[\n]?([^\"]*?["])','gm'),"\%n\%"],
-//     [new RegExp('(["][^\"]+?)[,]?([^\"]*?["])','gm'),"\%delim\%"],
-// ];
+
 let g;
 let node_radius = 5;
 const colours = {
@@ -182,33 +179,71 @@ function rem_spec_chars(str_pair){
     }
 }
 
-// function make_replacements(in_str) {
-//     let out_str = "";
-//     for(let i in replacements_map) {
-// 	out_str = in_str.replace(replacements_map[i][0],"$1"+replacements_map[i][1]+"$2");
-//     }
-//     return(out_str);
-// }
-
-function get_edge_list(delim=elem_delim) {
-    let edgelist_str = area_edgelist.value;
-    const edges = edgelist_str.split(elem_endl);
-    let split_edges = [];
+function proc_unquoted_csv(str,delim,endl) {
+    const edges = str.split(endl);
+    const split_edges = [];
     for (let i in edges) {
 	const a_pair = edges[i].split(delim);
-	//rem_spec_chars(a_pair);
 	if (a_pair.length != 2)
 	    continue;
 	split_edges.push(a_pair);
     }
-    return split_edges;
+    return(split_edges);
+}
+
+function proc_quoted_csv(str,quot,delim,endl) {
+    const in_str = new String(str);
+    const edge_list = [];
+    //const inStr = new String(str);
+    let in_quot = false;
+    let line_arr = [];
+    let item_str = "";
+    //console.log("received: |" + str + "|");
+    for (let ch of in_str) {
+	//console.log("char: " + ch);
+	if (ch == quot) {
+	    in_quot = in_quot ? false : true;
+	    continue;
+	}
+	if (in_quot) {
+	    item_str += ch;
+	    continue;
+	}
+	if (ch == delim) {
+	    line_arr.push(item_str);
+	    item_str = "";
+	    continue;
+	}
+	if (ch == endl) {
+	    line_arr.push(item_str);
+	    item_str = "";
+	    edge_list.push(line_arr);
+	    line_arr = [];
+	    continue;
+	}
+    }
+    if(item_str.length > 0)
+	line_arr.push(item_str);
+    if(line_arr.length > 0)
+	edge_list.push(line_arr);
+    //console.table(edge_list);
+    return edge_list;
+}
+
+function get_edge_list(quote=elem_quote,delim=elem_delim,endl=elem_endl) {
+    let edgelist_str = area_edgelist.value.trim();
+    const r = new RegExp("[" + quote + "]",'gm');
+    const q = edgelist_str.match(r);
+    //console.log("quote count: " + (!q ? 0 : q.length));
+    
+    return(!q ? proc_unquoted_csv(edgelist_str,delim,endl) : proc_quoted_csv(edgelist_str,quote,delim,endl));
 }
 
 function get_node_list(edges) {
     let nodes = [];
     for(let i in edges) {
 	const a_pair = edges[i];
-	rem_spec_chars(a_pair);
+	//rem_spec_chars(a_pair);
 	for(let j in a_pair)
 	    if (nodes.indexOf(a_pair[j]) == -1)
 		nodes.push(a_pair[j]);

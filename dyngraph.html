@@ -24,11 +24,11 @@
 	      for (let it in col_sels)
 	       	  col_sels[it].value = colours[it];
 	  }
-	  function remove_unconnected(delim=elem_delim) {
+	  function remove_unconnected(quot=elem_quote,delim=elem_delim,endl=elem_endl) {
 	      const edge_list = get_edge_list();
 	      let output_string = "";
 	      for(let i in edge_list) {
-		  output_string += edge_list[i][0] + delim + edge_list[i][1] + elem_endl;
+		  output_string += quot + edge_list[i][0] + quot + delim + quot + edge_list[i][1] + quot + endl;
 	      }
 	      area_edgelist.value = output_string;
 	  }
@@ -51,7 +51,7 @@
 	  }
 	  function proc_sel_graphalg(sel_graphalg) {
 	      const seli = sel_graphalg.selectedIndex;
-	      console.log("alg selected: " + seli);
+	      // console.log("alg selected: " + seli);
 	      switch (seli) {
 	      case 0:
 	      case 1:
