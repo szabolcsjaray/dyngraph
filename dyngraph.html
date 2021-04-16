@@ -186,7 +186,7 @@
 	  <table id="tbl_shape">
 	    <tr>
 	      <td class="button1"><label>canvas</label></td>
-	      <td><input title="size of the canvas (in screen pixels)" id="sz_canvas_w" type="number" min="100" max="8192" /><input title="size of the canvas (in screen pixels)" id="sz_canvas_h" type="number" min="100" max="8192" /></td>
+	      <td><input title="width of the canvas (in screen pixels)" id="sz_canvas_w" type="number" min="100" max="8192" /><input title="height of the canvas (in screen pixels)" id="sz_canvas_h" type="number" min="100" max="8192" disabled><input title="width/height lock" id="cb_canv_dim_lock" class="cb" type="checkbox" checked></td>
 	    </tr>
 	    <tr>
 	      <td><label>edges</label></td>
@@ -482,31 +482,6 @@
 	    size:0,
 	    data_file:[]
 	};
-	// const obj_csv_full = {
-	//     size:0,
-	//     data_file:""
-	// };
-
-	// function readFile(input,output_id) {
-	//     const file = input.files[0];
-	    
-	//     const reader = new FileReader();
-	    
-	    //reader.readAsText(file);
-	    //reader.readAsBinaryString(file);
-	    //reader.readAsArrayBuffer(file);
-	    
-	//     reader.onload = function() {
-	// 	console.log(reader.result);
-	// 	document.getElementById(output_id).value = reader.result;
-	// 	obj_csv_full.data_file = reader.result;
-	//     };
-	    
-	//     reader.onerror = function() {
-	// 	console.log(reader.error);
-	//     };
-	    
-	// }
 			
 	function read_image(input,outbox_id) {
 	    //console.log(input)
@@ -532,15 +507,20 @@
 	    });
 	    //console.table(csvData);
 	}
-
 	
 	const inp_vals_map = {};
 	function setup_inp_vals_map() {
+	    const canv_dim_lock = document.getElementById("cb_canv_dim_lock");
+
 	    for (let a_val in inp_vals) {
 		inp_vals_map[a_val] = document.getElementById(a_val);
 		inp_vals_map[a_val].value = inp_vals[a_val];
 	    }
 	    inp_vals_map.sz_canvas_w.addEventListener("change",function() {
+		if(canv_dim_lock.checked) {
+		    inp_vals.sz_canvas_h = this.value;
+		    inp_vals_map.sz_canvas_h.value = this.value;
+		}
 		resize_canvas(this.value,inp_vals.sz_canvas_h);
 		inp_vals.sz_canvas_w = this.value;
 		inp_vals_map.sz_font.dispatchEvent(new Event('change'));
@@ -555,6 +535,12 @@
 	    inp_vals_map.sz_font.addEventListener("change",function() {
 		c2d.font = this.value + 'px sans-serif';
 		inp_vals.sz_font = this.value;
+	    });
+	    canv_dim_lock.addEventListener("change",function(){
+		if(this.checked)
+		    inp_vals_map.sz_canvas_h.disabled = true;
+		else
+		    inp_vals_map.sz_canvas_h.disabled = false;
 	    });
 	    inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
 	    inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
