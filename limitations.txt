@@ -1,2 +1,2 @@
 label formatting and placement are manual only
-canvas resize resets font size
+
