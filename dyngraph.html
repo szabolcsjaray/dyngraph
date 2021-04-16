@@ -538,8 +538,16 @@
 		inp_vals_map[a_val] = document.getElementById(a_val);
 		inp_vals_map[a_val].value = inp_vals[a_val];
 	    }
-	    inp_vals_map.sz_canvas.addEventListener("change",function() {resize_canvas(this.value);});
-	    inp_vals_map.sz_font.addEventListener("change",function() {c2d.font = this.value + 'px sans-serif';});
+	    inp_vals_map.sz_canvas.addEventListener("change",function() {
+		resize_canvas(this.value);
+		inp_vals.sz_canvas = this.value;
+		inp_vals_map.sz_font.dispatchEvent(new Event('change'));
+		inp_vals_map.wd_line.dispatchEvent(new Event('change'));
+	    });
+	    inp_vals_map.sz_font.addEventListener("change",function() {
+		c2d.font = this.value + 'px sans-serif';
+		inp_vals.sz_font = this.value;
+	    });
 	    inp_vals_map.wd_line.addEventListener("change",function() {resize_linewidth(Number(this.value));});
 	    inp_vals_map.nu_scatter.addEventListener("change",function(){update_scatter(this.value)});
 	    inp_vals_map.nu_alpha.addEventListener("change",function(){update_alpha(this.value)});
