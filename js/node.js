@@ -6,8 +6,10 @@ const node_params = {
     small_dist_div:  30, // 30
     dist_threshold: 100, // 100
     label_offset_x:   0, // 0
-    label_offset_y:   0,
-    nudge_size: 5,
+    label_offset_y:   0, // 0
+    nudge_size:       5, // 5
+    fx_multip:        1, // 1
+    fy_multip:        1, // 1
 };
 
 function modify_params(param,value) {
@@ -76,8 +78,8 @@ class Node {
     }
 
     step() {
-        this.x += this.fx;
-        this.y += this.fy;
+        this.x += this.fx*node_params.fx_multip;;
+        this.y += this.fy*node_params.fy_multip;
         this.resetForce();
     }
 

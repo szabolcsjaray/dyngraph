@@ -17,8 +17,14 @@ const colours = {
 let graph_algorithm = 0;
 let animate;
 let scatter = 0.8;
-let scat = 800;
-let offs = 100;
+const scat = {
+    x: 800,
+    y: 800
+};
+const offs = {
+    x: 100,
+    y: 100,
+};
 let node_shape;
 const node_size = {
     s0: 5,
@@ -141,8 +147,10 @@ function sync_back_node_sizes(sz_id0,sz_id1) {
 function update_scatter(scatter_value,c=canv) {
     scatter = Math.abs(Number(scatter_value) / 100);
     const sc_off = Math.abs(1 - scatter) / 2;
-    scat = Math.round(c.width * scatter);
-    offs = Math.round(c.width * sc_off);
+    scat.x = Math.round(c.width * scatter);
+    scat.y = Math.round(c.height * scatter);
+    offs.x = Math.round(c.width * sc_off);
+    offs.y = Math.round(c.height * sc_off);
 }
 
 function set_graph_alg(a) {
@@ -153,8 +161,8 @@ function add_node_at_random_pos(gr,name,shape) {
     gr.addNode(new Node(name, shape, node_size.s0, node_size.s1,
 			colours,
 			rnd_pairs,
-			Math.random()*scat+offs,
-			Math.random()*scat+offs, c2d));
+			Math.random()*scat.x+offs.x,
+			Math.random()*scat.y+offs.y, c2d));
 }
 
 function print_edges(target,delim=elem_delim,quot=elem_quote) {
