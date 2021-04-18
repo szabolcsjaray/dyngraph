@@ -602,6 +602,7 @@
 	sel_graphalg.addEventListener("change",function(){
 	    proc_sel_graphalg(this);
 	});
+	const sel_nodeplace = document.getElementById("sel_nodeplace");
 	const col_sels = {};
 	const rnd_boxes = {};
 	const off_boxes = {};
@@ -669,6 +670,7 @@
 	    sync_back_shape_selection("sel_shape");
 	    sel_graphalg.selectedIndex = contents.graphalg_index;
 	    sel_graphalg.dispatchEvent(new Event("change"));
+	    sel_nodeplace.selectedIndex = contents.nodeplace_index;
 	    tracer.checked = contents.tracing;
 	    tracer.dispatchEvent(new Event("change"));
 	    labelling.checked = contents.labelling;
@@ -718,6 +720,7 @@
 	    out_val.labelling = labelling.checked;
 	    out_val.node_shape = node_shape;
 	    out_val.graphalg_index = sel_graphalg.selectedIndex;
+	    out_val.nodeplace_index = sel_nodeplace.selectedIndex;
 	    
 	    hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(JSON.stringify(out_val));
 	    hiddenElement.target = '_blank';
