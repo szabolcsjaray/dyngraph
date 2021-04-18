@@ -1,2 +1,4 @@
-label formatting and placement are manual only
-
+label: formatting and placement are manual only
+label: alignment is missing (centre/right)
+node placement selection: does not work with edge lists
+node placement selection: does not get saved and restored

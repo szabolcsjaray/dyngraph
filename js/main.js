@@ -220,12 +220,14 @@ function add_x_nodes(gr,num,c=canv) {
     const v_incr = (c.height - (2 * offs.y))/num;
     const h_incr = (c.width - (2 * offs.x))/num;
     let vpos = offs.y;
-    let hpos = offs.x;
-    for(let i = 0; i < num; vpos+=v_incr,hpos+=h_incr,++i)
+    let hpos1 = offs.x;
+    let hpos2 = canv.width-offs.x;
+    
+    for(let i = 0; i < num; vpos+=v_incr,hpos1+=h_incr,hpos2-=h_incr,++i)
 	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
 			    colours,
 			    rnd_pairs,
-			    hpos,
+			    (i % 2 == 0) ? hpos1 : hpos2,
 			    vpos,
 			    c2d));
 }
@@ -246,6 +248,9 @@ function add_nodes(g, num, sel_id="sel_nodeplace") {
 	break;
     case "lrdiagonal":
 	add_lrdiagonal_nodes(g,num);
+	break;
+    case "x":
+	add_x_nodes(g,num);
 	break;
     default:
 	console.log("unrecognised placement method:" + how);
