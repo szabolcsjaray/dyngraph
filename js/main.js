@@ -1,7 +1,6 @@
 const elem_delim = ",";
 const elem_quote = '"';
 const elem_endl = "\n";
-
 let g;
 let node_radius = 5;
 const colours = {
@@ -31,6 +30,7 @@ const node_size = {
     s1: 5
 };
 const time_out = 10;
+const jitter = 1;
 const min_num = 0;
 const off_pairs = {};
 const rnd_pairs = {};
@@ -121,7 +121,6 @@ function gen_colour(type=2,alpha=0.9) {
     return the_colour;
 }
 
-
 function resize_linewidth(sz) {
     c2d.lineWidth = sz;
 }
@@ -169,9 +168,88 @@ function print_edges(target,delim=elem_delim,quot=elem_quote) {
     target.value = g.get_edge_list(delim,quot);
 }
 
-function add_nodes(g, num) {
+function add_scattered_nodes(g,num) {
     for(let i = 0;i<num;i++)
 	add_node_at_random_pos(g,'n'+i,node_shape,node_size.s0, node_size.s1);
+}
+
+function add_hline_nodes(gr,num,c=canv) {
+    const vpos = c.height / 2;
+    let vpos_mod = jitter;
+    const h_incr = (c.width - (2 * offs.x))/num;
+    let hpos = offs.x;
+    for(let i = 0; i < num; hpos+=h_incr,++i,vpos_mod*=-1)
+	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+			    colours,
+			    rnd_pairs,
+			    hpos,
+			    vpos+vpos_mod,
+			    c2d));
+}
+
+function add_vline_nodes(gr,num,c=canv) {
+    const hpos = c.width / 2;
+    let hpos_mod = jitter;
+    const v_incr = (c.height - (2 * offs.y))/num;
+    let vpos = offs.y;
+    for(let i = 0; i < num; vpos+=v_incr,++i,hpos_mod*=-1)
+	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+			    colours,
+			    rnd_pairs,
+			    hpos+hpos_mod,
+			    vpos,
+			    c2d));
+}
+
+function add_lrdiagonal_nodes(gr,num,c=canv) {
+    const v_incr = (c.height - (2 * offs.y))/num;
+    const h_incr = (c.width - (2 * offs.x))/num;
+    let vpos = offs.y;
+    let hpos = offs.x;
+    let hpos_mod = jitter;
+    for(let i = 0; i < num; vpos+=v_incr,hpos+=h_incr,++i,hpos_mod*=-1)
+	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+			    colours,
+			    rnd_pairs,
+			    hpos+hpos_mod,
+			    vpos,
+			    c2d));
+}
+
+function add_x_nodes(gr,num,c=canv) {
+    const v_incr = (c.height - (2 * offs.y))/num;
+    const h_incr = (c.width - (2 * offs.x))/num;
+    let vpos = offs.y;
+    let hpos = offs.x;
+    for(let i = 0; i < num; vpos+=v_incr,hpos+=h_incr,++i)
+	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+			    colours,
+			    rnd_pairs,
+			    hpos,
+			    vpos,
+			    c2d));
+}
+
+function add_nodes(g, num, sel_id="sel_nodeplace") {
+    const sels = document.getElementById(sel_id);
+    const seli = sels.selectedIndex;
+    const how = sels[seli].value;
+    switch(how) {
+    case "scatter":
+	add_scattered_nodes(g,num);
+	break;
+    case "hline":
+	add_hline_nodes(g,num);
+	break;
+    case "vline":
+	add_vline_nodes(g,num);
+	break;
+    case "lrdiagonal":
+	add_lrdiagonal_nodes(g,num);
+	break;
+    default:
+	console.log("unrecognised placement method:" + how);
+    }
 }
 
 function add_named_nodes(g,node_names) {

@@ -398,6 +398,16 @@
 		  <option value="10">Triangulated</option>
 	      </select></td>
 	    </tr>
+	    <tr><td colspan="2" class="centred"><label>Initial node placement</label></td></tr>
+	    <tr>
+	      <td colspan="2"><select class="button2" id="sel_nodeplace">
+		  <option value="scatter" selected>Random Scatter</option>
+		  <option value="hline">Horizontal Line</option>
+		  <option value="vline">Vertical Line</option>
+		  <option value="lrdiagonal">Diagonal</option>
+	      </select></td>
+	    </tr>
+	    <tr><td colspan="2" class="centred"><label>Edge List</label></td></tr>
 	    <tr>
 	      <td><input type="button" class="button1" title="Ctrl+Alt+P" id="btn_print" onClick="print_edges(area_edgelist);" value="Print Edges" /></td>
 	      <td><input type="button" class="button1" title="Alt+Delete" id="btn_rm_lone" onClick="remove_unconnected();" value="Del Lone Nodes" /></td>
