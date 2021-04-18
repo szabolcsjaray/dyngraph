@@ -168,18 +168,18 @@ function print_edges(target,delim=elem_delim,quot=elem_quote) {
     target.value = g.get_edge_list(delim,quot);
 }
 
-function add_scattered_nodes(g,num) {
+function add_scattered_nodes(g,num,nl) {
     for(let i = 0;i<num;i++)
-	add_node_at_random_pos(g,'n'+i,node_shape,node_size.s0, node_size.s1);
+	add_node_at_random_pos(g,nl[i],node_shape,node_size.s0, node_size.s1);
 }
 
-function add_hline_nodes(gr,num,c=canv) {
+function add_hline_nodes(gr,num,nl,c=canv) {
     const vpos = c.height / 2;
     let vpos_mod = jitter;
     const h_incr = (c.width - (2 * offs.x))/num;
     let hpos = offs.x;
     for(let i = 0; i < num; hpos+=h_incr,++i,vpos_mod*=-1)
-	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
 			    colours,
 			    rnd_pairs,
 			    hpos,
@@ -187,13 +187,13 @@ function add_hline_nodes(gr,num,c=canv) {
 			    c2d));
 }
 
-function add_vline_nodes(gr,num,c=canv) {
+function add_vline_nodes(gr,num,nl,c=canv) {
     const hpos = c.width / 2;
     let hpos_mod = jitter;
     const v_incr = (c.height - (2 * offs.y))/num;
     let vpos = offs.y;
     for(let i = 0; i < num; vpos+=v_incr,++i,hpos_mod*=-1)
-	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
 			    colours,
 			    rnd_pairs,
 			    hpos+hpos_mod,
@@ -201,14 +201,14 @@ function add_vline_nodes(gr,num,c=canv) {
 			    c2d));
 }
 
-function add_lrdiagonal_nodes(gr,num,c=canv) {
+function add_lrdiagonal_nodes(gr,num,nl,c=canv) {
     const v_incr = (c.height - (2 * offs.y))/num;
     const h_incr = (c.width - (2 * offs.x))/num;
     let vpos = offs.y;
     let hpos = offs.x;
     let hpos_mod = jitter;
     for(let i = 0; i < num; vpos+=v_incr,hpos+=h_incr,++i,hpos_mod*=-1)
-	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
 			    colours,
 			    rnd_pairs,
 			    hpos+hpos_mod,
@@ -216,7 +216,7 @@ function add_lrdiagonal_nodes(gr,num,c=canv) {
 			    c2d));
 }
 
-function add_x_nodes(gr,num,c=canv) {
+function add_x_nodes(gr,num,nl,c=canv) {
     const v_incr = (c.height - (2 * offs.y))/num;
     const h_incr = (c.width - (2 * offs.x))/num;
     let vpos = offs.y;
@@ -224,7 +224,7 @@ function add_x_nodes(gr,num,c=canv) {
     let hpos2 = canv.width-offs.x;
     
     for(let i = 0; i < num; vpos+=v_incr,hpos1+=h_incr,hpos2-=h_incr,++i)
-	gr.addNode(new Node('n'+i, node_shape, node_size.s0, node_size.s1,
+	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
 			    colours,
 			    rnd_pairs,
 			    (i % 2 == 0) ? hpos1 : hpos2,
@@ -232,34 +232,36 @@ function add_x_nodes(gr,num,c=canv) {
 			    c2d));
 }
 
-function add_nodes(g, num, sel_id="sel_nodeplace") {
+function make_namelist(n,l) {
+    for(let i = 0; i < n; ++i)
+	l.push('n'+i);
+}
+
+function add_nodes(g, num, namelist=[], sel_id="sel_nodeplace") {
+    if (namelist.length == 0)
+	make_namelist(num,namelist);
     const sels = document.getElementById(sel_id);
     const seli = sels.selectedIndex;
     const how = sels[seli].value;
     switch(how) {
     case "scatter":
-	add_scattered_nodes(g,num);
+	add_scattered_nodes(g,num,namelist);
 	break;
     case "hline":
-	add_hline_nodes(g,num);
+	add_hline_nodes(g,num,namelist);
 	break;
     case "vline":
-	add_vline_nodes(g,num);
+	add_vline_nodes(g,num,namelist);
 	break;
     case "lrdiagonal":
-	add_lrdiagonal_nodes(g,num);
+	add_lrdiagonal_nodes(g,num,namelist);
 	break;
     case "x":
-	add_x_nodes(g,num);
+	add_x_nodes(g,num,namelist);
 	break;
     default:
 	console.log("unrecognised placement method:" + how);
     }
-}
-
-function add_named_nodes(g,node_names) {
-    for(let i in node_names)
-	add_node_at_random_pos(g,node_names[i],node_shape);
 }
 
 function rem_spec_chars(str_pair){
@@ -463,7 +465,6 @@ function make_tree_graph(nuno,nubr,c=canv) {
 	while(queue.length) {
 	    const ni = queue.shift();
 	    for(let b = 0; b < nubr && i < nuno; ++b,++i) {
-		//add_node_at_random_pos(gr,'n'+i,node_shape);
 		queue.push(i);
 		gr.addLink(ni,i);
 	    }
@@ -476,7 +477,7 @@ function make_el_graph() {
     const gr = new Graph('el');
     const edges = get_edge_list();
     const nodes = get_node_list(edges);
-    add_named_nodes(gr,nodes);
+    add_nodes(gr,nodes.length,nodes);
     for(let i in edges) {
 	if (edges[i].length != 2)
 	    continue;
