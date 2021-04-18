@@ -456,18 +456,14 @@ function make_matrix_graph(nuno) {
 
 function make_tree_graph(nuno,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
+    add_nodes(gr,nuno);
     const queue = [];
-    gr.addNode(new Node('n0', node_shape, node_size.s0, node_size.s1,
-			colours,
-			rnd_pairs,
-			c.width/2,
-			c.height/2, c2d));
     queue.push(0);
     for(let i = 1; i < nuno; ++i) {
 	while(queue.length) {
 	    const ni = queue.shift();
 	    for(let b = 0; b < nubr && i < nuno; ++b,++i) {
-		add_node_at_random_pos(gr,'n'+i,node_shape);
+		//add_node_at_random_pos(gr,'n'+i,node_shape);
 		queue.push(i);
 		gr.addLink(ni,i);
 	    }
