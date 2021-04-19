@@ -626,10 +626,12 @@
 	const sel_nodeplace = document.getElementById("sel_nodeplace");
 	const sel_label_align = document.getElementById("sel_label_align");
 	sel_label_align.addEventListener("change",function(){
+	    //console.log("set to: " + this[this.selectedIndex].value);
 	    c2d.textAlign = this[this.selectedIndex].value;
 	});
 	const sel_label_baseline = document.getElementById("sel_label_baseline");
 	sel_label_baseline.addEventListener("change",function(){
+	    //console.log("set to: " + this[this.selectedIndex].value);
 	    c2d.textBaseline = this[this.selectedIndex].value;
 	});
 	const col_sels = {};
@@ -700,12 +702,16 @@
 	    sel_graphalg.selectedIndex = contents.graphalg_index;
 	    sel_graphalg.dispatchEvent(new Event("change"));
 	    sel_nodeplace.selectedIndex = contents.nodeplace_index;
+	    sel_label_align.selectedIndex = contents.labelalign_index;
+	    sel_label_baseline.selectedIndex = contents.labelbaseline_index;
 	    tracer.checked = contents.tracing;
 	    tracer.dispatchEvent(new Event("change"));
 	    labelling.checked = contents.labelling;
 	    labelling.dispatchEvent(new Event("change"));
 	    config();
 	    restart();
+	    sel_label_align.dispatchEvent(new Event("change"));
+	    sel_label_baseline.dispatchEvent(new Event("change"));
 	};
 	// when it changes (ie: user selects a file)
 	infn.addEventListener("change", function() {
@@ -750,6 +756,8 @@
 	    out_val.node_shape = node_shape;
 	    out_val.graphalg_index = sel_graphalg.selectedIndex;
 	    out_val.nodeplace_index = sel_nodeplace.selectedIndex;
+	    out_val.labelalign_index = sel_label_align.selectedIndex;
+	    out_val.labelbaseline_index = sel_label_baseline.selectedIndex;
 	    
 	    hiddenElement.href = 'data:attachment/text,' + encodeURIComponent(JSON.stringify(out_val));
 	    hiddenElement.target = '_blank';
