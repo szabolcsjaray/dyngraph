@@ -1,3 +1,1 @@
-label: formatting and placement are manual only
-
-
+label: formatting and placement are manual only, and is ugly
