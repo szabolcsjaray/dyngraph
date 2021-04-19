@@ -292,11 +292,11 @@
 	    <tr>
 	      <td><table>
 		  <tr>
-		    <td><label title="Ctrl+Alt+T">Tracing:</label></td>
+		    <td><label title="Ctrl+Alt+T">Tracing</label></td>
 		    <td><input id="cb_tracing" class="cb" type="checkbox" checked></td>
 		  </tr>
 		  <tr>
-		    <td><label title="Ctrl+Alt+L">Labels:</label></td>
+		    <td><label title="Ctrl+Alt+L">Labels</label></td>
 		    <td><input id="cb_labels" class="cb" type="checkbox"></td>
 		  </tr>
 	      </table></td>
@@ -306,7 +306,28 @@
 	      </table></td>
 	    </tr>
 	    <tr>
-	      <td><label>Output file:</label></td>
+	      <td><label>Label Align</label></td>
+	      <td><select class="button2" id="sel_label_align">
+		  <option value="start" selected>start</option>
+		  <option value="end">end</option>
+		  <option value="left">left</option>
+		  <option value="right">right</option>
+		  <option value="center">centre</option>
+	      </select></td>
+	    </tr>
+	    <tr>
+	      <td><label>Label Basel.</label></td>
+	      <td><select class="button2" id="sel_label_baseline">
+		  <option value="top" selected>top</option>
+		  <option value="hanging">hanging</option>
+		  <option value="middle">middle</option>
+		  <option value="alphabetic">alphabetic</option>
+		  <option value="ideographic">ideographic</option>
+		  <option value="bottom">bottom</option>
+	      </select></td>
+	    </tr>
+	    <tr>
+	      <td><label>Output file</label></td>
 	      <td><label><input type="text" class="button1" id="out_fn" value="settings.json" /></label></td>
 	    </tr>
 	    <tr>
@@ -603,6 +624,14 @@
 	    proc_sel_graphalg(this);
 	});
 	const sel_nodeplace = document.getElementById("sel_nodeplace");
+	const sel_label_align = document.getElementById("sel_label_align");
+	sel_label_align.addEventListener("change",function(){
+	    c2d.textAlign = this[this.selectedIndex].value;
+	});
+	const sel_label_baseline = document.getElementById("sel_label_baseline");
+	sel_label_baseline.addEventListener("change",function(){
+	    c2d.textBaseline = this[this.selectedIndex].value;
+	});
 	const col_sels = {};
 	const rnd_boxes = {};
 	const off_boxes = {};
