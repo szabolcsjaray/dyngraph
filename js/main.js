@@ -232,6 +232,35 @@ function add_x_nodes(gr,num,nl,c=canv) {
 			    c2d));
 }
 
+class Point {
+    constructor(x,y) {
+	this.x = x;
+	this.y = y;
+    }
+}
+
+function get_point_on_circ(origin,radian,radius) {
+    return(new Point(Math.round(origin.x + Math.cos(radian) * radius),
+		     Math.round(origin.y + Math.sin(radian) * radius)));
+    }
+
+function add_circular_nodes(gr,num,nl,c=canv) {
+    const o = new Point(c.width/2,c.height/2);
+    const radius = (o.x < o.y) ? o.x - offs.x : o.y - offs.y;
+    const rad_incr = (2 * Math.PI) / num;
+    let radian = 0;
+    for(let i = 0; i < num; ++i,radian+=rad_incr) {
+	const p = get_point_on_circ(o,radian,radius)
+	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
+			    colours,
+			    rnd_pairs,
+			    p.x,
+			    p.y,
+			    c2d));
+    }
+	
+}
+
 function make_namelist(n,l) {
     for(let i = 0; i < n; ++i)
 	l.push('n'+i);
@@ -258,6 +287,9 @@ function add_nodes(g, num, namelist=[], sel_id="sel_nodeplace") {
 	break;
     case "x":
 	add_x_nodes(g,num,namelist);
+	break;
+    case "o":
+	add_circular_nodes(g,num,namelist);
 	break;
     default:
 	console.log("unrecognised placement method:" + how);
