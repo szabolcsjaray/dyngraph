@@ -38,8 +38,12 @@ class Node {
         this.c2d = c2d;
         this.fx = 0;
         this.fy = 0;
+	this.visited = false;
     }
 
+    visit() { this.visited = true; }
+    unvisit() { this.visited = false; }
+    
     refresh_colours(cols,rnd) {
         this.fillcolour = rnd.fill_colour ? gen_colour() : cols.fill_colour;
 	this.fontcolour = rnd.font_colour ? gen_colour() : cols.font_colour;

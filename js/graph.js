@@ -77,6 +77,12 @@ class Graph {
         });
     }
 
+    unvisit_nodes() {
+	this.ns.forEach( node => {
+	    node.unvisit();
+	});
+    }
+    
     get_edge_list(delim,quot) {
 	let output_string = "";
 	for(let i in this.ns) {
