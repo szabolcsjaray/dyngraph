@@ -66,7 +66,7 @@ function discover_a_group(a_node,group_colour,the_group) {
 	the_group.push(a_node);
     else
 	return;
-    //a_node.fillcolour = group_colour;
+    a_node.fillcolour = "#" + group_colour;
     a_node.visit();
     const queue = [];
     for (let i = 0; i < a_node.links.length; ++i) {
