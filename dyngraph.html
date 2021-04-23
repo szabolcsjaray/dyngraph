@@ -11,6 +11,8 @@
 	<script type="text/javascript">
 	  function init() {
 	      setup_inp_vals_map();
+	      init_starting_colour_selector();
+	      document.getElementById("sel_starting_safe_colour").dispatchEvent(new Event("change"));
 	  }
 	  function config() {
 	      fill_in_colours();
@@ -468,7 +470,11 @@
 	      <td><input type="button" title="した (Ctrl+Shift+DownArrow)" id="btn_down" onClick="nudge('down');" value="下" /></td>
 	    </tr>
 	    <tr>
-	      <td><input type="button" id="btn_island_connect" onClick="connect_islands();" value="Connect Islands" /></td>
+	      <td><input type="button" id="btn_island_connect" onClick="connect_islands();" value="Connect Islands" /> <label>starting with colour </label><select class="button1" id="sel_starting_safe_colour"></select></td>
+	      <td></td>
+	    </tr>
+	    <tr>
+	      <td></td>
 	      <td></td>
 	    </tr>
 	  </table>
@@ -487,6 +493,19 @@
 	    nu_branches:   2,
 	    nu_scatter:   80,
 	    nu_alpha:     90,
+	}
+	function init_starting_colour_selector() {
+	    const sel_box = document.getElementById("sel_starting_safe_colour");
+	    for(var i = 0, l = safe_colours.length; i < l; i++){
+		const option = safe_colours[i];
+		sel_box.options.add( new Option(option, option, false) );
+		sel_box.options[i].style.backgroundColor = "#" + option;
+	    }
+	    sel_box.selectedIndex = 6;
+	    sel_box.addEventListener("change",function(){
+		safe_colour_index = this.selectedIndex
+		sel_box.style.backgroundColor = "#" + sel_box[sel_box.selectedIndex].value;
+	    });
 	}
 	function update_alpha(alpha_value) {
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);
