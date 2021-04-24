@@ -102,7 +102,6 @@ class Node {
     move_right() {
 	this.x += node_params.nudge_size;
     }
-
     
     addLink(otherNode) {
 	this.add_uni_link(otherNode);
@@ -122,7 +121,7 @@ class Node {
 	    if (this.links[i].name == other_node.name)
 		return true;
 	for(let i in this.backLinks)
-	    if (this.backLinks[i] == other_node.name)
+	    if (this.backLinks[i].name == other_node.name)
 		return true;
 	return false;
     }
