@@ -45,7 +45,9 @@ function get_next_safe_colour() {
 	safe_colour_index = 0;
     return(safe_colours[safe_colour_index++]);
 }
-
+function reset_safe_colour_index(sel_box_id="sel_starting_safe_colour") {
+    safe_colour_index = document.getElementById(sel_box_id).selectedIndex;
+}
 function discover_a_group(a_node,group_colour,the_group) {
     if (!a_node.visited)
 	the_group.push(a_node);
@@ -82,10 +84,10 @@ function discover_node_groups() {
     return(groups)
 }
 
-function connect_islands() {
+function connect_node_groups() {
     const islands = discover_node_groups();
     for(let i = 1; i < islands.length; ++i) {
-	islands[i][0].addLink(islands[i-1][0]);
+	islands[i][0].connect(islands[i-1][0]);
     }
 }
 
