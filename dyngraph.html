@@ -14,6 +14,9 @@
 	      init_starting_colour_selector();
 	      document.getElementById("sel_starting_safe_colour").dispatchEvent(new Event("change"));
 	  }
+	  function post_init() {
+	      init_connectedness_selectors();
+	  }
 	  function config() {
 	      fill_in_colours();
 	      tracer.dispatchEvent(new Event('change'));
@@ -182,7 +185,7 @@
 	  }
 	</style>
     </head>
-    <body onload="init();config();restart();">
+    <body onload="init();config();restart();post_init();">
       <div id="main_container">
         <div class="column" id="panel_space">
 	  <table id="tbl_shape">
@@ -474,7 +477,7 @@
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td></td>
+	      <td><label>Is node <select id="sel_node_list1"></select> directly connected to node <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span></label></td>
 	      <td></td>
 	    </tr>
 	  </table>
@@ -498,6 +501,7 @@
 	    const sel_box = document.getElementById("sel_starting_safe_colour");
 	    for(var i = 0, l = safe_colours.length; i < l; i++){
 		const option = safe_colours[i];
+		//                               text    value  selected
 		sel_box.options.add( new Option(option, option, false) );
 		sel_box.options[i].style.backgroundColor = "#" + option;
 	    }
@@ -507,6 +511,27 @@
 		sel_box.style.backgroundColor = "#" + sel_box[sel_box.selectedIndex].value;
 	    });
 	}
+	function init_node_selector(sel_box,nodes) {
+	    const l = nodes.length;
+	    for(let i = 0; i < l; ++i) {
+		const option = nodes[i].name;
+		sel_box.options.add( new Option(option,option,false));
+	    }
+	}
+	function init_connectedness_selectors(sel1="sel_node_list1",sel2="sel_node_list2",res="sp_is_connected",nodes=g.ns) {
+	    const sel_box1 = document.getElementById(sel1);
+	    const sel_box2 = document.getElementById(sel2);
+	    const res_targ = document.getElementById(res);
+	    init_node_selector(sel_box1,nodes);
+	    init_node_selector(sel_box2,nodes);
+	    sel_box1.addEventListener("change",function() {
+		res_targ.innerHTML = nodes[this.selectedIndex].is_connected(nodes[sel_box2.selectedIndex]);
+	    });
+	    sel_box2.addEventListener("change",function() {
+		res_targ.innerHTML = nodes[this.selectedIndex].is_connected(nodes[sel_box1.selectedIndex]);
+	    });
+	}
+	    
 	function update_alpha(alpha_value) {
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);
 	}
