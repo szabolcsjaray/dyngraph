@@ -46,21 +46,6 @@ function get_next_safe_colour() {
     return(safe_colours[safe_colour_index++]);
 }
 
-// 1. go over node list
-// 2. colour the connected groups with the same colour
-//    * perhaps simpler, if only links are used, not backlinks
-//    * backLinks are used for group of unconnected nodes only
-//    * best if safe colours are used for this purpose
-// 3. connection targets discovered -> to queue
-//    (groups will follow each other)
-// 4. connect groups to each other
-//    opt A: chain (long model)
-//    opt B: circular (neighbourhood model)
-//    opt C: random (how many links per group?)
-// 5. lone nodes to be dealt with at the end
-//    opt A: first, connect them to each other, then connect one or two to main chain
-//    opt B: each to be connected to main branch one by one (perhaps, this will result in the neater look)
-
 function discover_a_group(a_node,group_colour,the_group) {
     if (!a_node.visited)
 	the_group.push(a_node);
