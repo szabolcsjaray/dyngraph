@@ -16,6 +16,10 @@ class Graph {
         this.ns[index1].addLink(this.ns[index2]);
     }
 
+    add_uni_link(index1, index2) {
+	this.ns[index1].add_uni_link(this.ns[index2]);
+    }
+
     draw(params,draw_trace,draw_labels) {
 	//console.log("graph.draw() has been called");
         this.ns.forEach( node => {
@@ -86,16 +90,10 @@ class Graph {
     get_edge_list(delim,quot) {
 	let output_string = "";
 	for(let i in this.ns) {
-	    // if (this.ns[i].links.length == 0) {
-	    // 	output_string += quot + this.ns[i].name + quot + "\n";
-	    // 	//console.log(output_string);
-	    // }
-	    // else {
 		for(let j in this.ns[i].links) {
 		    output_string += quot + this.ns[i].name + quot + delim + quot + this.ns[i].links[j].name + quot + "\n";
 		    //console.log(output_string);
 		}
-	    //}
 	}
 	return output_string;
     }
