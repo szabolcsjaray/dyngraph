@@ -185,7 +185,7 @@
 	  }
 	</style>
     </head>
-    <body onload="init();config();restart();post_init();">
+    <body onload="init();config();restart();">
       <div id="main_container">
         <div class="column" id="panel_space">
 	  <table id="tbl_shape">
@@ -477,7 +477,7 @@
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td><label>Is node <select id="sel_node_list1"></select> directly connected to node <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span></label></td>
+	      <td><label>Is node <select id="sel_node_list1"></select> directly connected to node <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span> <input type="button" id="btn_hilite_sel_nodes" value="higlight"  onclick="hilite_selected_nodes();"/> <input type="button" id="btn_connect_sel_nodes" value="connect"  onclick="connect_selected_nodes();"/> <input type="button" id="btn_disconnect_sel_nodes" value="disconnect"  onclick="disconnect_selected_nodes();"/></label></td>
 	      <td></td>
 	    </tr>
 	  </table>
@@ -511,12 +511,41 @@
 		sel_box.style.backgroundColor = "#" + sel_box[sel_box.selectedIndex].value;
 	    });
 	}
+	function remove_all_options(selectBox) {
+	    while (selectBox.options.length > 0) {
+		selectBox.remove(0);
+	    }
+	}
 	function init_node_selector(sel_box,nodes) {
+	    if(sel_box.options.length > 0)
+		remove_all_options(sel_box);
 	    const l = nodes.length;
 	    for(let i = 0; i < l; ++i) {
 		const option = nodes[i].name;
 		sel_box.options.add( new Option(option,option,false));
 	    }
+	}
+	function hilite_selected_nodes(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",colours=safe_colours) {
+	    const nd_sel_box1 = document.getElementById(sel1);
+	    const nd_sel_box2 = document.getElementById(sel2);
+	    const col_sel_box = document.getElementById(col_sel_id);
+	    nodes[nd_sel_box1.selectedIndex].fillcolour = "#" + colours[col_sel_box.selectedIndex];
+	    nodes[nd_sel_box2.selectedIndex].fillcolour = "#" + colours[col_sel_box.selectedIndex];
+	}
+	function connect_selected_nodes(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2") {
+	    const nd_sel_box1 = document.getElementById(sel1);
+	    const nd_sel_box2 = document.getElementById(sel2);
+	    nodes[nd_sel_box1.selectedIndex].connect(nodes[nd_sel_box2.selectedIndex]);
+	    nd_sel_box2.dispatchEvent(new Event("change"));
+	}
+	function disconnect_selected_nodes(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2") {
+	    const nd_sel_box1 = document.getElementById(sel1);
+	    const nd_sel_box2 = document.getElementById(sel2);
+	    const ind1 = nd_sel_box1.selectedIndex;
+	    const ind2 = nd_sel_box2.selectedIndex
+	    nodes[ind1].disconnect(nodes[ind2]);
+	    nodes[ind2].disconnect(nodes[ind1]);
+	    nd_sel_box2.dispatchEvent(new Event("change"));
 	}
 	function init_connectedness_selectors(sel1="sel_node_list1",sel2="sel_node_list2",res="sp_is_connected",nodes=g.ns) {
 	    const sel_box1 = document.getElementById(sel1);
@@ -721,6 +750,7 @@
 		  Number(inp_vals_map.nu_branches.value),
 		  Number(inp_vals_map.nu_alpha.value)
 		 );
+	    post_init();
 	}
 	function load_cols(cols) {
 	    for(a_col in cols) {

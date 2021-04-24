@@ -13,7 +13,7 @@ class Graph {
         if (index1<0 || index1>=this.ns.length || index2<0 || index2>=this.ns.length)
             return;
 
-        this.ns[index1].addLink(this.ns[index2]);
+        this.ns[index1].connect(this.ns[index2]);
     }
 
     add_uni_link(index1, index2) {

@@ -102,26 +102,49 @@ class Node {
     move_right() {
 	this.x += node_params.nudge_size;
     }
-    
-    addLink(otherNode) {
-	this.add_uni_link(otherNode);
-        otherNode.addBacklink(this);
+
+    connect(otherNode) {
+	if(!this.is_connected(otherNode)) {
+	    this.add_uni_link(otherNode);
+	    otherNode.add_back_link(this);
+	}
     }
 
+    disconnect(otherNode) {
+	if(this.is_connected(otherNode)) {
+	    this.rem_link(otherNode);
+	    otherNode.rem_back_link(this);
+	}
+    }
+	
+    rem_from_arr(arr,node) {
+	const ind = arr.indexOf(node);
+	if (ind > -1)
+	    arr.splice(ind,1);
+    }
+    
+    rem_link(otherNode) {
+	this.rem_from_arr(this.links,otherNode);
+    }
+
+    rem_back_link(otherNode) {
+	this.rem_from_arr(otherNode.backLinks,this);
+    }
+    
     add_uni_link(otherNode) {
         this.links.push(otherNode);
     }
 
-    addBacklink(otherNode) {
+    add_back_link(otherNode) {
         this.backLinks.push(otherNode);
     }
 
     is_connected(other_node) {
 	for(let i in this.links)
-	    if (this.links[i].name == other_node.name)
+	    if (this.links[i] == other_node)
 		return true;
 	for(let i in this.backLinks)
-	    if (this.backLinks[i].name == other_node.name)
+	    if (this.backLinks[i] == other_node)
 		return true;
 	return false;
     }
