@@ -105,8 +105,12 @@ class Node {
 
     
     addLink(otherNode) {
-        this.links.push(otherNode);
+	this.add_uni_link(otherNode);
         otherNode.addBacklink(this);
+    }
+
+    add_uni_link(otherNode) {
+        this.links.push(otherNode);
     }
 
     addBacklink(otherNode) {
