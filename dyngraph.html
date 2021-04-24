@@ -480,6 +480,10 @@
 	      <td><label>Is node <select id="sel_node_list1"></select> directly connected to node <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span> <input type="button" id="btn_hilite_sel_nodes" value="higlight"  onclick="hilite_selected_nodes();"/> <input type="button" id="btn_connect_sel_nodes" value="connect"  onclick="connect_selected_nodes();"/> <input type="button" id="btn_disconnect_sel_nodes" value="disconnect"  onclick="disconnect_selected_nodes();"/></label></td>
 	      <td></td>
 	    </tr>
+	    <tr>
+	      <td><label>Is there a route between the two nodes above? <input type="button" id="btn_route" value="Examine" onclick="examine_routes_between();"/> <span id="sp_is_route_between"></span></label></td>
+	      <td></td>
+	    </tr>
 	  </table>
 	</div>
       </div>
@@ -560,7 +564,16 @@
 		res_targ.innerHTML = nodes[this.selectedIndex].is_connected(nodes[sel_box1.selectedIndex]);
 	    });
 	}
-	    
+	function examine_routes_between(sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",res="sp_is_route_between",gr=g) {
+	    const node1 = gr.ns[document.getElementById(sel1).selectedIndex];
+	    const node2 = gr.ns[document.getElementById(sel2).selectedIndex];
+	    const res_targ = document.getElementById(res);
+	    const group_colour = safe_colours[document.getElementById(col_sel_id).selectedIndex];
+	    const node1_group = [];
+	    discover_a_group(node1,group_colour,node1_group);
+	    res_targ.innerHTML = node1_group.indexOf(node2) > -1;
+	    gr.unvisit_nodes();
+	}
 	function update_alpha(alpha_value) {
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);
 	}
