@@ -477,11 +477,11 @@
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td><label>Is node <select id="sel_node_list1"></select> directly connected to node <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span> <input type="button" id="btn_hilite_sel_nodes" value="higlight"  onclick="hilite_selected_nodes();"/> <input type="button" id="btn_connect_sel_nodes" value="connect"  onclick="connect_selected_nodes();"/> <input type="button" id="btn_disconnect_sel_nodes" value="disconnect"  onclick="disconnect_selected_nodes();"/></label></td>
+	      <td><label>Edge between <select id="sel_node_list1"></select> and <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span> <input type="button" id="btn_hilite_sel_nodes" value="highlight"  onclick="hilite_selected_nodes();"/> <input type="button" id="btn_connect_sel_nodes" value="connect"  onclick="connect_selected_nodes();"/> <input type="button" id="btn_disconnect_sel_nodes" value="disconnect"  onclick="disconnect_selected_nodes();"/></label></td>
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td><label>Is there a route between the two nodes above? <input type="button" id="btn_route" value="Examine" onclick="examine_routes_between();"/> <span id="sp_is_route_between"></span></label></td>
+	      <td><label>Route between the two? <input type="button" id="btn_route" value="Examine" onclick="examine_routes_between();"/> <span id="sp_is_route_between"></span></label></td>
 	      <td></td>
 	    </tr>
 	  </table>
@@ -509,7 +509,7 @@
 		sel_box.options.add( new Option(option, option, false) );
 		sel_box.options[i].style.backgroundColor = "#" + option;
 	    }
-	    sel_box.selectedIndex = 6;
+	    sel_box.selectedIndex = 102;
 	    sel_box.addEventListener("change",function(){
 		safe_colour_index = this.selectedIndex
 		sel_box.style.backgroundColor = "#" + sel_box[sel_box.selectedIndex].value;
@@ -533,8 +533,11 @@
 	    const nd_sel_box1 = document.getElementById(sel1);
 	    const nd_sel_box2 = document.getElementById(sel2);
 	    const col_sel_box = document.getElementById(col_sel_id);
-	    nodes[nd_sel_box1.selectedIndex].fillcolour = "#" + colours[col_sel_box.selectedIndex];
-	    nodes[nd_sel_box2.selectedIndex].fillcolour = "#" + colours[col_sel_box.selectedIndex];
+	    const sel_col = "#" + colours[col_sel_box.selectedIndex]
+	    nodes[nd_sel_box1.selectedIndex].fillcolour = sel_col;
+	    nodes[nd_sel_box1.selectedIndex].linecolour = sel_col;
+	    nodes[nd_sel_box2.selectedIndex].fillcolour = sel_col;
+	    nodes[nd_sel_box2.selectedIndex].linecolour = sel_col;
 	}
 	function connect_selected_nodes(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2") {
 	    const nd_sel_box1 = document.getElementById(sel1);
