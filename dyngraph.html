@@ -489,7 +489,7 @@
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td><label>Add node with name <input type="text" id="inp_new_node_name" size="10" /><input type="button" id="btn_add_node" onclick="add_new_node('inp_new_node_name')" value="Add" /></label></td>
+	      <td><label>Add node with name <input type="text" id="inp_new_node_name" onchange="add_new_node(this)" size="10" /></label></td>
 	      <td></td>
 	    </tr>
 	  </table>
@@ -509,12 +509,12 @@
 	    nu_scatter:   80,
 	    nu_alpha:     90,
 	}
-	function add_new_node(name_id,sel_shape_id="sel_shape",gr=g) {
-	    const node_name = document.getElementById(name_id).value;
+	function add_new_node(name_box,sel_shape_id="sel_shape",gr=g) {
 	    const sel_shape = document.getElementById(sel_shape_id);
 	    const node_shape = sel_shape[sel_shape.selectedIndex].value;
-	    add_node_at_random_pos(gr,node_name,node_shape);
+	    add_node_at_random_pos(gr,name_box.value,node_shape);
 	    init_connectedness_selectors();
+	    name_box.value = "";
 	}
 	function rem_node(selid="sel_node_list1",gr=g) {
 	    gr.rem_node(document.getElementById(selid).selectedIndex);
