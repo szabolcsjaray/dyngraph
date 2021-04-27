@@ -481,11 +481,15 @@
 	      <td></td>
 	    </tr>
 	    <tr>
+	      <td><label><input type="button" id="btn_rem_node" onclick="rem_node('sel_node_list1')" value="Remove" /> first selected node above.</label></td>
+	      <td></td>
+	    </tr>
+	    <tr>
 	      <td><label>Route between the two? <input type="button" id="btn_route" value="Examine" onclick="examine_routes_between();"/> <span id="sp_is_route_between"></span></label></td>
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td><label>Add node with name <input type="text" id="inp_new_node_name" size="10" /><input type="button" id="btn_add_node" onclick="add_new_node('inp_new_node_name')" value="Add" /> <!-- or <input type="button" id="btn_add_node" onclick="del_node('inp_del_node_with_name')" value="Delete" /> --></label></td>
+	      <td><label>Add node with name <input type="text" id="inp_new_node_name" size="10" /><input type="button" id="btn_add_node" onclick="add_new_node('inp_new_node_name')" value="Add" /></label></td>
 	      <td></td>
 	    </tr>
 	  </table>
@@ -505,11 +509,15 @@
 	    nu_scatter:   80,
 	    nu_alpha:     90,
 	}
-	function add_new_node(name_id,sel_shape_id="sel_shape") {
+	function add_new_node(name_id,sel_shape_id="sel_shape",gr=g) {
 	    const node_name = document.getElementById(name_id).value;
 	    const sel_shape = document.getElementById(sel_shape_id);
 	    const node_shape = sel_shape[sel_shape.selectedIndex].value;
-	    add_node_at_random_pos(g,node_name,node_shape);
+	    add_node_at_random_pos(gr,node_name,node_shape);
+	    init_connectedness_selectors();
+	}
+	function rem_node(selid="sel_node_list1",gr=g) {
+	    gr.rem_node(document.getElementById(selid).selectedIndex);
 	    init_connectedness_selectors();
 	}
 	function init_starting_colour_selector() {

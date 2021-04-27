@@ -40,6 +40,16 @@ class Graph {
         });
     }
 
+    rem_node(ind) {
+	for(let n of this.ns[ind].links) {
+	    this.ns[ind].disconnect(n);
+	}
+	for(let n of this.ns[ind].backLinks) {
+	    n.disconnect(this.ns[ind]);
+	}
+	this.ns.splice(ind,1);
+    }
+
     refresh_colours(cols,rnd) {
         this.ns.forEach( node => {
             node.refresh_colours(cols,rnd);
