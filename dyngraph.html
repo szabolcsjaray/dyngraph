@@ -477,11 +477,7 @@
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td><label>Edge between <select id="sel_node_list1"></select> and <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span> <input type="button" id="btn_hilite_sel_nodes" value="highlight"  onclick="hilite_selected_nodes();"/> <input type="button" id="btn_connect_sel_nodes" value="connect"  onclick="connect_selected_nodes();"/> <input type="button" id="btn_disconnect_sel_nodes" value="disconnect"  onclick="disconnect_selected_nodes();"/></label></td>
-	      <td></td>
-	    </tr>
-	    <tr>
-	      <td><label><input type="button" id="btn_rem_node" onclick="rem_node('sel_node_list1')" value="Remove" /> first selected node above.</label></td>
+	      <td><label>Edge between <select id="sel_node_list1"></select> and <select id="sel_node_list2"></select>? <span id="sp_is_connected"></span> <input type="button" id="btn_hilite_sel_nodes" value="highlight"  onclick="hilite_selected_nodes();"/> <input type="button" id="btn_connect_sel_nodes" value="connect"  onclick="connect_selected_nodes();"/> <input type="button" id="btn_disconnect_sel_nodes" value="disconnect"  onclick="disconnect_selected_nodes();"/> <input type="button" onclick="rem_node('sel_node_list1')" value="Remove first" /> <input type="button" onclick="rem_node('sel_node_list2')" value="Remove second" /></label></td>
 	      <td></td>
 	    </tr>
 	    <tr>
@@ -579,6 +575,10 @@
 	    const res_targ = document.getElementById(res);
 	    init_node_selector(sel_box1,nodes);
 	    init_node_selector(sel_box2,nodes);
+	    if(nodes.length > 0) {
+		sel_box1.selectedIndex = 0;
+		sel_box2.selectedIndex = nodes.length-1;
+	    }
 	    sel_box1.addEventListener("change",function() {
 		res_targ.innerHTML = nodes[this.selectedIndex].is_connected(nodes[sel_box2.selectedIndex]);
 	    });
