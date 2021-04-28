@@ -1,4 +1,5 @@
 const elem_delim = ",";
+const elem_delim2 = " ";
 const elem_quote = '"';
 const elem_endl = "\n";
 let g;

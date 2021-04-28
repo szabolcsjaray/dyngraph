@@ -1,1 +1,5 @@
-label: formatting and placement are manual only, and is ugly
+numbers: more or less tolerable speed and view is for about 1000 nodes and
+	 1500 edges
+label: formatting and placement are manual only, and is often ugly
+label: placement after restoring saved settings is not good.
+CSV input: sometimes creates errors, needs investigation

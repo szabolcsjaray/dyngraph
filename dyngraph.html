@@ -450,6 +450,10 @@
 	    <tr>
 	      <td colspan="2"><input type="button" id="btn_save_as_csv" value="Save as csv" onclick="save_as_csv('edge_list','inp_csv_fn');"> <input type="text" id="inp_csv_fn" value="edgelist.csv" /></td>
 	    </tr>
+	    <tr><td colspan="2" class="centred"><label>Sedgewick Input</label></td></tr>
+	    <tr>
+	      <td colspan="2"><input type="file" id="file_sedge_in" onChange="read_image2(this)"></td>
+	    </tr>
 	  </table>
 	</div>
 	<div class="column" id="canvas_space">
@@ -650,6 +654,35 @@
 		    //console.log(obj_csv.dataFile)
 		    parse_csv_data(obj_csv.data_file,outbox_id);
 		}
+	    }
+	}
+
+	function read_image2(input) {
+	    //console.log(input)
+	    if (input.files && input.files[0]) {
+		const reader = new FileReader();
+		reader.readAsBinaryString(input.files[0]);
+		reader.onload = function (e) {
+		    //console.log(e);
+		    parse_sedgewick_data(e.target.result.split(elem_endl));
+		}
+	    }
+	}
+
+	function parse_sedgewick_data(dat_lines) {
+	    const nuvert = dat_lines[0];
+	    const nuedge = dat_lines[1];
+	    console.log("Number of vertices: " + nuvert);
+	    console.log("Number of edges: " + nuedge);
+	    clear_canvas();
+	    g = new Graph("sedge");
+	    for(let i = 0; i < nuvert; ++i)
+		add_node_at_random_pos(g,i,node_shape);
+	    const len = dat_lines.length
+	    for(let i = 2; i < len; ++i) {
+		const arr = dat_lines[i].trim().split(elem_delim2);
+		if (arr.length == 2)
+		    g.addLink(arr[0].trim(),arr[1].trim());
 	    }
 	}
  
