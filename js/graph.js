@@ -12,8 +12,8 @@ class Graph {
     addLink(index1, index2) {
         if (index1<0 || index1>=this.ns.length || index2<0 || index2>=this.ns.length)
             return;
-
-        this.ns[index1].connect(this.ns[index2]);
+	if (!Node.is_connected(this.ns[index1],this.ns[index2]) && index1 != index2)
+            this.ns[index1].connect(this.ns[index2]);
     }
 
     add_uni_link(index1, index2) {
@@ -23,7 +23,7 @@ class Graph {
     draw(params,draw_trace,draw_labels) {
 	//console.log("graph.draw() has been called");
         this.ns.forEach( node => {
-            node.draw(params,draw_trace,draw_labels);
+            Node.draw(node,params,draw_trace,draw_labels);
         });
     }
 

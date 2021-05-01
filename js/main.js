@@ -408,8 +408,7 @@ function make_r2r_graph(nuno,nued) {
     for(let i = 0;i<nued;++i) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
-	if (!gr.ns[n1].is_connected(gr.ns[n2]) && n1 != n2)
-	    gr.addLink(n1,n2);
+	gr.addLink(n1,n2);
     }
     return(gr);
 }
@@ -423,8 +422,7 @@ function make_s2r_graph(nuno,nued) {
 	    n = 0;
 	let n1 = n;
 	let n2 = Math.floor(Math.random()*nuno);
-	if (!gr.ns[n1].is_connected(gr.ns[n2]) && n1 != n2)
-	    gr.addLink(n1,n2);
+	gr.addLink(n1,n2);
     }
     return(gr);
 }

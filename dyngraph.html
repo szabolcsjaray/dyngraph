@@ -573,12 +573,13 @@
 	    nodes[ind2].disconnect(nodes[ind1]);
 	    nd_sel_box2.dispatchEvent(new Event("change"));
 	}
-	function init_connectedness_selectors(sel1="sel_node_list1",sel2="sel_node_list2",res="sp_is_connected",nodes=g.ns) {
+	function init_connectedness_selectors(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2",res="sp_is_connected") {
 	    const sel_box1 = document.getElementById(sel1);
 	    const sel_box2 = document.getElementById(sel2);
 	    const res_targ = document.getElementById(res);
 	    init_node_selector(sel_box1,nodes);
 	    init_node_selector(sel_box2,nodes);
+	    //console.log("nodes length: " + nodes.length);
 	    if(nodes.length > 0) {
 		sel_box1.selectedIndex = 0;
 		sel_box2.selectedIndex = nodes.length-1;
@@ -665,6 +666,7 @@
 		reader.onload = function (e) {
 		    //console.log(e);
 		    parse_sedgewick_data(e.target.result.split(elem_endl));
+		    init_connectedness_selectors();
 		}
 	    }
 	}

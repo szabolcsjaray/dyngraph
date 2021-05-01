@@ -104,14 +104,14 @@ class Node {
     }
 
     connect(otherNode) {
-	if(!this.is_connected(otherNode)) {
+	if(!this.constructor.is_connected(this,otherNode)) {
 	    this.add_uni_link(otherNode);
 	    otherNode.add_back_link(this);
 	}
     }
 
     disconnect(otherNode) {
-	if(this.is_connected(otherNode)) {
+	if(this.constructor.is_connected(this,otherNode)) {
 	    this.rem_link(otherNode);
 	    otherNode.rem_back_link(this);
 	}
@@ -139,127 +139,123 @@ class Node {
         this.backLinks.push(otherNode);
     }
 
-    is_connected(other_node) {
-	for(let i in this.links)
-	    if (this.links[i] == other_node)
+    static is_connected(n,other_node) {
+	for(let i in n.links)
+	    if (n.links[i] == other_node)
 		return true;
-	for(let i in this.backLinks)
-	    if (this.backLinks[i] == other_node)
+	for(let i in n.backLinks)
+	    if (n.backLinks[i] == other_node)
 		return true;
 	return false;
     }
 
-    draw(p,draw_trace,draw_labels) {
+    static draw(n,p,draw_trace,draw_labels) {
         if (!p.fill_colour)
-	    this.c2d.fillStyle = draw_trace ? this.tracefillcolour : this.fillcolour;
+	    n.c2d.fillStyle = draw_trace ? n.tracefillcolour : n.fillcolour;
 
 	if (!p.line_colour)
-            this.c2d.strokeStyle = draw_trace ? this.tracelinecolour : this.linecolour;
-        this.c2d.beginPath();
-	switch(this.shape) {
+            n.c2d.strokeStyle = draw_trace ? n.tracelinecolour : n.linecolour;
+        n.c2d.beginPath();
+	switch(n.shape) {
 	case 'c':
-            this.links.forEach(otherNode => {
-		const coords1 = this.getPointOnCircle(this.angleBetween(otherNode));
-		this.c2d.moveTo(coords1[0], coords1[1]);
-		const coords2 = otherNode.getPointOnCircle(otherNode.angleBetween(this));
-		this.c2d.lineTo(coords2[0], coords2[1]);
+            n.links.forEach(otherNode => {
+		const coords1 = this.getPointOnCircle(n,this.angleBetween(n,otherNode));
+		n.c2d.moveTo(coords1[0], coords1[1]);
+		const coords2 = this.getPointOnCircle(otherNode,this.angleBetween(otherNode,n));
+		n.c2d.lineTo(coords2[0], coords2[1]);
             });
 	    break;
 	case 'e':
-	    this.links.forEach(otherNode => {
-		const coords1 = this.getPointOnEllipse(this.angleBetween(otherNode));
-		this.c2d.moveTo(coords1[0], coords1[1]);
-		const coords2 = otherNode.getPointOnEllipse(otherNode.angleBetween(this));
-		this.c2d.lineTo(coords2[0], coords2[1]);
+	    n.links.forEach(otherNode => {
+		const coords1 = this.getPointOnEllipse(n,this.angleBetween(n,otherNode));
+		n.c2d.moveTo(coords1[0], coords1[1]);
+		const coords2 = this.getPointOnEllipse(otherNode,this.angleBetween(otherNode,n));
+		n.c2d.lineTo(coords2[0], coords2[1]);
             });
 	    break;
 	case 'r':
 	case 's':
-	    this.links.forEach(otherNode => {
-		const coords1 = this.getConnectionPoint(otherNode);
-		this.c2d.moveTo(coords1[0], coords1[1]);
-		const coords2 = otherNode.getConnectionPoint(this);
-		this.c2d.lineTo(coords2[0], coords2[1]);
+	    n.links.forEach(otherNode => {
+		const coords1 = this.getConnectionPoint(n,otherNode);
+		n.c2d.moveTo(coords1[0], coords1[1]);
+		const coords2 = this.getConnectionPoint(otherNode,n);
+		n.c2d.lineTo(coords2[0], coords2[1]);
             });
 	    break;
 	default:
-	    this.links.forEach(otherNode => {
-		this.c2d.moveTo(otherNode.x, otherNode.y);
-		this.c2d.lineTo(this.x, this.y);
+	    n.links.forEach(otherNode => {
+		n.c2d.moveTo(otherNode.x, otherNode.y);
+		n.c2d.lineTo(n.x, n.y);
             });
 	}
 	if (!p.line_colour)
-            this.c2d.stroke();
+            n.c2d.stroke();
 
 	if (!p.outline_col)
-            this.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
+            n.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
 	
-	this.c2d.beginPath();
-	switch(this.shape) {
+	n.c2d.beginPath();
+	switch(n.shape) {
 	case 'c':
 	case 'e':
-            this.c2d.ellipse(this.x, this.y, this.size0, this.size1, 0, 0, 2*Math.PI);
+            n.c2d.ellipse(n.x, n.y, n.size0, n.size1, 0, 0, 2*Math.PI);
 	    break;
 	case 's':
 	case 'r':
-	    this.c2d.rect(this.x, this.y, this.size0, this.size1);
+	    n.c2d.rect(n.x, n.y, n.size0, n.size1);
 	    break;
 	}
 	if (!p.fill_colour)
-            this.c2d.fill();
+            n.c2d.fill();
 	if (!p.outline_col)
-	    this.c2d.stroke();
+	    n.c2d.stroke();
 	if (draw_labels) {
-	    this.c2d.fillStyle=this.fontcolour;
-	    this.c2d.fillText(this.name, this.x + node_params.label_offset_x, this.y + node_params.label_offset_y);
+	    n.c2d.fillStyle=n.fontcolour;
+	    n.c2d.fillText(n.name, n.x + node_params.label_offset_x, n.y + node_params.label_offset_y);
 	}
     }
 
-    angleBetween(other) {
+    static angleBetween(n,other) {
 	// Calculate the angle...
 	// This is our "0" or start angle..
-	let rotation = -Math.atan2(other.x - this.x, other.y - this.y);
+	let rotation = -Math.atan2(other.x - n.x, other.y - n.y);
 	rotation = rotation + Math.PI; // 180 degrees
 
 	return rotation;
     }
-    getPointOnCircle(radians) {
+    static getPointOnCircle(n,radians) {
 	radians = radians - Math.PI/2; // 0 becomes the top
 	// Calculate the outter point of the line
-	return [Math.round(this.x + Math.cos(radians) * this.size0),  // pos x
-		Math.round(this.y + Math.sin(radians) * this.size0)]; // pos y
+	return [Math.round(n.x + Math.cos(radians) * n.size0),  // pos x
+		Math.round(n.y + Math.sin(radians) * n.size0)]; // pos y
     }
-    getPointOnEllipse(radians) {
+    static getPointOnEllipse(n,radians) {
 	radians = radians - Math.PI/2; // 0 becomes the top
-	//const multipx = this.size0 >= this.size1 ? this.size0 - this.size1 : this.size0;
-	//const multipy = this.size1 >= this.size0 ? this.size1 - this.size0 : this.size1;
 	// Calculate the outter point of the line
-	return [Math.round(this.x + Math.cos(radians) * this.size0),  // pos x
-		Math.round(this.y + Math.sin(radians) * this.size1)]; // pos y
-	//return [Math.round(this.x + Math.cos(radians) * multipx),  // pos x
-	//	Math.round(this.y + Math.sin(radians) * multipy)]; // pos y
+	return [Math.round(n.x + Math.cos(radians) * n.size0),  // pos x
+		Math.round(n.y + Math.sin(radians) * n.size1)]; // pos y
     }
 
-    getConnectionPoint(otherNode) {
+    static getConnectionPoint(n,otherNode) {
 	// full over
-	if (otherNode.y + otherNode.size1 < this.y)
-	    return [this.x + this.size0 / 2, this.y];
+	if (otherNode.y + otherNode.size1 < n.y)
+	    return [n.x + n.size0 / 2, n.y];
 	// full below
-	if (otherNode.y > this.y + this.size1)
-	    return [this.x + this.size0 / 2, this.y + this.size1];
+	if (otherNode.y > n.y + n.size1)
+	    return [n.x + n.size0 / 2, n.y + n.size1];
 	// full left
-	if (otherNode.x + otherNode.size0 < this.x)
-	    return [Number(this.x), this.y + this.size1 / 2];
+	if (otherNode.x + otherNode.size0 < n.x)
+	    return [Number(n.x), n.y + n.size1 / 2];
 	// full right
-	if (otherNode.x > this.x + this.size0)
-	    return [this.x + this.size0, this.y + this.size1 / 2];
+	if (otherNode.x > n.x + n.size0)
+	    return [n.x + n.size0, n.y + n.size1 / 2];
 
-	const x = (otherNode.x < this.x) ? this.x : this.x + this.size0;
-	const y = (otherNode.y < this.y) ? this.y : this.y + this.size1;
+	const x = (otherNode.x < n.x) ? n.x : n.x + n.size0;
+	const y = (otherNode.y < n.y) ? n.y : n.y + n.size1;
 	return [x,y];
     }
 
-    status() {
-        return this.name+": coord.: (" + this.x + ","+this.y+") forces: ("+ this.fx + ","+this.fy+")";
+    static status(g) {
+        return g.name+": coord.: (" + g.x + ","+g.y+") forces: ("+ g.fx + ","+g.fy+")";
     }
 }
