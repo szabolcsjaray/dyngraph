@@ -49,13 +49,15 @@ function get_next_safe_colour() {
 function reset_safe_colour_index(sel_box_id="sel_starting_safe_colour") {
     safe_colour_index = document.getElementById(sel_box_id).selectedIndex;
 }
-function discover_a_group(a_node,group_colour,the_group) {
+function discover_a_group(a_node,group_colour,the_group,cols) {
     if (!a_node.visited)
 	the_group.push(a_node);
     else
 	return;
-    a_node.fillcolour = "#" + group_colour;
-    a_node.linecolour = "#" + group_colour;
+    if (cols) {
+	a_node.fillcolour = "#" + group_colour;
+	a_node.linecolour = "#" + group_colour;
+    }
     a_node.visit();
     const queue = [];
     for (let i = 0; i < a_node.links.length; ++i) {
@@ -71,17 +73,17 @@ function discover_a_group(a_node,group_colour,the_group) {
     }
 }
 
-function discover_node_groups() {
+function discover_node_groups(gr=g,cols=true) {
     const groups = [];
-    g.unvisit_nodes();
-    for(let i = 0; i < g.ns.length; ++i) {
-	if (g.ns[i].visited)
+    gr.unvisit_nodes();
+    for(let i = 0; i < gr.ns.length; ++i) {
+	if (gr.ns[i].visited)
 	    continue;
 	const a_group = [];
-	discover_a_group(g.ns[i],get_next_safe_colour(),a_group);
+	discover_a_group(gr.ns[i],get_next_safe_colour(),a_group,cols);
 	groups.push(a_group);
     }
-    g.unvisit_nodes();
+    gr.unvisit_nodes();
     return(groups)
 }
 
@@ -413,6 +415,19 @@ function make_r2r_graph(nuno,nued) {
     return(gr);
 }
 
+function make_r2all_graph(nuno) {
+    const gr = new Graph('r2r'); 
+    add_nodes(gr,nuno);
+    for(let i = 0;i<nuno || discover_node_groups(gr,false).length > 1;++i) {
+	let n1 = Math.floor(Math.random()*nuno);
+	let n2 = Math.floor(Math.random()*nuno);
+	gr.addLink(n1,n2);
+	if(i > 10*nuno)
+	    return(gr);
+    }
+    return(gr);
+}
+
 function make_s2r_graph(nuno,nued) {
     const gr = new Graph('s2r');
     add_nodes(gr,nuno);
@@ -588,8 +603,11 @@ function start(c2d,nnodes,nedges,nbranches,nalpha) {
     case 10:
 	g = make_triangulated_graph(num_nodes);
 	break;
+    case 11:
+	g = make_r2all_graph(num_nodes);
+	break;
     default:
-	console.log("Invalid graph algorithm code: " + graph_algorigthm);
+	console.log("Invalid graph algorithm code: " + graph_algorithm);
     }
 
     animate=true;
