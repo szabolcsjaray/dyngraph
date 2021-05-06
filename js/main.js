@@ -415,8 +415,8 @@ function make_r2r_graph(nuno,nued) {
     return(gr);
 }
 
-function make_r2all_graph(nuno) {
-    const gr = new Graph('r2r'); 
+function make_randtillall_graph(nuno) {
+    const gr = new Graph('rand_till_all'); 
     add_nodes(gr,nuno);
     for(let i = 0;i<nuno || discover_node_groups(gr,false).length > 1;++i) {
 	let n1 = Math.floor(Math.random()*nuno);
@@ -604,7 +604,7 @@ function start(c2d,nnodes,nedges,nbranches,nalpha) {
 	g = make_triangulated_graph(num_nodes);
 	break;
     case 11:
-	g = make_r2all_graph(num_nodes);
+	g = make_randtillall_graph(num_nodes);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorithm);
