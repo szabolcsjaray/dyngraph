@@ -69,7 +69,7 @@ function discover_a_group(a_node,group_colour,the_group,cols) {
 	    queue.push(a_node.backLinks[i]);
     }
     while(queue.length > 0) {
-	discover_a_group(queue.shift(),group_colour,the_group);
+	discover_a_group(queue.shift(),group_colour,the_group,cols);
     }
 }
 
