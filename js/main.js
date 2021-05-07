@@ -285,8 +285,23 @@ function add_circular_nodes(gr,num,nl,c=canv) {
 			    p.x,
 			    p.y,
 			    c2d));
-    }
-	
+    }	
+}
+
+function add_grid_nodes(gr,num,nl,c=canv) {
+    let vpos;
+    let hpos = offs.x;
+    let num_max = Math.ceil(Math.sqrt(num));
+    const v_incr = (c.height - 2 * offs.y)/(num_max-1);
+    const h_incr = (c.width - 2 * offs.x)/(num_max-1);
+    for(let i = 0; i < num_max; hpos+=h_incr,++i)
+	for(let j = 0,vpos = offs.y; j < num_max; vpos+=v_incr,++j)
+	    gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
+				colours,
+				rnd_pairs,
+				hpos,
+				vpos,
+				c2d));
 }
 
 function make_namelist(n,l) {
@@ -319,6 +334,8 @@ function add_nodes(g, num, namelist=[], sel_id="sel_nodeplace") {
     case "o":
 	add_circular_nodes(g,num,namelist);
 	break;
+    case "grid":
+	add_grid_nodes(g,num,namelist);
     default:
 	console.log("unrecognised placement method:" + how);
     }
