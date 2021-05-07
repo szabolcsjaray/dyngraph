@@ -294,9 +294,10 @@ function add_grid_nodes(gr,num,nl,c=canv) {
     let num_max = Math.ceil(Math.sqrt(num));
     const v_incr = (c.height - 2 * offs.y)/(num_max-1);
     const h_incr = (c.width - 2 * offs.x)/(num_max-1);
-    for(let i = 0; i < num_max; hpos+=h_incr,++i)
-	for(let j = 0,vpos = offs.y; j < num_max; vpos+=v_incr,++j)
-	    gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
+    let n;
+    for(let i = 0,n=0; i < num_max; hpos+=h_incr,++i)
+	for(let j = 0,vpos = offs.y; j < num_max && n<num; vpos+=v_incr,++j,++n)
+	    gr.addNode(new Node(nl[n], node_shape, node_size.s0, node_size.s1,
 				colours,
 				rnd_pairs,
 				hpos,
@@ -336,6 +337,7 @@ function add_nodes(g, num, namelist=[], sel_id="sel_nodeplace") {
 	break;
     case "grid":
 	add_grid_nodes(g,num,namelist);
+	break;
     default:
 	console.log("unrecognised placement method:" + how);
     }
