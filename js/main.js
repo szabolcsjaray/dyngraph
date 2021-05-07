@@ -415,16 +415,17 @@ function make_r2r_graph(nuno,nued) {
     return(gr);
 }
 
-function make_randtillall_graph(nuno) {
-    const gr = new Graph('rand_till_all'); 
+function make_r2r_all_graph(nuno,nued_id="nu_edges") {
+    const gr = new Graph('r2r_all');
     add_nodes(gr,nuno);
+    let ne = 0;
     for(let i = 0;i<nuno || discover_node_groups(gr,false).length > 1;++i) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
-	gr.addLink(n1,n2);
-	if(i > 10*nuno)
-	    return(gr);
+	if (gr.addLink(n1,n2))
+	    ++ne;
     }
+    document.getElementById(nued_id).value = ne;
     return(gr);
 }
 
@@ -442,6 +443,22 @@ function make_s2r_graph(nuno,nued) {
     return(gr);
 }
 
+function make_s2r_all_graph(nuno,nued_id="nu_edges") {
+    const gr = new Graph('s2r_all');
+    add_nodes(gr,nuno);
+    let i = 0;
+    let ne = 0;
+    while(discover_node_groups(gr,false).length > 1) {
+	let n2 = Math.floor(Math.random()*nuno);
+	if (gr.addLink(i++,n2))
+	    ++ne;
+	if (i == nuno)
+	    i = 0;
+    }
+    document.getElementById(nued_id).value = ne;
+    return(gr);
+}
+    
 function make_a2a_graph(nuno) {
     const gr = new Graph('a2a');
     add_nodes(gr,nuno);
@@ -604,7 +621,10 @@ function start(c2d,nnodes,nedges,nbranches,nalpha) {
 	g = make_triangulated_graph(num_nodes);
 	break;
     case 11:
-	g = make_randtillall_graph(num_nodes);
+	g = make_r2r_all_graph(num_nodes);
+	break;
+    case 12:
+	g = make_s2r_all_graph(num_nodes);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorithm);
