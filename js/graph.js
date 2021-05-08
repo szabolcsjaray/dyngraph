@@ -55,12 +55,14 @@ class Graph {
     }
 
     rem_node(ind) {
-	for(let n of this.ns[ind].links) {
-	    this.ns[ind].disconnect(n);
+	const the_node = this.ns[ind];
+	for(let i = the_node.links.length-1; i >= 0; --i) {
+	    the_node.disconnect(the_node.links[i]);
 	    --this.nu_edges;
 	}
-	for(let n of this.ns[ind].backLinks) {
-	    n.disconnect(this.ns[ind]);
+	for(let i = the_node.backLinks.length-1; i >= 0; --i) {
+	    the_node.backLinks[i].disconnect(the_node);
+	    --this.nu_edges;
 	}
 	this.ns.splice(ind,1);
     }

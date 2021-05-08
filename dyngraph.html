@@ -521,9 +521,10 @@
 	    init_connectedness_selectors();
 	    name_box.value = "";
 	}
-	function rem_node(selid="sel_node_list1",gr=g) {
+	function rem_node(selid="sel_node_list1",gr=g,nued_id="nu_edges") {
 	    gr.rem_node(document.getElementById(selid).selectedIndex);
 	    init_connectedness_selectors();
+	    document.getElementById(nued_id).value = gr.nu_edges;
 	}
 	function init_starting_colour_selector() {
 	    const sel_box = document.getElementById("sel_starting_safe_colour");
