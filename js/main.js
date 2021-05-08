@@ -49,66 +49,18 @@ function get_next_safe_colour() {
 function reset_safe_colour_index(sel_box_id="sel_starting_safe_colour") {
     safe_colour_index = document.getElementById(sel_box_id).selectedIndex;
 }
-function discover_a_group(a_node,group_colour,the_group,cols) {
-    if (!a_node.visited)
-	the_group.push(a_node);
-    else
-	return;
-    if (cols) {
-	a_node.fillcolour = "#" + group_colour;
-	a_node.linecolour = "#" + group_colour;
-    }
-    a_node.visit();
-    const queue = [];
-    for (let i = 0; i < a_node.links.length; ++i) {
-	if (!a_node.links[i].visited)
-	    queue.push(a_node.links[i]);
-    }
-    for (let i = 0; i < a_node.backLinks.length; ++i) {
-	if (!a_node.backLinks[i].visited)
-	    queue.push(a_node.backLinks[i]);
-    }
-    while(queue.length > 0) {
-	discover_a_group(queue.shift(),group_colour,the_group,cols);
-    }
-}
-
-function discover_node_groups(gr=g,cols=true) {
-    const groups = [];
-    gr.unvisit_nodes();
-    for(let i = 0; i < gr.ns.length; ++i) {
-	if (gr.ns[i].visited)
-	    continue;
-	const a_group = [];
-	discover_a_group(gr.ns[i],get_next_safe_colour(),a_group,cols);
-	groups.push(a_group);
-    }
-    gr.unvisit_nodes();
-    return(groups)
-}
-
-function connect_node_groups_first() {
-    const islands = discover_node_groups();
-    for(let i = 1; i < islands.length; ++i) {
-	islands[i][0].connect(islands[i-1][0]);
-    }
-}
-
-function sort_islands_by_length(islnds) {
-    return islnds.sort((a,b) => b.length - a.length);
-}
-
-function connect_node_groups_rand() {
-    const islands = sort_islands_by_length(discover_node_groups());
-    for(let i = 1; i < islands.length; ++i) {
-	const i0= Math.floor(Math.random()*islands[0].length);
-	const i1 = Math.floor(Math.random()*islands[i].length);
-	islands[0][i0].connect(islands[i][i1]);
-    }
-}
-
-function connect_node_groups(rnd_id) {
-    document.getElementById(rnd_id).checked ? connect_node_groups_rand() : connect_node_groups_first();
+// function factorial(n) {
+//     let fact=1;
+    
+//     for (let i = 2; i <= n; ++i)
+//         fact *= i;
+//     return fact;
+// }
+function full_connect_nu(n) {
+    let nu_edges = 0;
+    for(let i = 0; i < n; ++i)
+	nu_edges += i;
+    return nu_edges;
 }
 
 function nudge(dir) {
@@ -443,7 +395,9 @@ function get_node_list(edges) {
 function make_r2r_graph(nuno,nued) {
     const gr = new Graph('r2r'); 
     add_nodes(gr,nuno);
-    for(let i = 0;i<nued;++i) {
+    const theoretical_max = full_connect_nu(nuno);
+    const max_num = (nued <= theoretical_max) ? nued : theoretical_max;
+    while(gr.nu_edges < max_num) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
 	gr.addLink(n1,n2);
@@ -455,7 +409,7 @@ function make_r2r_all_graph(nuno,nued_id="nu_edges") {
     const gr = new Graph('r2r_all');
     add_nodes(gr,nuno);
     let ne = 0;
-    for(let i = 0;i<nuno || discover_node_groups(gr,false).length > 1;++i) {
+    for(let i = 0;i<nuno || Graph.discover_node_groups(gr,false).length > 1;++i) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
 	if (gr.addLink(n1,n2))
@@ -467,13 +421,20 @@ function make_r2r_all_graph(nuno,nued_id="nu_edges") {
 
 function make_s2r_graph(nuno,nued) {
     const gr = new Graph('s2r');
+    if (nuno == 0)
+	return gr;
     add_nodes(gr,nuno);
-    let n = 0;
-    for(let i = 0;i < nued;++i,++n) {
+    if (nuno == 1)
+	return gr;
+    const theoretical_max = full_connect_nu(nuno);
+    const max_num = (nued <= theoretical_max) ? nued : theoretical_max;
+    for(let n = 0;gr.nu_edges < max_num;++n) {
 	if (n == nuno)
 	    n = 0;
-	let n1 = n;
-	let n2 = Math.floor(Math.random()*nuno);
+	const n1 = n;
+	let n2 = n1
+	while (n2 == n1)
+	    n2 = Math.floor(Math.random()*nuno);
 	gr.addLink(n1,n2);
     }
     return(gr);
@@ -484,7 +445,7 @@ function make_s2r_all_graph(nuno,nued_id="nu_edges") {
     add_nodes(gr,nuno);
     let i = 0;
     let ne = 0;
-    while(discover_node_groups(gr,false).length > 1) {
+    while(Graph.discover_node_groups(gr,false).length > 1) {
 	let n2 = Math.floor(Math.random()*nuno);
 	if (gr.addLink(i++,n2))
 	    ++ne;

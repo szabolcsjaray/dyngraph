@@ -1,6 +1,7 @@
 class Graph {
     constructor(name) {
         this.name = name;
+	this.nu_edges = 0;
         this.ns = [];
     }
 
@@ -12,16 +13,26 @@ class Graph {
     addLink(index1, index2) {
         if (index1<0 || index1>=this.ns.length || index2<0 || index2>=this.ns.length)
             return false;
-	if (!Node.is_connected(this.ns[index1],this.ns[index2]) && index1 != index2) {
+	if (!this.is_connected(index1,index2) && index1 != index2) {
             this.ns[index1].connect(this.ns[index2]);
+	    ++this.nu_edges;
 	    return true;
 	}
 	return false;
     }
-
-    add_uni_link(index1, index2) {
-	this.ns[index1].add_uni_link(this.ns[index2]);
+    remLink(index1, index2) {
+	if (!this.is_connected(index1,index2))
+	    return false;
+	if (this.ns[index1].disconnect(this.ns[index2]))
+	    --this.nu_edges;
+	return true;
     }
+    is_connected(index1,index2) {
+	return(Node.is_connected(this.ns[index1],this.ns[index2]));
+    }
+    // add_uni_link(index1, index2) {
+    // 	this.ns[index1].add_uni_link(this.ns[index2]);
+    // }
 
     draw(params,draw_trace,draw_labels) {
 	//console.log("graph.draw() has been called");
@@ -46,6 +57,7 @@ class Graph {
     rem_node(ind) {
 	for(let n of this.ns[ind].links) {
 	    this.ns[ind].disconnect(n);
+	    --this.nu_edges;
 	}
 	for(let n of this.ns[ind].backLinks) {
 	    n.disconnect(this.ns[ind]);
@@ -109,5 +121,71 @@ class Graph {
 		}
 	}
 	return output_string;
+    }
+    
+    static discover_a_group(a_node,group_colour,the_group,cols) {
+	if (!a_node.visited)
+	    the_group.push(a_node);
+	else
+	    return;
+	if (cols) {
+	    a_node.fillcolour = "#" + group_colour;
+	    a_node.linecolour = "#" + group_colour;
+	}
+	a_node.visit();
+	const queue = [];
+	for (let i = 0; i < a_node.links.length; ++i) {
+	    if (!a_node.links[i].visited)
+		queue.push(a_node.links[i]);
+	}
+	for (let i = 0; i < a_node.backLinks.length; ++i) {
+	    if (!a_node.backLinks[i].visited)
+		queue.push(a_node.backLinks[i]);
+	}
+	while(queue.length > 0) {
+	    this.discover_a_group(queue.shift(),group_colour,the_group,cols);
+	}
+    }
+
+    static discover_node_groups(gr,cols=true) {
+	const groups = [];
+	gr.unvisit_nodes();
+	for(let i = 0; i < gr.ns.length; ++i) {
+	    if (gr.ns[i].visited)
+		continue;
+	    const a_group = [];
+	    this.discover_a_group(gr.ns[i],get_next_safe_colour(),a_group,cols);
+	    groups.push(a_group);
+	}
+	gr.unvisit_nodes();
+	return(groups)
+    }
+
+    static connect_node_groups_first(gr) {
+	const islands = this.discover_node_groups(gr);
+	for(let i = 1; i < islands.length; ++i) {
+	    islands[i][0].connect(islands[i-1][0]);
+	    ++gr.nu_edges;
+	}
+    }
+
+    static sort_islands_by_length(islnds) {
+	return islnds.sort((a,b) => b.length - a.length);
+    }
+
+    static connect_node_groups_rand(gr) {
+	let islands = this.sort_islands_by_length(this.discover_node_groups(gr));
+	while(islands.length > 1) {
+	    const i0= Math.floor(Math.random()*islands[0].length);
+	    const i1 = Math.floor(Math.random()*islands[1].length);
+	    islands[0][i0].connect(islands[1][i1]);
+	    ++gr.nu_edges;
+	    islands = this.sort_islands_by_length(this.discover_node_groups(gr));
+	}
+    }
+
+    static connect_node_groups(gr,rnd_id,nu_edges_id) {
+	document.getElementById(rnd_id).checked ? this.connect_node_groups_rand(gr) : this.connect_node_groups_first(gr);
+	document.getElementById(nu_edges_id).value = gr.nu_edges;
     }
 }

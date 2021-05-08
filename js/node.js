@@ -114,7 +114,9 @@ class Node {
 	if(this.constructor.is_connected(this,otherNode)) {
 	    this.rem_link(otherNode);
 	    otherNode.rem_back_link(this);
+	    return true;
 	}
+	return false;
     }
 	
     rem_from_arr(arr,node) {
@@ -128,7 +130,7 @@ class Node {
     }
 
     rem_back_link(otherNode) {
-	this.rem_from_arr(otherNode.backLinks,this);
+	this.rem_from_arr(this.backLinks,otherNode);
     }
     
     add_uni_link(otherNode) {
