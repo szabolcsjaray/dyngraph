@@ -87,11 +87,28 @@ function discover_node_groups(gr=g,cols=true) {
     return(groups)
 }
 
-function connect_node_groups() {
+function connect_node_groups_first() {
     const islands = discover_node_groups();
     for(let i = 1; i < islands.length; ++i) {
 	islands[i][0].connect(islands[i-1][0]);
     }
+}
+
+function sort_islands_by_length(islnds) {
+    return islnds.sort((a,b) => b.length - a.length);
+}
+
+function connect_node_groups_rand() {
+    const islands = sort_islands_by_length(discover_node_groups());
+    for(let i = 1; i < islands.length; ++i) {
+	const i0= Math.floor(Math.random()*islands[0].length);
+	const i1 = Math.floor(Math.random()*islands[i].length);
+	islands[0][i0].connect(islands[i][i1]);
+    }
+}
+
+function connect_node_groups(rnd_id) {
+    document.getElementById(rnd_id).checked ? connect_node_groups_rand() : connect_node_groups_first();
 }
 
 function nudge(dir) {

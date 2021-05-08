@@ -482,7 +482,7 @@
 	      <td><input type="button" title="した (Ctrl+Shift+DownArrow)" id="btn_down" onClick="nudge('down');" value="下" /></td>
 	    </tr>
 	    <tr>
-	      <td><label><input type="button" id="btn_discover_groups" onClick="reset_safe_colour_index();discover_node_groups();" value="Colour Groups" /> or <input type="button" id="btn_connect_groups" onClick="reset_safe_colour_index();connect_node_groups();" value="Connect Groups" /> starting with colour </label><select class="button1" id="sel_starting_safe_colour" onChange="console.log(this.selectedIndex + ': ' + this[this.selectedIndex].text)"></select></td>
+	      <td><label><input type="button" id="btn_discover_groups" onClick="reset_safe_colour_index();discover_node_groups();" value="Colour Groups" /> or <input type="button" id="btn_connect_groups" onClick="reset_safe_colour_index();connect_node_groups('cb_rnd_conn_grps');" value="Connect Groups" /> (rand:<input type="checkbox" class="cb" id="cb_rnd_conn_grps" />) starting with colour </label><select class="button1" id="sel_starting_safe_colour" onChange="console.log(this.selectedIndex + ': ' + this[this.selectedIndex].text)"></select></td>
 	      <td></td>
 	    </tr>
 	    <tr>
