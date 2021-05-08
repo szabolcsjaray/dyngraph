@@ -606,7 +606,7 @@
 	    const res_targ = document.getElementById(res);
 	    const group_colour = safe_colours[document.getElementById(col_sel_id).selectedIndex];
 	    const node1_group = [];
-	    discover_a_group(node1,group_colour,node1_group);
+	    Graph.discover_a_group(node1,group_colour,node1_group,true);
 	    res_targ.innerHTML = node1_group.indexOf(node2) > -1;
 	    gr.unvisit_nodes();
 	}

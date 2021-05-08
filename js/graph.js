@@ -180,7 +180,7 @@ class Graph {
 	    const i1 = Math.floor(Math.random()*islands[1].length);
 	    islands[0][i0].connect(islands[1][i1]);
 	    ++gr.nu_edges;
-	    islands = this.sort_islands_by_length(this.discover_node_groups(gr));
+	    islands = this.sort_islands_by_length(this.discover_node_groups(gr,false));
 	}
     }
 
