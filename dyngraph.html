@@ -55,28 +55,28 @@
 	       	  params[a_key].disabled = !scen_map[scen][a_key];
 	  }
 	  function proc_sel_graphalg(sel_graphalg) {
-	      const seli = sel_graphalg.selectedIndex;
+	      const seli = sel_graphalg[sel_graphalg.selectedIndex].value;
 	      // console.log("alg selected: " + seli);
 	      switch (seli) {
-	      case 0:
-	      case 1:
+	      case "r2r":
+	      case "s2r":
 		  set_scenario(0);
 		  break;
-	      case 2:
-	      case 5:
-	      case 6:
-	      case 7:
-	      case 8:
-	      case 9:
-	      case 10:
+	      case "a2a":
+	      case "circ":
+	      case "centr":
+	      case "line":
+	      case "ladd":
+	      case "matr":
+	      case "tri":
 		  set_scenario(2);
 		  break;
-	      case 3:
-	      case 11:
-	      case 12:
+	      case "tree":
+	      case "r2ra":
+	      case "s2ra":
 		  set_scenario(1);
 		  break;
-	      case 4:
+	      case "el":
 		  set_scenario(3);
 		  break;
 	      default:
@@ -413,19 +413,19 @@
 	    <tr><td colspan="2" class="centred"><label>How to build graph?</label></td></tr>
 	    <tr>
 	      <td colspan="2"><select class="button2" id="sel_graphalg">
-		  <option value="0" selected>Random:Random</option>
-		  <option value="1">Serial:Random</option>
-		  <option value="2">All:All</option>
-		  <option value="3">Tree</option>
-		  <option value="4">from Edge List</option>
-		  <option value="5">Circular</option>
-		  <option value="6">Central</option>
-		  <option value="7">Linear</option>
-		  <option value="8">Ladder</option>
-		  <option value="9">Matrix</option>
-		  <option value="10">Triangulated</option>
-		  <option value="11">Rand:Rand Till All</option>
-		  <option value="12">Serial:Rand Till All</option>
+		  <option value="r2r" selected>Random:Random</option>
+		  <option value="r2ra">Rand:Rand Till All</option>
+		  <option value="s2r">Serial:Random</option>
+		  <option value="s2ra">Serial:Rand Till All</option>
+		  <option value="a2a">All:All</option>
+		  <option value="tree">Tree</option>
+		  <option value="circ">Circular</option>
+		  <option value="centr">Central</option>
+		  <option value="line">Linear</option>
+		  <option value="ladd">Ladder</option>
+		  <option value="matr">Matrix</option>
+		  <option value="tri">Triangulated</option>
+		  <option value="el">from Edge List</option>
 	      </select></td>
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label>Initial node placement</label></td></tr>
