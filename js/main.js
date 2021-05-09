@@ -578,7 +578,7 @@ function update_global_alpha(nalpha) {
     c2d.globalAlpha = nalpha;
 }
 
-function start(c2d,nnodes,nedges,nbranches,nalpha,nued_id="nu_edges") {
+function start(c2d,nnodes,nedges,nbranches,nalpha,nuno_id="nu_nodes",nued_id="nu_edges") {
     c2d.globalAlpha = nalpha;
     const num_nodes = nnodes;
     const num_edges = nedges;
@@ -629,6 +629,7 @@ function start(c2d,nnodes,nedges,nbranches,nalpha,nued_id="nu_edges") {
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorithm);
     }
+    document.getElementById(nuno_id).value = g.ns.length;
     document.getElementById(nued_id).value = g.nu_edges;
     animate=true;
     animPhase();
