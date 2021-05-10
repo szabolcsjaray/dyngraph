@@ -10,6 +10,7 @@ const node_params = {
     nudge_size:       5, // 5
     fx_multip:        1, // 1
     fy_multip:        1, // 1
+    anim_timeout:    10, // 10
 };
 
 function modify_params(param,value) {

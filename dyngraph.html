@@ -29,7 +29,7 @@
 	      for (let it in col_sels)
 	       	  col_sels[it].value = colours[it];
 	  }
-	  function remove_unconnected(quot=elem_quote,delim=elem_delim,endl=elem_endl) {
+	  function remove_unconnected(quot=elem.quote,delim=elem.delim,endl=elem.endl) {
 	      const edge_list = get_edge_list();
 	      let output_string = "";
 	      for(let i in edge_list) {
@@ -411,6 +411,11 @@
 		    <td><input type="range" min="-100" max="100" step="1" class="slider" id="slider_label_offset_y")></td>
 		    <td class="right"><span id="span_label_offset_y"></span></td>
 		  </tr>
+		  <tr>
+		    <td>Animation Timeout</td>
+		    <td><input type="range" min="0" max="100" step="1" class="slider" id="slider_anim_timeout")></td>
+		    <td class="right"><span id="span_anim_timeout"></span></td>
+		  </tr>
 		</table>
 	      </td>
 	    </tr>
@@ -634,15 +639,15 @@
 	    tmpLink.click();  
 	    document.body.removeChild( tmpLink );  
 	}
-	function save_as_csv(dat_id,inp_id,delim=elem_delim){
+	function save_as_csv(dat_id,inp_id,delim=elem.delim,endl=elem.endl){
 	    // get canvas data  
-	    const dat = document.getElementById(dat_id).value.trim().split(elem_endl);
+	    const dat = document.getElementById(dat_id).value.trim().split(endl);
 	    const fn = document.getElementById(inp_id).value;
 
 	    let csv = "";
             dat.forEach( str => {
 		//console.log(str);
-                csv += str.split(" ").join(delim)+elem_endl;
+                csv += str.split(" ").join(delim)+endl;
             });
 	    
  	    const csvData = new Blob([csv], { type: 'text/csv' });  
@@ -673,20 +678,20 @@
 	    }
 	}
 
-	function read_image2(input) {
+	function read_image2(input,endl=elem.endl) {
 	    //console.log(input)
 	    if (input.files && input.files[0]) {
 		const reader = new FileReader();
 		reader.readAsBinaryString(input.files[0]);
 		reader.onload = function (e) {
 		    //console.log(e);
-		    parse_sedgewick_data(e.target.result.split(elem_endl));
+		    parse_sedgewick_data(e.target.result.split(endl));
 		    init_connectedness_selectors();
 		}
 	    }
 	}
 
-	function parse_sedgewick_data(dat_lines) {
+	function parse_sedgewick_data(dat_lines,delim=elem.delim2) {
 	    const nuvert = dat_lines[0];
 	    const nuedge = dat_lines[1];
 	    console.log("Number of vertices: " + nuvert);
@@ -697,18 +702,18 @@
 		add_node_at_random_pos(g,i,node_shape);
 	    const len = dat_lines.length
 	    for(let i = 2; i < len; ++i) {
-		const arr = dat_lines[i].trim().split(elem_delim2);
+		const arr = dat_lines[i].trim().split(delim);
 		if (arr.length == 2)
 		    g.addLink(arr[0].trim(),arr[1].trim());
 	    }
 	}
  
-	function parse_csv_data(data,out_id){
+	function parse_csv_data(data,out_id,delim=elem.delim,endl=elem.endl){
 	    const csv_data = [];
 	    document.getElementById(out_id).value = data;
-	    const line_break = data.split(elem_endl);
+	    const line_break = data.split(endl);
 	    line_break.forEach(res => {
-		csv_data.push(res.split(elem_delim));
+		csv_data.push(res.split(delim));
 	    });
 	    //console.table(csvData);
 	}
