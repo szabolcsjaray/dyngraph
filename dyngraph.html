@@ -37,19 +37,21 @@
 	      }
 	      area_edgelist.value = output_string;
 	  }
-	  function set_scenario(scen,node_id="nu_nodes",edge_id="nu_edges",brch_id="nu_branches") {
+	  function set_scenario(scen,node_id="nu_nodes",node_id2="nu_nodes2",edge_id="nu_edges",brch_id="nu_branches") {
 	      //     nodes,  edges, branch
 	      //       0       1      2
 	      const scen_map = {
-		  0: [true,  true,  false],
-		  1: [true,  false, true ],
-		  2: [true,  false, false],
-		  3: [false, false, false]
+		  0: [true,  false, true,  false],
+		  1: [true,  false, false, true ],
+		  2: [true,  false, false, false],
+		  3: [false, false, false, false],
+		  4: [true,  true,  false, false],
 	      };
 	      const params = {
 		  0: document.getElementById(node_id),
-		  1: document.getElementById(edge_id),
-		  2: document.getElementById(brch_id)
+		  1: document.getElementById(node_id2),
+		  2: document.getElementById(edge_id),
+		  3: document.getElementById(brch_id)
 	      };
 	      for( let a_key of Object.keys(params))
 	       	  params[a_key].disabled = !scen_map[scen][a_key];
@@ -67,7 +69,6 @@
 	      case "centr":
 	      case "line":
 	      case "ladd":
-	      case "matr":
 	      case "tri":
 		  set_scenario(2);
 		  break;
@@ -78,6 +79,9 @@
 		  break;
 	      case "el":
 		  set_scenario(3);
+		  break;
+	      case "matr":
+		  set_scenario(4);
 		  break;
 	      default:
 		  console.log("Unhandled selection");
@@ -205,7 +209,7 @@
 	    </tr>
 	    <tr>
 	      <td><label>nodes</label></td>
-	      <td><input title="number of nodes" id="nu_nodes" type="number" min="2" max="1000" /></td>
+	      <td><input title="number of nodes" id="nu_nodes" type="number" min="2" max="1000" /><label>x</label><input id="nu_nodes2" type="number" min="1" max="100" value="1" disabled></td>
 	    </tr>
 	    <tr>
 	      <td><label>shape</label></td>
@@ -421,8 +425,8 @@
 		  <option value="tree">Tree</option>
 		  <option value="circ">Circular</option>
 		  <option value="centr">Central</option>
-		  <option value="line">Linear</option>
-		  <option value="ladd">Ladder</option>
+		  <!-- <option value="line">Linear</option> -->
+		  <!-- <option value="ladd">Ladder</option> -->
 		  <option value="matr">Matrix</option>
 		  <option value="tri">Triangulated</option>
 		  <option value="el">from Edge List</option>
@@ -508,6 +512,7 @@
 	    sz_canvas_h:  1000,
 	    sz_font:      12, 
 	    nu_nodes:    100,
+	    nu_nodes2:     1,
 	    nu_edges:    100,
 	    wd_line:       1,
 	    nu_branches:   2,
@@ -826,6 +831,7 @@
 		pause_or_continue(btn_pause_conti);
 	    start(c2d,
 		  Number(inp_vals_map.nu_nodes.value),
+		  Number(inp_vals_map.nu_nodes2.value),
 		  Number(inp_vals_map.nu_edges.value),
 		  Number(inp_vals_map.nu_branches.value),
 		  Number(inp_vals_map.nu_alpha.value)

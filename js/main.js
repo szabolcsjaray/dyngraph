@@ -480,14 +480,13 @@ function make_circular_graph(nuno) {
     return(gr);
 }
 
-function make_linear_graph(nuno) {
-    const gr = new Graph('circular');
-    add_nodes(gr,nuno);
-    for(let i = 1; i < nuno; ++i)
-	gr.addLink(i-1,i);
-    return(gr);
-}
-
+// function make_linear_graph(nuno) {
+//     const gr = new Graph('circular');
+//     add_nodes(gr,nuno);
+//     for(let i = 1; i < nuno; ++i)
+// 	gr.addLink(i-1,i);
+//     return(gr);
+// }
 
 function make_central_graph(nuno) {
     const gr = new Graph('central');
@@ -512,33 +511,32 @@ function make_triangulated_graph(nuno) {
     return(gr);
 }
 
-function make_ladder_graph(nuno) {
-    const gr = new Graph('ladder');
-    if (nuno % 2 != 0)
-	++nuno;
-    add_nodes(gr,nuno);
-    if (nuno == 0)
-	return gr;
-    gr.addLink(0,1);
-    for (let i = 2; i < nuno; i+=2) {
-	gr.addLink(i-2,i);
-	gr.addLink(i-1,i+1);
-	gr.addLink(i,i+1);
-	}
-    return(gr);
-}
+// function make_ladder_graph(nuno) {
+//     const gr = new Graph('ladder');
+//     if (nuno % 2 != 0)
+// 	++nuno;
+//     add_nodes(gr,nuno);
+//     if (nuno == 0)
+// 	return gr;
+//     gr.addLink(0,1);
+//     for (let i = 2; i < nuno; i+=2) {
+// 	gr.addLink(i-2,i);
+// 	gr.addLink(i-1,i+1);
+// 	gr.addLink(i,i+1);
+// 	}
+//     return(gr);
+// }
 
-function make_matrix_graph(nuno) {
+function make_matrix_graph(nuno,nuno2) {
     const gr = new Graph('ladder');
-    const d = Math.ceil(Math.sqrt(nuno));
-    add_nodes(gr,Math.pow(d,2));
+    add_nodes(gr,nuno*nuno2);
     let n = 0;
-    for(let i = 0; i < d; ++i) {
-	for(let j = 0; j < d; ++j,++n) {
+    for(let i = 0; i < nuno; ++i) {
+	for(let j = 0; j < nuno2; ++j,++n) {
 	    if(j>0)
 		gr.addLink(n-1,n);
 	    if(i>0)
-		gr.addLink(n-d,n);
+		gr.addLink(n-nuno2,n);
 	}
     }
     return(gr);
@@ -578,9 +576,10 @@ function update_global_alpha(nalpha) {
     c2d.globalAlpha = nalpha;
 }
 
-function start(c2d,nnodes,nedges,nbranches,nalpha,nuno_id="nu_nodes",nued_id="nu_edges") {
+function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
     c2d.globalAlpha = nalpha;
     const num_nodes = nnodes;
+    const num_nodes2 = nnodes2;
     const num_edges = nedges;
     const num_branches = nbranches;
 
@@ -608,14 +607,14 @@ function start(c2d,nnodes,nedges,nbranches,nalpha,nuno_id="nu_nodes",nued_id="nu
     case "centr":
 	g = make_central_graph(num_nodes);
 	break;
-    case "line":
-	g = make_linear_graph(num_nodes);
-	break;
-    case "ladd":
-	g = make_ladder_graph(num_nodes);
-	break;
+    // case "line":
+    // 	g = make_linear_graph(num_nodes);
+    // 	break;
+    // case "ladd":
+    // 	g = make_ladder_graph(num_nodes);
+    // 	break;
     case "matr":
-	g = make_matrix_graph(num_nodes);
+	g = make_matrix_graph(num_nodes,num_nodes2);
 	break;
     case "tri":
 	g = make_triangulated_graph(num_nodes);
@@ -629,7 +628,6 @@ function start(c2d,nnodes,nedges,nbranches,nalpha,nuno_id="nu_nodes",nued_id="nu
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorithm);
     }
-    document.getElementById(nuno_id).value = g.ns.length;
     document.getElementById(nued_id).value = g.nu_edges;
     animate=true;
     animPhase();
