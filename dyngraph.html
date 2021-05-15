@@ -843,6 +843,7 @@
 		y: node_params.fy_multip,
 	    }
 	    if(btn_start.value == "Restart") {
+		first_step = true;
 		if (btn_pause_conti.value == "Continue")
 		    pause_or_continue(btn_pause_conti,btn_start);
 		if (cb_paused_start.checked) {
@@ -865,6 +866,7 @@
 		    node_params.fy_multip = multip_saved.y;
 		}
 	    } else if (btn_start.value == "Step") {
+		first_step = false;
 		anim_step();
 	    }
 	}
