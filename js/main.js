@@ -687,13 +687,18 @@ function col_off_change(sel_id) {
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
 
-function animPhase() {
-    g.draw(off_pairs,true,false);
+function anim_step() {
+    if(tracer.checked)
+	g.draw(off_pairs,true,false);
     g.calcForces();
     g.step();
     if(!tracer.checked)
 	clear_canvas();
     g.draw(off_pairs,false,labelling.checked);
+}
+    
+function animPhase() {
+    anim_step();
     if (animate)
         setTimeout(animPhase, node_params.anim_timeout);
 }
