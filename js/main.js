@@ -23,6 +23,7 @@ const safe_colours = ["000000","000033","000066","000099","0000CC","0000FF","003
 let safe_colour_index = 0;
 let graph_algorithm = "r2r";
 let animate;
+let first_step;
 let scatter = 0.8;
 const scat = {
     x: 800,
@@ -688,17 +689,21 @@ function col_off_change(sel_id) {
 }
 
 function anim_step() {
-    if(tracer.checked)
-	g.draw(off_pairs,true,false);
-    g.calcForces();
-    g.step();
-    if(!tracer.checked)
-	clear_canvas();
+    if(!first_step) {
+	if(tracer.checked)
+	    g.draw(off_pairs,true,false);
+	g.calcForces();
+	g.step();
+	if(!tracer.checked)
+	    clear_canvas();
+    }
     g.draw(off_pairs,false,labelling.checked);
 }
     
 function animPhase() {
     anim_step();
-    if (animate)
+    if (animate) {
+	first_step = false;
         setTimeout(animPhase, node_params.anim_timeout);
+    }
 }
