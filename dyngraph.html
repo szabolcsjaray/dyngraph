@@ -477,7 +477,7 @@
 	    </tr>
 	    <tr>
 	      <td rowspan="4">
-		<canvas id="cv_canv" title="click: pause/continue; double-click: clear" onclick="pause_or_continue(btn_pause_conti)" ondblclick="clear_canvas()"></canvas>
+		<canvas id="cv_canv" title="click: pause/continue; double-click: clear" onclick="pause_or_continue(btn_pause_conti,btn_start)" ondblclick="clear_canvas()"></canvas>
 	      </td>
 	      <td><input type="button" title="うえ (Ctrl+Shift+UpArrow)" id="btn_up" onClick="nudge('up');" value="上" /></td>
 	    </tr>
@@ -782,7 +782,7 @@
 	const btn_start = document.getElementById("btn_start");
 	const btn_pause_conti = document.getElementById("btn_pause_conti");
 	btn_pause_conti.addEventListener("click",function(){
-	    pause_or_continue(this);
+	    pause_or_continue(this,btn_start);
 	});
 	const btn_print = document.getElementById("btn_print");
 	const btn_clear = document.getElementById("btn_clear");
@@ -833,16 +833,20 @@
 	    }
 	}
 	function restart() {
-	    if (btn_pause_conti.value == "Continue")
-		pause_or_continue(btn_pause_conti);
-	    start(c2d,
-		  Number(inp_vals_map.nu_nodes.value),
-		  Number(inp_vals_map.nu_nodes2.value),
-		  Number(inp_vals_map.nu_edges.value),
-		  Number(inp_vals_map.nu_branches.value),
-		  Number(inp_vals_map.nu_alpha.value)
-		 );
-	    post_init();
+	    if(btn_start.value == "Restart") {
+		if (btn_pause_conti.value == "Continue")
+		    pause_or_continue(btn_pause_conti,btn_start);
+		start(c2d,
+		      Number(inp_vals_map.nu_nodes.value),
+		      Number(inp_vals_map.nu_nodes2.value),
+		      Number(inp_vals_map.nu_edges.value),
+		      Number(inp_vals_map.nu_branches.value),
+		      Number(inp_vals_map.nu_alpha.value)
+		     );
+		post_init();
+	    } else if (btn_start.value == "Step") {
+		anim_step();
+	    }
 	}
 	function load_cols(cols) {
 	    for(a_col in cols) {
@@ -892,13 +896,17 @@
 	    freader.readAsText( file );
 	    // and then then load event will trigger ...
 	});
-	function pause_or_continue(btn) {
+	function pause_or_continue(btn,restart_btn) {
 	    if (btn.value == "Pause") {
 		pause();
 		btn.value = "Continue";
+		restart_btn.value = "Step";
+		restart_btn.title = "Step animation. (Ctrl + Alt + S)";
 	    } else {
 		go_on();
 		btn.value = "Pause";
+		restart_btn.value = "Restart";
+		restart_btn.title = "Restart animation. (Ctrl + Alt + Enter)";
 	    }	    
 	}
 	for (let it in col_sels)
@@ -1026,25 +1034,37 @@
 	document.addEventListener('keydown', (event) => {
 	    const keyName = event.key;
 	    //console.log(keyName);
+	    // key only
+	    if (keyName == 'Pause') {
+		pause_or_continue(btn_pause_conti,btn_start);
+	    }
+	    // Ctrl + key
 	    if (event.ctrlKey && keyName == 'Enter')
 		btn_start.dispatchEvent(new Event("click"));
-	    if (keyName == 'Pause') {
-		pause_or_continue(btn_pause_conti);
-	    }
-	    if (event.ctrlKey && event.altKey && keyName == 'c')
-		btn_clear.dispatchEvent(new Event("click"));
-	    if (event.ctrlKey && event.altKey &&  keyName == 'p')
-		btn_print.dispatchEvent(new Event("click"));
-	    if (event.altKey && keyName == 'Delete')
+	    // Alt + key
+	    if (event.altKey && keyName == 'Delete') {
 		btn_rm_lone.dispatchEvent(new Event("click"));
-	    if (event.ctrlKey && event.altKey && keyName == 'r')
-		btn_fresh_cols.dispatchEvent(new Event("click"));
-	    if (event.ctrlKey && event.altKey && keyName == 't') {
-		toggle(tracer);
+	    }
+	    // Ctrl + Alt + key
+	    if (event.ctrlKey && event.altKey && keyName == 'c') {
+		btn_clear.dispatchEvent(new Event("click"));
 	    }
 	    if (event.ctrlKey && event.altKey && keyName == 'l') {
 		toggle(labelling);
 	    }
+	    if (event.ctrlKey && event.altKey && keyName == 'p') {
+		btn_print.dispatchEvent(new Event("click"));
+	    }
+	    if (event.ctrlKey && event.altKey && keyName == 'r') {
+		btn_fresh_cols.dispatchEvent(new Event("click"));
+	    }
+	    if (event.ctrlKey && event.altKey && keyName == 's') {
+		anim_step();
+	    }
+	    if (event.ctrlKey && event.altKey && keyName == 't') {
+		toggle(tracer);
+	    }
+	    // Ctrl + Shift + key
 	    if (event.ctrlKey && event.shiftKey && keyName == 'ArrowUp') {
 		nudge('up');
 	    }
