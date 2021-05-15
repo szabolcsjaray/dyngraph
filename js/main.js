@@ -631,7 +631,7 @@ function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
 	console.log("Invalid graph algorithm code: " + graph_algorithm);
     }
     document.getElementById(nued_id).value = g.nu_edges;
-    animate=true;
+    animate = cb_paused_start.checked ? false : true;
     animPhase();
 }
 
