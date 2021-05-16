@@ -5,9 +5,9 @@
         <meta content="utf-8" http-equiv="encoding">
 	<link rel="shortcut icon" type="image/jpg" href="img/favicon.ico"/>
         <title>Dynamic graph</title>
-        <script src="js/main.js"></script>
-        <script src="js/node.js"></script>
-        <script src="js/graph.js"></script>
+        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/node.js"></script>
+        <script type="text/javascript" src="js/graph.js"></script>
 	<script type="text/javascript">
 	  function init() {
 	      setup_inp_vals_map();
@@ -496,7 +496,7 @@
 	      <td><input type="button" title="した (Ctrl+Shift+DownArrow)" id="btn_down" onClick="nudge('down');" value="下" /></td>
 	    </tr>
 	    <tr>
-	      <td><label><input type="button" id="btn_discover_groups" onClick="reset_safe_colour_index();Graph.discover_node_groups(g);" value="Colour Groups" /> or <input type="button" id="btn_connect_groups" onClick="reset_safe_colour_index();Graph.connect_node_groups(g,'cb_rnd_conn_grps','nu_edges');" value="Connect Groups" /> (rand:<input type="checkbox" class="cb" id="cb_rnd_conn_grps" checked>) starting with colour </label><select class="button1" id="sel_starting_safe_colour" onChange="console.log(this.selectedIndex + ': ' + this[this.selectedIndex].text)"></select></td>
+	      <td><label><input type="button" id="btn_discover_groups" onClick="reset_safe_colour_index();Graph.discover_node_groups(g);" value="Colour Groups" /> or <input type="button" id="btn_connect_groups" onClick="reset_safe_colour_index();Graph.connect_node_groups(g,'cb_rnd_conn_grps','nu_edges');" value="Connect Groups" /> (rand:<input type="checkbox" class="cb" id="cb_rnd_conn_grps" checked>) starting with colour </label><select class="button1" id="sel_starting_safe_colour"></select></td> <!--  onChange="console.log(this.selectedIndex + ': ' + this[this.selectedIndex].text)" -->
 	      <td></td>
 	    </tr>
 	    <tr>
