@@ -469,9 +469,12 @@
 	    <tr>
 	      <td colspan="2"><input type="button" id="btn_save_as_csv" value="Save as csv" onclick="save_as_csv('edge_list','inp_csv_fn');"> <input type="text" id="inp_csv_fn" value="edgelist.csv" /></td>
 	    </tr>
-	    <tr><td colspan="2" class="centred"><label>Sedgewick Input</label></td></tr>
+	    <tr><td colspan="2" class="centred"><label>Sedgewick I/O</label></td></tr>
 	    <tr>
 	      <td colspan="2"><input type="file" id="file_sedge_in" onChange="read_image2(this)"></td>
+	    </tr>
+	    <tr>
+	      <td colspan="2"><input type="button" id="btn_save_as_sedge" value="Save as" onclick="save_as_sedge('inp_sedge_fn');"> <input type="text" id="inp_sedge_fn" value="sedge_out.txt" /></td>
 	    </tr>
 	  </table>
 	</div>
@@ -537,9 +540,10 @@
 	    name_box.value = "";
 	}
 	function rem_node(selid="sel_node_list1",gr=g,nued_id="nu_edges") {
-	    gr.rem_node(document.getElementById(selid).selectedIndex);
+	    gr.remNode(document.getElementById(selid).selectedIndex);
 	    init_connectedness_selectors();
 	    document.getElementById(nued_id).value = gr.nu_edges;
+	    document.getElementById("btn_save_as_sedge").disabled = true;
 	}
 	function init_starting_colour_selector() {
 	    const sel_box = document.getElementById("sel_starting_safe_colour");
@@ -663,6 +667,26 @@
             hiddenElement.download = fn;
             hiddenElement.click();
 	}
+	function save_as_sedge(inp_id,delim=elem.delim2,endl=elem.endl){
+	    // get canvas data  
+	    const fn = document.getElementById(inp_id).value;
+
+	    let dat_out = "";
+	    dat_out += g.nu_vertices + endl;
+	    dat_out += g.nu_edges + endl;
+            for (let a_key in g.adj)
+		for(let ind of g.adj[a_key])
+		    dat_out += a_key + delim + ind + endl;
+	    
+ 	    const sedge_data = new Blob([dat_out], { type: 'text' });  
+            const sedge_url = URL.createObjectURL(sedge_data);
+	    const hiddenElement = document.createElement('a');
+            hiddenElement.href = sedge_url;
+            hiddenElement.target = '_blank';
+            hiddenElement.download = fn;
+            hiddenElement.click();
+	}
+
 	const obj_csv = {
 	    size:0,
 	    data_file:[]

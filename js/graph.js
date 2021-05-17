@@ -1,13 +1,37 @@
 class Graph {
     constructor(name) {
         this.name = name;
+	this.nu_vertices = 0;
 	this.nu_edges = 0;
         this.ns = [];
+	this.adj = {};
+	this.badj = {};
     }
 
     addNode(node) {
         this.ns.push(node);
+	this.adj[this.nu_vertices] = [];
+	this.badj[this.nu_vertices] = [];
+	++this.nu_vertices;
         return this.ns.length-1;
+    }
+
+    remNode(ind) {
+	const the_node = this.ns[ind];
+	for(let i = the_node.links.length-1; i >= 0; --i) {
+	    the_node.disconnect(the_node.links[i]);
+	    --this.nu_edges;
+	}
+	for(let i = the_node.backLinks.length-1; i >= 0; --i) {
+	    the_node.backLinks[i].disconnect(the_node);
+	    --this.nu_edges;
+	}
+	this.ns.splice(ind,1);
+	for(let ind2 of this.adj[ind])
+	    this.remLink2(ind,ind2);
+	delete this.adj[ind];
+	delete this.badj[ind];
+	--this.nu_vertices;
     }
 
     addLink(index1, index2) {
@@ -16,6 +40,8 @@ class Graph {
 	if (!this.is_connected(index1,index2) && index1 != index2) {
             this.ns[index1].connect(this.ns[index2]);
 	    ++this.nu_edges;
+	    this.adj[index1].push(index2);
+	    this.badj[index2].push(index1);
 	    return true;
 	}
 	return false;
@@ -25,6 +51,23 @@ class Graph {
 	    return false;
 	if (this.ns[index1].disconnect(this.ns[index2]))
 	    --this.nu_edges;
+	this.remLink2(index1,index2);
+    }
+    remLink2(index1,index2) {
+	const ind_to_remove1 = this.adj[index1].indexOf(index2);
+	if(ind_to_remove1 > -1)
+	    this.adj[index1].splice(ind_to_remove1,1);
+	else {
+	    console.log("no link between " + index1 + " and " + index2);
+	    return false;
+	}
+	const ind_to_remove2 = this.badj[index2].indexOf(index1);
+	if(ind_to_remove2 > -1)
+	    this.badj[index2].splice(ind_to_remove2,1);
+	else {
+	    console.log("no link between " + index2 + " and " + index1);
+	    return false;
+	}
 	return true;
     }
     is_connected(index1,index2) {
@@ -52,19 +95,6 @@ class Graph {
                 }
             })
         });
-    }
-
-    rem_node(ind) {
-	const the_node = this.ns[ind];
-	for(let i = the_node.links.length-1; i >= 0; --i) {
-	    the_node.disconnect(the_node.links[i]);
-	    --this.nu_edges;
-	}
-	for(let i = the_node.backLinks.length-1; i >= 0; --i) {
-	    the_node.backLinks[i].disconnect(the_node);
-	    --this.nu_edges;
-	}
-	this.ns.splice(ind,1);
     }
 
     refresh_colours(cols,rnd) {
@@ -166,8 +196,11 @@ class Graph {
     static connect_node_groups_first(gr) {
 	const islands = this.discover_node_groups(gr);
 	for(let i = 1; i < islands.length; ++i) {
-	    islands[i][0].connect(islands[i-1][0]);
-	    ++gr.nu_edges;
+	    //islands[i][0].connect(islands[i-1][0]);
+	    const ind1 = gr.ns.indexOf(islands[i][0]);
+	    const ind2 = gr.ns.indexOf(islands[i-1][0]);
+	    gr.addLink(ind1,ind2);
+	    //++gr.nu_edges;
 	}
     }
 
@@ -180,8 +213,11 @@ class Graph {
 	while(islands.length > 1) {
 	    const i0= Math.floor(Math.random()*islands[0].length);
 	    const i1 = Math.floor(Math.random()*islands[1].length);
-	    islands[0][i0].connect(islands[1][i1]);
-	    ++gr.nu_edges;
+	    const ind0 = gr.ns.indexOf(islands[0][i0]);
+	    const ind1 = gr.ns.indexOf(islands[1][i1]);
+	    //islands[0][i0].connect(islands[1][i1]);
+	    //++gr.nu_edges;
+	    gr.addLink(ind0,ind1);
 	    islands = this.sort_islands_by_length(this.discover_node_groups(gr,false));
 	}
     }
