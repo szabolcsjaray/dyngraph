@@ -610,12 +610,6 @@ function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
     case "centr":
 	g = make_central_graph(num_nodes);
 	break;
-    // case "line":
-    // 	g = make_linear_graph(num_nodes);
-    // 	break;
-    // case "ladd":
-    // 	g = make_ladder_graph(num_nodes);
-    // 	break;
     case "matr":
 	g = make_matrix_graph(num_nodes,num_nodes2);
 	break;
