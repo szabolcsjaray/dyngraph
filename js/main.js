@@ -68,21 +68,17 @@ function full_connect_nu(n) {
 	nu_edges += i;
     return nu_edges;
 }
-
 function nudge(dir) {
     g.nudge(dir);
 }
-
 function refresh_colours() {
     g.refresh_colours(colours,rnd_pairs);
 }
-
 function change_shape(sel_id) {
     const sels = document.getElementById(sel_id);
     const seli = sels.selectedIndex;
     node_shape = sels[seli].value;
 }
-
 function sync_back_shape_selection(sel_id) {
     const sels = document.getElementById(sel_id);
     for(let seli = 0; seli < sels.length; ++seli) {
@@ -93,7 +89,6 @@ function sync_back_shape_selection(sel_id) {
     }
     sels.dispatchEvent(new Event('change'));
 }
-
 function gen_num(nmax,nmin=min_num) {
     if (nmax < nmin) {
 	const tmp = nmax;
@@ -102,7 +97,6 @@ function gen_num(nmax,nmin=min_num) {
     }
     return(Math.floor((Math.random() * (nmax-nmin+1)) + nmin));
 }
-
 function gen_colour(type=2,alpha=0.9) {
     const red = gen_num(255);
     const green = gen_num(255);
@@ -123,11 +117,9 @@ function gen_colour(type=2,alpha=0.9) {
     }
     return the_colour;
 }
-
 function resize_linewidth(sz) {
     c2d.lineWidth = sz;
 }
-
 function resize_nodes(sz_id0,sz_id1) {
     const sz0 = document.getElementById(sz_id0);
     let sz1 = document.getElementById(sz_id1);
@@ -137,7 +129,6 @@ function resize_nodes(sz_id0,sz_id1) {
     node_size.s1 = Number(sz1.value);
     g.resize_nodes(node_size.s0,node_size.s1);
 }
-
 function sync_back_node_sizes(sz_id0,sz_id1) {
     const sz0 = document.getElementById(sz_id0);
     const sz1 = document.getElementById(sz_id1);
@@ -145,7 +136,6 @@ function sync_back_node_sizes(sz_id0,sz_id1) {
     if(sz1)
 	sz1.value = Number(node_size.s1);
 }
-
 function update_scatter(scatter_value,c=canv) {
     scatter = Math.abs(Number(scatter_value) / 100);
     const sc_off = Math.abs(1 - scatter) / 2;
@@ -154,137 +144,103 @@ function update_scatter(scatter_value,c=canv) {
     offs.x = Math.round(c.width * sc_off);
     offs.y = Math.round(c.height * sc_off);
 }
-
 function set_graph_alg(a) {
     graph_algorithm = a;
 }
-
-function add_node_at_random_pos(gr,name,shape) {
-    gr.addNode(new Node(name, shape, node_size.s0, node_size.s1,
-			colours,
-			rnd_pairs,
-			Math.random()*scat.x+offs.x,
-			Math.random()*scat.y+offs.y, c2d));
+function add_node_at_pos(gr,name,xpos,ypos,shape=node_shape,sz=node_size,cols=colours,rpairs=rnd_pairs,c=c2d) {
+    gr.addNode(new Node(name,
+			shape,
+			sz.s0,
+			sz.s1,
+			cols,
+			rpairs,
+			xpos,
+			ypos,
+			c
+		       )
+	      );
 }
-
+function add_node_at_random_pos(gr,name,sc=scat,os=offs) {
+    add_node_at_pos(gr,name,
+		    Math.random()*sc.x+os.x,
+		    Math.random()*sc.y+os.y);
+}
 function print_edges(target,delim=elem.delim,quot=elem.quote) {
     target.value = g.get_edge_list(delim,quot);
 }
-
 function add_scattered_nodes(g,num,nl) {
     for(let i = 0;i<num;i++)
-	add_node_at_random_pos(g,nl[i],node_shape,node_size.s0, node_size.s1);
+	add_node_at_random_pos(g,nl[i]);
 }
-
-function add_hline_nodes(gr,num,nl,c=canv) {
+function add_hline_nodes(gr,num,nl,jit=jitter,os=offs,c=canv) {
     const vpos = c.height / 2;
-    let vpos_mod = jitter;
-    const h_incr = (c.width - (2 * offs.x))/num;
-    let hpos = offs.x;
+    let vpos_mod = jit;
+    const h_incr = (c.width - (2 * os.x))/num;
+    let hpos = os.x;
     for(let i = 0; i < num; hpos+=h_incr,++i,vpos_mod*=-1)
-	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
-			    colours,
-			    rnd_pairs,
-			    hpos,
-			    vpos+vpos_mod,
-			    c2d));
+	add_node_at_pos(gr,nl[i],hpos,vpos+vpos_mod);
 }
-
-function add_vline_nodes(gr,num,nl,c=canv) {
+function add_vline_nodes(gr,num,nl,jit=jitter,os=offs,c=canv) {
     const hpos = c.width / 2;
-    let hpos_mod = jitter;
-    const v_incr = (c.height - (2 * offs.y))/num;
-    let vpos = offs.y;
+    let hpos_mod = jit;
+    const v_incr = (c.height - (2 * os.y))/num;
+    let vpos = os.y;
     for(let i = 0; i < num; vpos+=v_incr,++i,hpos_mod*=-1)
-	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
-			    colours,
-			    rnd_pairs,
-			    hpos+hpos_mod,
-			    vpos,
-			    c2d));
+	add_node_at_pos(gr,nl[i],hpos+hpos_mod,vpos);
 }
-
-function add_lrdiagonal_nodes(gr,num,nl,c=canv) {
-    const v_incr = (c.height - (2 * offs.y))/num;
-    const h_incr = (c.width - (2 * offs.x))/num;
-    let vpos = offs.y;
-    let hpos = offs.x;
-    let hpos_mod = jitter;
+function add_lrdiagonal_nodes(gr,num,nl,jit=jitter,os=offs,c=canv) {
+    const v_incr = (c.height - (2 * os.y))/num;
+    const h_incr = (c.width - (2 * os.x))/num;
+    let vpos = os.y;
+    let hpos = os.x;
+    let hpos_mod = jit;
     for(let i = 0; i < num; vpos+=v_incr,hpos+=h_incr,++i,hpos_mod*=-1)
-	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
-			    colours,
-			    rnd_pairs,
-			    hpos+hpos_mod,
-			    vpos,
-			    c2d));
+	add_node_at_pos(gr,nl[i],hpos+hpos_mod,vpos);
 }
-
-function add_x_nodes(gr,num,nl,c=canv) {
-    const v_incr = (c.height - (2 * offs.y))/num;
-    const h_incr = (c.width - (2 * offs.x))/num;
-    let vpos = offs.y;
-    let hpos1 = offs.x;
-    let hpos2 = canv.width-offs.x;
-    
+function add_x_nodes(gr,num,nl,os=offs,c=canv) {
+    const v_incr = (c.height - (2 * os.y))/num;
+    const h_incr = (c.width - (2 * os.x))/num;
+    let vpos = os.y;
+    let hpos1 = os.x;
+    let hpos2 = c.width-os.x;
     for(let i = 0; i < num; vpos+=v_incr,hpos1+=h_incr,hpos2-=h_incr,++i)
-	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
-			    colours,
-			    rnd_pairs,
-			    (i % 2 == 0) ? hpos1 : hpos2,
-			    vpos,
-			    c2d));
+	add_node_at_pos(gr,nl[i],(i % 2 == 0) ? hpos1 : hpos2,vpos);
 }
-
 class Point {
     constructor(x,y) {
 	this.x = x;
 	this.y = y;
     }
 }
-
 function get_point_on_circ(origin,radian,radius) {
     return(new Point(Math.round(origin.x + Math.cos(radian) * radius),
 		     Math.round(origin.y + Math.sin(radian) * radius)));
-    }
-
-function add_circular_nodes(gr,num,nl,c=canv) {
+}
+function add_circular_nodes(gr,num,nl,os=offs,c=canv) {
     const o = new Point(c.width/2,c.height/2);
-    const radius = (o.x < o.y) ? o.x - offs.x : o.y - offs.y;
+    const radius = (o.x < o.y) ? o.x - os.x : o.y - os.y;
     const rad_incr = (2 * Math.PI) / num;
     let radian = 0;
     for(let i = 0; i < num; ++i,radian+=rad_incr) {
 	const p = get_point_on_circ(o,radian,radius)
-	gr.addNode(new Node(nl[i], node_shape, node_size.s0, node_size.s1,
-			    colours,
-			    rnd_pairs,
-			    p.x,
-			    p.y,
-			    c2d));
+	add_node_at_pos(gr,nl[i],p.x,p.y);
     }	
 }
-
-function add_grid_nodes(gr,num,nl,c=canv) {
+function add_grid_nodes(gr,num,nl,os=offs,c=canv) {
     let vpos;
-    let hpos = offs.x;
+    let hpos = os.x;
     let num_max = Math.ceil(Math.sqrt(num));
-    const v_incr = (c.height - 2 * offs.y)/(num_max-1);
-    const h_incr = (c.width - 2 * offs.x)/(num_max-1);
+    const v_incr = (c.height - 2 * os.y)/(num_max-1);
+    const h_incr = (c.width - 2 * os.x)/(num_max-1);
     let n;
     for(let i = 0,n=0; i < num_max; hpos+=h_incr,++i)
 	for(let j = 0,vpos = offs.y; j < num_max && n<num; vpos+=v_incr,++j,++n)
-	    gr.addNode(new Node(nl[n], node_shape, node_size.s0, node_size.s1,
-				colours,
-				rnd_pairs,
-				hpos,
-				vpos,
-				c2d));
+	    add_node_at_pos(gr,nl[i],hpos,vpos);
 }
-
 function make_namelist(n,l) {
     for(let i = 0; i < n; ++i)
 	l.push('n'+i);
 }
-
 function add_nodes(g, num, namelist=[], sel_id="sel_nodeplace") {
     if (namelist.length == 0)
 	make_namelist(num,namelist);
@@ -608,7 +564,6 @@ function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
     animate = cb_paused_start.checked ? false : true;
     animPhase();
 }
-
 function clear_canvas(from_x=0,
 		      from_y=0,
 		      to_x=canv.width,
@@ -623,20 +578,16 @@ function clear_canvas(from_x=0,
 	ctx.fillStyle = saved_fillStyle;
     }
 }
-
 function stop() {
     animate = false;
 }
-
 function pause() {
     animate=false;
 }
-
 function go_on() {
     animate = true;
     animPhase();
 }
-
 function col_sel_change(sel_id) {
     const cb = document.getElementById('rnd_' + sel_id);
     const sel = document.getElementById(sel_id);
@@ -644,7 +595,6 @@ function col_sel_change(sel_id) {
     rnd_pairs[sel_id] = cb.checked ? true : false;
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
-
 function col_off_change(sel_id) {
     const off_cb = document.getElementById(sel_id + "_off");
     const rnd_cb = document.getElementById("rnd_" + sel_id);
@@ -660,7 +610,6 @@ function col_off_change(sel_id) {
     }
     //console.log(v + " should change to " + (cb.checked ? true : false));
 }
-
 function anim_step() {
     if(!first_step) {
 	if(tracer.checked)
@@ -672,7 +621,6 @@ function anim_step() {
     }
     g.draw(off_pairs,false,labelling.checked);
 }
-    
 function animPhase() {
     anim_step();
     if (animate) {

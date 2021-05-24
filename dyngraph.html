@@ -213,7 +213,7 @@
 	      <td><input title="number of nodes" id="nu_nodes" type="number" min="2" max="1000" /><label>x</label><input id="nu_nodes2" type="number" min="1" max="100" value="1" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><label>shape</label></td>
+	      <td><label>shape/label></td>
 	      <td><select class="button1" title="the shape of the nodes" id="sel_shape" onchange="proc_shape_sel('sel_shape','node_dim_target')">
 		  <option value="c" selected>circle</option>
 		  <option value="s">square</option>
@@ -535,7 +535,7 @@
 	function add_new_node(name_box,sel_shape_id="sel_shape",gr=g) {
 	    const sel_shape = document.getElementById(sel_shape_id);
 	    const node_shape = sel_shape[sel_shape.selectedIndex].value;
-	    add_node_at_random_pos(gr,name_box.value,node_shape);
+	    add_node_at_random_pos(gr,name_box.value);
 	    init_connectedness_selectors();
 	    name_box.value = "";
 	}
@@ -736,7 +736,7 @@
 	    clear_canvas();
 	    g = new Graph("sedge");
 	    for(let i = 0; i < nuvert; ++i)
-		add_node_at_random_pos(g,i,node_shape);
+		add_node_at_random_pos(g,i);
 	    const len = dat_lines.length
 	    for(let i = 2; i < len; ++i) {
 		const arr = dat_lines[i].trim().split(delim);
