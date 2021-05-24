@@ -7,7 +7,6 @@ class Graph {
 	this.adj = {};
 	this.badj = {};
     }
-
     addNode(node) {
         this.ns.push(node);
 	this.adj[this.nu_vertices] = [];
@@ -15,7 +14,6 @@ class Graph {
 	++this.nu_vertices;
         return this.ns.length-1;
     }
-
     remNode(ind) {
 	const the_node = this.ns[ind];
 	for(let i = the_node.links.length-1; i >= 0; --i) {
@@ -33,7 +31,6 @@ class Graph {
 	delete this.badj[ind];
 	--this.nu_vertices;
     }
-
     addLink(index1, index2) {
         if (index1<0 || index1>=this.ns.length || index2<0 || index2>=this.ns.length)
             return false;
@@ -70,20 +67,22 @@ class Graph {
 	}
 	return true;
     }
+    reposition_node(num,xpos,ypos) {
+	this.ns[num].x = xpos;
+	this.ns[num].y = ypos;
+    }
     is_connected(index1,index2) {
 	return(Node.is_connected(this.ns[index1],this.ns[index2]));
     }
     // add_uni_link(index1, index2) {
     // 	this.ns[index1].add_uni_link(this.ns[index2]);
     // }
-
     draw(params,draw_trace,draw_labels) {
 	//console.log("graph.draw() has been called");
         this.ns.forEach( node => {
             Node.draw(node,params,draw_trace,draw_labels);
         });
     }
-
     calcForces() {
         this.ns.forEach( node => {
             node.resetForce();
@@ -96,13 +95,11 @@ class Graph {
             })
         });
     }
-
     refresh_colours(cols,rnd) {
         this.ns.forEach( node => {
             node.refresh_colours(cols,rnd);
         });
     }
-
     nudge(dir) {
 	this.ns.forEach( node => {
 	    switch(dir) {
@@ -123,27 +120,23 @@ class Graph {
 	    }
         });
     }
-    
     step() {
         this.calcForces();
         this.ns.forEach( node => {
             node.step();
         });
     }
-
     resize_nodes(new_size0,new_size1) {
 	this.ns.forEach( node => {
             node.size0=Number(new_size0);
 	    node.size1=Number(new_size1);
         });
     }
-
     unvisit_nodes() {
 	this.ns.forEach( node => {
 	    node.unvisit();
 	});
     }
-    
     get_edge_list(delim,quot) {
 	let output_string = "";
 	for(let i in this.ns) {
@@ -154,7 +147,6 @@ class Graph {
 	}
 	return output_string;
     }
-    
     static discover_a_group(a_node,group_colour,the_group,cols) {
 	if (!a_node.visited)
 	    the_group.push(a_node);
@@ -178,7 +170,6 @@ class Graph {
 	    this.discover_a_group(queue.shift(),group_colour,the_group,cols);
 	}
     }
-
     static discover_node_groups(gr,cols=true) {
 	const groups = [];
 	gr.unvisit_nodes();
@@ -192,7 +183,6 @@ class Graph {
 	gr.unvisit_nodes();
 	return(groups)
     }
-
     static connect_node_groups_first(gr) {
 	const islands = this.discover_node_groups(gr);
 	for(let i = 1; i < islands.length; ++i) {
@@ -203,11 +193,9 @@ class Graph {
 	    //++gr.nu_edges;
 	}
     }
-
     static sort_islands_by_length(islnds) {
 	return islnds.sort((a,b) => b.length - a.length);
     }
-
     static connect_node_groups_rand(gr) {
 	let islands = this.sort_islands_by_length(this.discover_node_groups(gr));
 	while(islands.length > 1) {
@@ -221,7 +209,6 @@ class Graph {
 	    islands = this.sort_islands_by_length(this.discover_node_groups(gr,false));
 	}
     }
-
     static connect_node_groups(gr,rnd_id,nu_edges_id) {
 	document.getElementById(rnd_id).checked ? this.connect_node_groups_rand(gr) : this.connect_node_groups_first(gr);
 	document.getElementById(nu_edges_id).value = gr.nu_edges;

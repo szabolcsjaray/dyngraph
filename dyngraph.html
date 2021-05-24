@@ -436,7 +436,7 @@
 		  <option value="centr">Central</option>
 		  <option value="circ">Circular</option>
 		  <option value="matr">Matrix</option>
-		  <option value="same" hidden>Same Graph</option>
+		  <option value="same">Same Graph</option>
 		  <option value="tree">Tree</option>
 		  <option value="tri">Triangulated</option>
 		  <option value="el">from Edge List</option>
@@ -538,12 +538,14 @@
 	    add_node_at_random_pos(gr,name_box.value);
 	    init_connectedness_selectors();
 	    name_box.value = "";
+	    sync_nu_nodes();
 	}
 	function rem_node(selid="sel_node_list1",gr=g,nued_id="nu_edges") {
 	    gr.remNode(document.getElementById(selid).selectedIndex);
 	    init_connectedness_selectors();
 	    document.getElementById(nued_id).value = gr.nu_edges;
 	    document.getElementById("btn_save_as_sedge").disabled = true;
+	    sync_nu_nodes();
 	}
 	function init_starting_colour_selector() {
 	    const sel_box = document.getElementById("sel_starting_safe_colour");
@@ -996,7 +998,6 @@
 	    hiddenElement.download = fn;
 	    hiddenElement.click();
 	}
-
 	function add_table_rows(tbl,row_data) {
 	    const tbdy = tbl.createTBody();
 	    for(let rowind in row_data) {
@@ -1064,13 +1065,15 @@
 	    }
 	    return(out_arr);
 	}
-	
 	function proc_shape_sel(sel_id,targ_id) {
 	    change_shape(sel_id);
 	    create_table(targ_id,prep_tr_data(set_shape_params(node_shape)));
 	    sync_back_node_sizes('inp_nodesize0','inp_nodesize1');
 	}
-
+	function sync_nu_nodes(nu1_id="nu_nodes",nu2_id="nu_nodes2",gr=g) {
+	    document.getElementById(nu1_id).value = gr.ns.length;
+	    document.getElementById(nu2_id).value = 1;
+	}
 	function toggle(param) {
 	    let ret_status;
 	    if(param.checked) {
@@ -1083,7 +1086,6 @@
 	    param.dispatchEvent(new Event("change"));
 	    return(ret_status);
 	}
-	
 	document.addEventListener('keydown', (event) => {
 	    const keyName = event.key;
 	    //console.log(keyName);

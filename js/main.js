@@ -168,43 +168,52 @@ function add_node_at_random_pos(gr,name,sc=scat,os=offs) {
 function print_edges(target,delim=elem.delim,quot=elem.quote) {
     target.value = g.get_edge_list(delim,quot);
 }
-function add_scattered_nodes(g,num,nl) {
-    for(let i = 0;i<num;i++)
-	add_node_at_random_pos(g,nl[i]);
+function add_nodes_at_same_pos(gr,names,posx=0,posy=0) {
+    const len = names.length;
+    for(let i = 0; i < len; ++i)
+	add_node_at_pos(gr,names[i],posx,posy);
 }
-function add_hline_nodes(gr,num,nl,jit=jitter,os=offs,c=canv) {
+function scatter_nodes(gr,sc=scat,os=offs) {
+    for(let i = 0;i<gr.ns.length;i++)
+	gr.reposition_node(i,Math.random()*sc.x+os.x,Math.random()*sc.y+os.y);
+}
+function hline_nodes(gr,jit=jitter,os=offs,c=canv) {
+    const len = gr.ns.length;
     const vpos = c.height / 2;
     let vpos_mod = jit;
-    const h_incr = (c.width - (2 * os.x))/num;
+    const h_incr = (c.width - (2 * os.x))/len;
     let hpos = os.x;
-    for(let i = 0; i < num; hpos+=h_incr,++i,vpos_mod*=-1)
-	add_node_at_pos(gr,nl[i],hpos,vpos+vpos_mod);
+    for(let i = 0; i < len; hpos+=h_incr,++i,vpos_mod*=-1)
+	gr.reposition_node(i,hpos,vpos+vpos_mod);
 }
-function add_vline_nodes(gr,num,nl,jit=jitter,os=offs,c=canv) {
+function vline_nodes(gr,jit=jitter,os=offs,c=canv) {
+    const len = gr.ns.length;
     const hpos = c.width / 2;
     let hpos_mod = jit;
-    const v_incr = (c.height - (2 * os.y))/num;
+    const v_incr = (c.height - (2 * os.y))/len;
     let vpos = os.y;
-    for(let i = 0; i < num; vpos+=v_incr,++i,hpos_mod*=-1)
-	add_node_at_pos(gr,nl[i],hpos+hpos_mod,vpos);
+    for(let i = 0; i < len; vpos+=v_incr,++i,hpos_mod*=-1)
+	gr.reposition_node(i,hpos+hpos_mod,vpos);
 }
-function add_lrdiagonal_nodes(gr,num,nl,jit=jitter,os=offs,c=canv) {
-    const v_incr = (c.height - (2 * os.y))/num;
-    const h_incr = (c.width - (2 * os.x))/num;
+function lrdiagonal_nodes(gr,jit=jitter,os=offs,c=canv) {
+    const len = gr.ns.length;
+    const v_incr = (c.height - (2 * os.y))/len;
+    const h_incr = (c.width - (2 * os.x))/len;
     let vpos = os.y;
     let hpos = os.x;
     let hpos_mod = jit;
-    for(let i = 0; i < num; vpos+=v_incr,hpos+=h_incr,++i,hpos_mod*=-1)
-	add_node_at_pos(gr,nl[i],hpos+hpos_mod,vpos);
+    for(let i = 0; i < len; vpos+=v_incr,hpos+=h_incr,++i,hpos_mod*=-1)
+	gr.reposition_node(i,hpos+hpos_mod,vpos);
 }
-function add_x_nodes(gr,num,nl,os=offs,c=canv) {
-    const v_incr = (c.height - (2 * os.y))/num;
-    const h_incr = (c.width - (2 * os.x))/num;
+function x_nodes(gr,os=offs,c=canv) {
+    const len = gr.ns.length;
+    const v_incr = (c.height - (2 * os.y))/len;
+    const h_incr = (c.width - (2 * os.x))/len;
     let vpos = os.y;
     let hpos1 = os.x;
     let hpos2 = c.width-os.x;
-    for(let i = 0; i < num; vpos+=v_incr,hpos1+=h_incr,hpos2-=h_incr,++i)
-	add_node_at_pos(gr,nl[i],(i % 2 == 0) ? hpos1 : hpos2,vpos);
+    for(let i = 0; i < len; vpos+=v_incr,hpos1+=h_incr,hpos2-=h_incr,++i)
+	gr.reposition_node(i,(i % 2 == 0) ? hpos1 : hpos2,vpos);
 }
 class Point {
     constructor(x,y) {
@@ -216,64 +225,70 @@ function get_point_on_circ(origin,radian,radius) {
     return(new Point(Math.round(origin.x + Math.cos(radian) * radius),
 		     Math.round(origin.y + Math.sin(radian) * radius)));
 }
-function add_circular_nodes(gr,num,nl,os=offs,c=canv) {
+function circular_nodes(gr,os=offs,c=canv) {
+    const len = gr.ns.length;
     const o = new Point(c.width/2,c.height/2);
     const radius = (o.x < o.y) ? o.x - os.x : o.y - os.y;
-    const rad_incr = (2 * Math.PI) / num;
+    const rad_incr = (2 * Math.PI) / len;
     let radian = 0;
-    for(let i = 0; i < num; ++i,radian+=rad_incr) {
+    for(let i = 0; i < len; ++i,radian+=rad_incr) {
 	const p = get_point_on_circ(o,radian,radius)
-	add_node_at_pos(gr,nl[i],p.x,p.y);
+	gr.reposition_node(i,p.x,p.y);
     }	
 }
-function add_grid_nodes(gr,num,nl,os=offs,c=canv) {
+function grid_nodes(gr,os=offs,c=canv) {
+    const len = gr.ns.length;
     let vpos;
     let hpos = os.x;
-    let num_max = Math.ceil(Math.sqrt(num));
+    let num_max = Math.ceil(Math.sqrt(len));
     const v_incr = (c.height - 2 * os.y)/(num_max-1);
     const h_incr = (c.width - 2 * os.x)/(num_max-1);
     let n;
     for(let i = 0,n=0; i < num_max; hpos+=h_incr,++i)
-	for(let j = 0,vpos = offs.y; j < num_max && n<num; vpos+=v_incr,++j,++n)
-	    add_node_at_pos(gr,nl[i],hpos,vpos);
+	for(let j = 0,vpos = os.y; j < num_max && n<len; vpos+=v_incr,++j,++n)
+	    gr.reposition_node(n,Math.floor(hpos),Math.floor(vpos));
 }
 function make_namelist(n,l) {
     for(let i = 0; i < n; ++i)
 	l.push('n'+i);
 }
-function add_nodes(g, num, namelist=[], sel_id="sel_nodeplace") {
+function add_nodes(g, num, namelist=[], new_nodes=true, sel_id="sel_nodeplace") {
     if (namelist.length == 0)
 	make_namelist(num,namelist);
+    if(new_nodes)
+	add_nodes_at_same_pos(g,namelist);
     const sels = document.getElementById(sel_id);
     const seli = sels.selectedIndex;
     const how = sels[seli].value;
     switch(how) {
     case "scatter":
-	add_scattered_nodes(g,num,namelist);
+	scatter_nodes(g);
 	break;
     case "hline":
-	add_hline_nodes(g,num,namelist);
+	hline_nodes(g);
 	break;
     case "vline":
-	add_vline_nodes(g,num,namelist);
+	vline_nodes(g);
 	break;
     case "lrdiagonal":
-	add_lrdiagonal_nodes(g,num,namelist);
+	lrdiagonal_nodes(g);
 	break;
     case "x":
-	add_x_nodes(g,num,namelist);
+	x_nodes(g);
 	break;
     case "o":
-	add_circular_nodes(g,num,namelist);
+	circular_nodes(g);
 	break;
     case "grid":
-	add_grid_nodes(g,num,namelist);
+	grid_nodes(g);
 	break;
     default:
-	console.log("unrecognised placement method:" + how);
+	console.log("unrecognised placement method: " + how);
     }
 }
-
+function reposition_nodes(gr) {
+    add_nodes(gr,0,[],false);
+}
 function rem_spec_chars(str_pair){
     for(let i in str_pair) {
 	if(str_pair[i] == null || str_pair[i] == '')
@@ -281,7 +296,6 @@ function rem_spec_chars(str_pair){
 	str_pair[i] = str_pair[i].replace(/[^a-zA-Z0-9 _]/g, '');
     }
 }
-
 function proc_unquoted_csv(str,delim,endl) {
     const edges = str.split(endl);
     const split_edges = [];
@@ -293,7 +307,6 @@ function proc_unquoted_csv(str,delim,endl) {
     }
     return(split_edges);
 }
-
 function proc_quoted_csv(str,quot,delim,endl) {
     const in_str = new String(str);
     const edge_list = [];
@@ -332,7 +345,6 @@ function proc_quoted_csv(str,quot,delim,endl) {
     //console.table(edge_list);
     return edge_list;
 }
-
 function get_edge_list(quote=elem.quote,delim=elem.delim,endl=elem.endl) {
     let edgelist_str = area_edgelist.value.trim();
     const r = new RegExp("[" + quote + "]",'gm');
@@ -341,7 +353,6 @@ function get_edge_list(quote=elem.quote,delim=elem.delim,endl=elem.endl) {
     
     return(!q ? proc_unquoted_csv(edgelist_str,delim,endl) : proc_quoted_csv(edgelist_str,quote,delim,endl));
 }
-
 function get_node_list(edges) {
     let nodes = [];
     for(let i in edges) {
@@ -353,7 +364,6 @@ function get_node_list(edges) {
     }
     return nodes;
 }
-
 function make_r2r_graph(nuno,nued) {
     const gr = new Graph('r2r'); 
     add_nodes(gr,nuno);
@@ -366,7 +376,6 @@ function make_r2r_graph(nuno,nued) {
     }
     return(gr);
 }
-
 function make_r2r_all_graph(nuno,nued_id="nu_edges") {
     const gr = new Graph('r2r_all');
     add_nodes(gr,nuno);
@@ -380,7 +389,6 @@ function make_r2r_all_graph(nuno,nued_id="nu_edges") {
     document.getElementById(nued_id).value = ne;
     return(gr);
 }
-
 function make_s2r_graph(nuno,nued) {
     const gr = new Graph('s2r');
     if (nuno == 0)
@@ -401,7 +409,6 @@ function make_s2r_graph(nuno,nued) {
     }
     return(gr);
 }
-
 function make_s2r_all_graph(nuno,nued_id="nu_edges") {
     const gr = new Graph('s2r_all');
     add_nodes(gr,nuno);
@@ -417,7 +424,6 @@ function make_s2r_all_graph(nuno,nued_id="nu_edges") {
     document.getElementById(nued_id).value = ne;
     return(gr);
 }
-    
 function make_a2a_graph(nuno) {
     const gr = new Graph('a2a');
     add_nodes(gr,nuno);
@@ -428,7 +434,6 @@ function make_a2a_graph(nuno) {
 	     
     return(gr);
 }
-
 function make_circular_graph(nuno) {
     const gr = new Graph('circular');
     add_nodes(gr,nuno);
@@ -438,7 +443,6 @@ function make_circular_graph(nuno) {
     gr.addLink(i-1,0);
     return(gr);
 }
-
 function make_central_graph(nuno) {
     const gr = new Graph('central');
     add_nodes(gr,nuno);
@@ -446,7 +450,6 @@ function make_central_graph(nuno) {
 	gr.addLink(0,i);
     return(gr);
 }
-
 function make_triangulated_graph(nuno) {
     const gr = new Graph('triangulated');
     add_nodes(gr,nuno);
@@ -461,7 +464,6 @@ function make_triangulated_graph(nuno) {
     gr.addLink(i-1,1);
     return(gr);
 }
-
 function make_matrix_graph(nuno,nuno2) {
     const gr = new Graph('ladder');
     add_nodes(gr,nuno*nuno2);
@@ -476,7 +478,6 @@ function make_matrix_graph(nuno,nuno2) {
     }
     return(gr);
 }
-
 function make_tree_graph(nuno,nubr,c=canv) {
     const gr = new Graph(Number(nubr).toString() + 'tree');
     add_nodes(gr,nuno);
@@ -493,7 +494,6 @@ function make_tree_graph(nuno,nubr,c=canv) {
     }
     return(gr);
 }
-
 function make_el_graph() {
     const gr = new Graph('el');
     const edges = get_edge_list();
@@ -506,20 +506,16 @@ function make_el_graph() {
     }
     return(gr);
 }
-
 function update_global_alpha(nalpha) {
     c2d.globalAlpha = nalpha;
 }
-
 function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
     c2d.globalAlpha = nalpha;
     const num_nodes = nnodes;
     const num_nodes2 = nnodes2;
     const num_edges = nedges;
     const num_branches = nbranches;
-
     clear_canvas();
-
     switch(graph_algorithm) {
     case "r2r":
 	g = make_r2r_graph(num_nodes,num_edges);
@@ -555,7 +551,7 @@ function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
 	g = make_s2r_all_graph(num_nodes);
 	break;
     case "same":
-	console.log("no change in graph");
+	reposition_nodes(g);
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorithm);
