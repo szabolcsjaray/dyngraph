@@ -483,14 +483,6 @@ function make_circular_graph(nuno) {
     return(gr);
 }
 
-// function make_linear_graph(nuno) {
-//     const gr = new Graph('circular');
-//     add_nodes(gr,nuno);
-//     for(let i = 1; i < nuno; ++i)
-// 	gr.addLink(i-1,i);
-//     return(gr);
-// }
-
 function make_central_graph(nuno) {
     const gr = new Graph('central');
     add_nodes(gr,nuno);
@@ -513,22 +505,6 @@ function make_triangulated_graph(nuno) {
     gr.addLink(i-1,1);
     return(gr);
 }
-
-// function make_ladder_graph(nuno) {
-//     const gr = new Graph('ladder');
-//     if (nuno % 2 != 0)
-// 	++nuno;
-//     add_nodes(gr,nuno);
-//     if (nuno == 0)
-// 	return gr;
-//     gr.addLink(0,1);
-//     for (let i = 2; i < nuno; i+=2) {
-// 	gr.addLink(i-2,i);
-// 	gr.addLink(i-1,i+1);
-// 	gr.addLink(i,i+1);
-// 	}
-//     return(gr);
-// }
 
 function make_matrix_graph(nuno,nuno2) {
     const gr = new Graph('ladder');
@@ -621,6 +597,9 @@ function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
 	break;
     case "s2ra":
 	g = make_s2r_all_graph(num_nodes);
+	break;
+    case "same":
+	console.log("no change in graph");
 	break;
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorithm);

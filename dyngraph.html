@@ -64,6 +64,11 @@
 	      case "s2r":
 		  set_scenario(0);
 		  break;
+	      case "tree":
+	      case "r2ra":
+	      case "s2ra":
+		  set_scenario(1);
+		  break;
 	      case "a2a":
 	      case "circ":
 	      case "centr":
@@ -72,11 +77,7 @@
 	      case "tri":
 		  set_scenario(2);
 		  break;
-	      case "tree":
-	      case "r2ra":
-	      case "s2ra":
-		  set_scenario(1);
-		  break;
+	      case "same":
 	      case "el":
 		  set_scenario(3);
 		  break;
@@ -432,12 +433,11 @@
 		  <option value="s2r">Serial:Random</option>
 		  <option value="s2ra">Serial:Rand Till All</option>
 		  <option value="a2a">All:All</option>
-		  <option value="tree">Tree</option>
-		  <option value="circ">Circular</option>
 		  <option value="centr">Central</option>
-		  <!-- <option value="line">Linear</option> -->
-		  <!-- <option value="ladd">Ladder</option> -->
+		  <option value="circ">Circular</option>
 		  <option value="matr">Matrix</option>
+		  <option value="same" hidden>Same Graph</option>
+		  <option value="tree">Tree</option>
 		  <option value="tri">Triangulated</option>
 		  <option value="el">from Edge List</option>
 	      </select></td>
@@ -471,7 +471,7 @@
 	    </tr>
 	    <tr><td colspan="2" class="centred"><label><a name="sedge">Sedgewick I/O</a></label></td></tr>
 	    <tr>
-	      <td colspan="2"><input type="file" id="file_sedge_in" onChange="read_image2(this)"></td>
+	      <td colspan="2"><input type="file" id="file_sedge_in" onChange="read_image2(this,'nu_nodes','nu_edges')"></td>
 	    </tr>
 	    <tr>
 	      <td colspan="2"><input type="button" id="btn_save_as_sedge" value="Save as" onclick="save_as_sedge('inp_sedge_fn');"> <input type="text" id="inp_sedge_fn" value="sedge_out.txt" /></td>
@@ -707,14 +707,14 @@
 	    }
 	}
 
-	function read_image2(input,endl=elem.endl,pstart=cb_paused_start) {
+	function read_image2(input,nu_nodes_id,nu_edges_id,endl=elem.endl,pstart=cb_paused_start) {
 	    //console.log(input)
 	    if (input.files && input.files[0]) {
 		const reader = new FileReader();
 		reader.readAsBinaryString(input.files[0]);
 		reader.onload = function (e) {
 		    //console.log(e);
-		    parse_sedgewick_data(e.target.result.split(endl));
+		    parse_sedgewick_data(e.target.result.split(endl),nu_nodes_id,nu_edges_id);
 		    init_connectedness_selectors();
 		    if(pstart.checked) {
 			console.log("pstart_checked");
@@ -726,9 +726,11 @@
 	    }
 	}
 
-	function parse_sedgewick_data(dat_lines,delim=elem.delim2) {
+	function parse_sedgewick_data(dat_lines,nuvert_id,nuedge_id,delim=elem.delim2) {
 	    const nuvert = dat_lines[0];
+	    document.getElementById(nuvert_id).value = nuvert;
 	    const nuedge = dat_lines[1];
+	    document.getElementById(nuedge_id).value = nuedge;
 	    console.log("Number of vertices: " + nuvert);
 	    console.log("Number of edges: " + nuedge);
 	    clear_canvas();
