@@ -8,6 +8,7 @@
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript" src="js/node.js"></script>
         <script type="text/javascript" src="js/graph.js"></script>
+	<script type="text/javascript" src="js/paths.js"></script>
 	<script type="text/javascript">
 	  function init() {
 	      setup_inp_vals_map();
@@ -511,6 +512,10 @@
 	      <td></td>
 	    </tr>
 	    <tr>
+	      <td><label>Path between the two? <input type="button" id="btn_path_btw" value="Examine" onclick="hilight_path_between();"/> <span id="sp_is_path_btw"></span> <input type="button" value="Rem Path" onclick="g.path=[];"/></label></td>
+	      <td></td>
+	    </tr>
+	    <tr>
 	      <td><label>Add node with name <input type="text" id="inp_new_node_name" onchange="add_new_node(this)" size="10" /></label></td>
 	      <td></td>
 	    </tr>
@@ -626,11 +631,23 @@
 	    const node1 = gr.ns[document.getElementById(sel1).selectedIndex];
 	    const node2 = gr.ns[document.getElementById(sel2).selectedIndex];
 	    const res_targ = document.getElementById(res);
-	    const group_colour = safe_colours[document.getElementById(col_sel_id).selectedIndex];
+	    const col_sel_box = document.getElementById(col_sel_id);
+	    const group_colour = col_sel_box[col_sel_box.selectedIndex].value;
 	    const node1_group = [];
 	    Graph.discover_a_group(node1,group_colour,node1_group,true);
 	    res_targ.innerHTML = node1_group.indexOf(node2) > -1;
 	    gr.unvisit_nodes();
+	}
+	function hilight_path_between(sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",res="sp_is_path_btw",gr=g) {
+	    const src_ind = document.getElementById(sel1).selectedIndex;
+	    const trg_ind = document.getElementById(sel2).selectedIndex;
+	    const pth = new BreadthFirstPathsIterative(gr,src_ind);
+	    const col_sel_box = document.getElementById(col_sel_id);
+	    const is_path = pth.has_path_to(trg_ind);
+	    document.getElementById(res).innerHTML = is_path;
+	    gr.path_col = "#" + col_sel_box[col_sel_box.selectedIndex].value;
+	    if (is_path)
+		gr.path = pth.path_to(trg_ind);
 	}
 	function update_alpha(alpha_value) {
 	    update_global_alpha(Math.abs(Number(alpha_value)) / 100);

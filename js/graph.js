@@ -4,8 +4,11 @@ class Graph {
 	this.nu_vertices = 0;
 	this.nu_edges = 0;
         this.ns = [];
+	//this.vertnames = [];
 	this.adj = {};
 	this.badj = {};
+	this.path = [];
+	this.path_col = "#ff00ff";
     }
     addNode(node) {
         this.ns.push(node);
@@ -82,6 +85,18 @@ class Graph {
         this.ns.forEach( node => {
             Node.draw(node,params,draw_trace,draw_labels);
         });
+	for(let i = 1; i < this.path.length; ++i) {
+	    let n0 = this.ns[this.path[i-1]];
+	    let n1 = this.ns[this.path[i]];
+	    //const saved_stroke = n0.c2d.strokeStyle;
+	    n0.c2d.strokeStyle = this.path_col;
+	    //n0.c2d.fillStyle = this.path_col;
+	    n0.c2d.moveTo(n0.x,n0.y);
+	    n0.c2d.lineTo(n1.x,n1.y);
+	    n0.c2d.stroke();
+	    //n0.c2d.strokeStyle = saved_stroke;
+	    //n0.c2d.fill();
+	}
     }
     calcForces() {
         this.ns.forEach( node => {
