@@ -28,8 +28,8 @@ class Graph {
 	    --this.nu_edges;
 	}
 	this.ns.splice(ind,1);
-	for(let ind2 of this.adj[ind])
-	    this.remLink2(ind,ind2);
+	this.remLinks(ind,this.adj,this.badj);
+	this.remLinks(ind,this.badj,this.adj);
 	delete this.adj[ind];
 	delete this.badj[ind];
 	--this.nu_vertices;
@@ -53,23 +53,27 @@ class Graph {
 	    --this.nu_edges;
 	this.remLink2(index1,index2);
     }
-    remLink2(index1,index2) {
-	const ind_to_remove1 = this.adj[index1].indexOf(index2);
-	if(ind_to_remove1 > -1)
-	    this.adj[index1].splice(ind_to_remove1,1);
-	else {
-	    console.log("no link between " + index1 + " and " + index2);
-	    return false;
-	}
-	const ind_to_remove2 = this.badj[index2].indexOf(index1);
-	if(ind_to_remove2 > -1)
-	    this.badj[index2].splice(ind_to_remove2,1);
-	else {
-	    console.log("no link between " + index2 + " and " + index1);
-	    return false;
-	}
-	return true;
+    remLinks(ind1,adj1,adj2) {
+	for(let ind2 of adj1[ind1])
+	    adj2[ind2].splice(adj2[ind2].indexOf(ind1),1);
     }
+    // remLink2(index1,index2) {
+    // 	const ind_to_remove1 = this.adj[index1].indexOf(index2);
+    // 	if(ind_to_remove1 > -1)
+    // 	    this.adj[index1].splice(ind_to_remove1,1);
+    // 	else {
+    // 	    console.log("no link between " + index1 + " and " + index2);
+    // 	    return false;
+    // 	}
+    // 	const ind_to_remove2 = this.badj[index2].indexOf(index1);
+    // 	if(ind_to_remove2 > -1)
+    // 	    this.badj[index2].splice(ind_to_remove2,1);
+    // 	else {
+    // 	    console.log("no link between " + index2 + " and " + index1);
+    // 	    return false;
+    // 	}
+    // 	return true;
+    // }
     reposition_node(num,xpos,ypos) {
 	this.ns[num].x = xpos;
 	this.ns[num].y = ypos;
