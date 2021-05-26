@@ -4,6 +4,7 @@ class Graph {
 	this.nu_vertices = 0;
 	this.nu_edges = 0;
         this.ns = [];
+	this.sn = {};
 	//this.vertnames = [];
 	this.adj = {};
 	this.badj = {};
@@ -12,12 +13,22 @@ class Graph {
     }
     addNode(node) {
         this.ns.push(node);
+	this.sn[node.name] = node;
 	this.adj[this.nu_vertices] = [];
 	this.badj[this.nu_vertices] = [];
 	++this.nu_vertices;
         return this.ns.length-1;
     }
+    remNodeByName(name) {
+	if(this.sn[name]===undefined)
+	    return false;
+	if (this.remNode(this.ns.indexOf(this.sn[name])))
+	    return true;
+	return false;
+    }
     remNode(ind) {
+	if(ind < 0)
+	    return false;
 	const the_node = this.ns[ind];
 	for(let i = the_node.links.length-1; i >= 0; --i) {
 	    the_node.disconnect(the_node.links[i]);
@@ -27,12 +38,14 @@ class Graph {
 	    the_node.backLinks[i].disconnect(the_node);
 	    --this.nu_edges;
 	}
+	delete this.sn[this.ns[ind].name];
 	this.ns.splice(ind,1);
 	this.remLinks(ind,this.adj,this.badj);
 	this.remLinks(ind,this.badj,this.adj);
 	delete this.adj[ind];
 	delete this.badj[ind];
 	--this.nu_vertices;
+	return true;
     }
     addLink(index1, index2) {
         if (index1<0 || index1>=this.ns.length || index2<0 || index2>=this.ns.length)
@@ -57,23 +70,23 @@ class Graph {
 	for(let ind2 of adj1[ind1])
 	    adj2[ind2].splice(adj2[ind2].indexOf(ind1),1);
     }
-    // remLink2(index1,index2) {
-    // 	const ind_to_remove1 = this.adj[index1].indexOf(index2);
-    // 	if(ind_to_remove1 > -1)
-    // 	    this.adj[index1].splice(ind_to_remove1,1);
-    // 	else {
-    // 	    console.log("no link between " + index1 + " and " + index2);
-    // 	    return false;
-    // 	}
-    // 	const ind_to_remove2 = this.badj[index2].indexOf(index1);
-    // 	if(ind_to_remove2 > -1)
-    // 	    this.badj[index2].splice(ind_to_remove2,1);
-    // 	else {
-    // 	    console.log("no link between " + index2 + " and " + index1);
-    // 	    return false;
-    // 	}
-    // 	return true;
-    // }
+    remLink2(index1,index2) {
+	const ind_to_remove1 = this.adj[index1].indexOf(index2);
+	if(ind_to_remove1 > -1)
+	    this.adj[index1].splice(ind_to_remove1,1);
+	else {
+	    console.log("no link between " + index1 + " and " + index2);
+	    return false;
+	}
+	const ind_to_remove2 = this.badj[index2].indexOf(index1);
+	if(ind_to_remove2 > -1)
+	    this.badj[index2].splice(ind_to_remove2,1);
+	else {
+	    console.log("no link between " + index2 + " and " + index1);
+	    return false;
+	}
+	return true;
+    }
     reposition_node(num,xpos,ypos) {
 	this.ns[num].x = xpos;
 	this.ns[num].y = ypos;

@@ -546,7 +546,8 @@
 	    sync_nu_nodes();
 	}
 	function rem_node(selid="sel_node_list1",gr=g,nued_id="nu_edges") {
-	    gr.remNode(document.getElementById(selid).selectedIndex);
+	    const seli = document.getElementById(selid);
+	    gr.remNodeByName(seli[seli.selectedIndex].value);
 	    init_connectedness_selectors();
 	    document.getElementById(nued_id).value = gr.nu_edges;
 	    document.getElementById("btn_save_as_sedge").disabled = true;
