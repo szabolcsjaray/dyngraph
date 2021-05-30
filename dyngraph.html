@@ -748,9 +748,9 @@
 
 	function parse_sedgewick_data(dat_lines,nuvert_id,nuedge_id,delim=elem.delim2) {
 	    const nuvert = dat_lines[0];
-	    document.getElementById(nuvert_id).value = nuvert;
+	    document.getElementById(nuvert_id).value = Number(nuvert);
 	    const nuedge = dat_lines[1];
-	    document.getElementById(nuedge_id).value = nuedge;
+	    document.getElementById(nuedge_id).value = Number(nuedge);
 	    console.log("Number of vertices: " + nuvert);
 	    console.log("Number of edges: " + nuedge);
 	    clear_canvas();
@@ -761,7 +761,7 @@
 	    for(let i = 2; i < len; ++i) {
 		const arr = dat_lines[i].trim().split(delim);
 		if (arr.length == 2)
-		    g.addLink(arr[0].trim(),arr[1].trim());
+		    g.addLink(Number(arr[0].trim()),Number(arr[1].trim()));
 	    }
 	}
  
