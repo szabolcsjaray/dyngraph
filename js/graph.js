@@ -59,35 +59,38 @@ class Graph {
     is_connected(index1,index2) {
 	return(this.adj[index1].indexOf[index2] > -1 || this.adj[index2].indexOf[index1] > -1);
     }
-    draw(params,draw_trace,draw_labels) {
-	//console.log("graph.draw() has been called");
-        this.ns.forEach( node => {
-            Node.draw(node,params,draw_trace,draw_labels);
-        });
+    draw_path() {
 	for(let i = 1; i < this.path.length; ++i) {
 	    let n0 = this.ns[this.path[i-1]];
 	    let n1 = this.ns[this.path[i]];
-	    //const saved_stroke = n0.c2d.strokeStyle;
 	    n0.c2d.strokeStyle = this.path_col;
-	    //n0.c2d.fillStyle = this.path_col;
 	    n0.c2d.moveTo(n0.x,n0.y);
 	    n0.c2d.lineTo(n1.x,n1.y);
 	    n0.c2d.stroke();
-	    //n0.c2d.strokeStyle = saved_stroke;
-	    //n0.c2d.fill();
 	}
     }
-    calcForces() {
+    draw(params,draw_trace,draw_labels) {
+	//console.log("graph.draw() has been called");
+        for (let i in this.ns) {
+            Node.draw(this.ns[i],params,draw_trace,draw_labels);
+	    for (let j in this.adj[i])
+		if (j < i)
+		    this.constructor.draw_edge(this.ns[i],this.ns[j],draw_trace,draw_labels);
+        }
+	this.draw_path();
+    }
+    calc_forces() {
         this.ns.forEach( node => {
             node.resetForce();
         });
-        this.ns.forEach( node => {
-            this.ns.forEach( otherNode => {
-                if (node!=otherNode) {
-                    node.addForce(otherNode);
-                }
-            })
-        });
+	for (let i in this.ns)
+	    for (let j in this.ns)
+                if (i != j) {
+		    if(this.adj[i].includes(j))
+			this.ns[i].add_force_connected(this.ns[j]);
+		    else
+			this.ns[i].add_force_unconnected(this.ns[j]);
+		}
     }
     refresh_colours(cols,rnd) {
         this.ns.forEach( node => {
@@ -115,7 +118,7 @@ class Graph {
         });
     }
     step() {
-        this.calcForces();
+        this.calc_forces();
         this.ns.forEach( node => {
             node.step();
         });
@@ -140,6 +143,17 @@ class Graph {
 		}
 	}
 	return output_string;
+    }
+    static draw_edge(n0,n1,p,draw_trace,draw_labels) {
+	if (!p.line_colour)
+            n0.c2d.strokeStyle = draw_trace ? n0.tracelinecolour : n0.linecolour;
+        n0.c2d.beginPath();
+	const coords1 = Node.get_point(n0,n1);
+	const coords2 = Node.get_point(n1,n0);
+	n0.c2d.moveTo(coords1[0], coords1[1]);
+	n1.c2d.lineTo(coords2[0], coords2[1]);
+	if (!p.line_colour)
+            n0.c2d.stroke();
     }
     static discover_a_group(a_node,group_colour,the_group,cols) {
 	if (!a_node.visited)

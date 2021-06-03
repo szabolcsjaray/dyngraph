@@ -31,8 +31,8 @@ class Node {
 	this.refresh_colours(cols,rnd);
         this.x = x;
         this.y = y;
-        this.links = [];
-        this.backLinks = [];
+        // this.links = [];
+        // this.backLinks = [];
         this.c2d = c2d;
         this.fx = 0;
         this.fy = 0;
@@ -53,25 +53,21 @@ class Node {
         this.fx = 0;
         this.fy = 0;
     }
-    addForce(otherNode) {
-        let dist = Math.sqrt((this.x-otherNode.x)*(this.x-otherNode.x) + (this.y-otherNode.y)*(this.y-otherNode.y));
-
-        if ((this.links.indexOf(otherNode)!=-1) ||
-            (this.backLinks.indexOf(otherNode)!=-1)) {
-            //console.log('Linked node force:' + this.name + ' - ' + otherNode.name);
-            if (dist>node_params.link_max_length) {
-                this.fx += (otherNode.x-this.x)/dist*(dist-node_params.dist_modifier)/node_params.large_dist_div;
-                this.fy += (otherNode.y-this.y)/dist*(dist-node_params.dist_modifier)/node_params.large_dist_div;
-            } else if (dist<node_params.link_min_length) {
-                this.fx += (this.x-otherNode.x)/dist*(node_params.link_min_length-dist)/node_params.small_dist_div;
-                this.fy += (this.y-otherNode.y)/dist*(node_params.link_min_length-dist)/node_params.small_dist_div;
-            }
-        } else {
-            //console.log('Not linked node force:' + this.name + ' - ' + otherNode.name);
-            if (dist<node_params.dist_threshold) {
-                this.fx += (this.x-otherNode.x)/dist;
-                this.fy += (this.y-otherNode.y)/dist;
-            }
+    add_force_connected(otherNode) {
+        let dist = this.constructor.calc_dist(this,otherNode);
+	if (dist>node_params.link_max_length) {
+            this.fx += (otherNode.x-this.x)/dist*(dist-node_params.dist_modifier)/node_params.large_dist_div;
+            this.fy += (otherNode.y-this.y)/dist*(dist-node_params.dist_modifier)/node_params.large_dist_div;
+        } else if (dist<node_params.link_min_length) {
+            this.fx += (this.x-otherNode.x)/dist*(node_params.link_min_length-dist)/node_params.small_dist_div;
+            this.fy += (this.y-otherNode.y)/dist*(node_params.link_min_length-dist)/node_params.small_dist_div;
+        }
+    }
+    add_force_unconnected(otherNode) {
+	let dist = this.constructor.calc_dist(this,otherNode);
+        if (dist<node_params.dist_threshold) {
+            this.fx += (this.x-otherNode.x)/dist;
+            this.fy += (this.y-otherNode.y)/dist;
         }
     }
     step() {
@@ -91,89 +87,13 @@ class Node {
     move_right() {
 	this.x += node_params.nudge_size;
     }
-    connect(otherNode) {
-	if(!this.constructor.is_connected(this,otherNode)) {
-	    this.add_uni_link(otherNode);
-	    otherNode.add_back_link(this);
-	}
-    }
-    disconnect(otherNode) {
-	if(this.constructor.is_connected(this,otherNode)) {
-	    this.rem_link(otherNode);
-	    otherNode.rem_back_link(this);
-	    return true;
-	}
-	return false;
-    }
-    rem_from_arr(arr,node) {
-	const ind = arr.indexOf(node);
-	if (ind > -1)
-	    arr.splice(ind,1);
-    }
-    rem_link(otherNode) {
-	this.rem_from_arr(this.links,otherNode);
-    }
-    rem_back_link(otherNode) {
-	this.rem_from_arr(this.backLinks,otherNode);
-    }
-    add_uni_link(otherNode) {
-        this.links.push(otherNode);
-    }
-    add_back_link(otherNode) {
-        this.backLinks.push(otherNode);
-    }
-    static is_connected(n,other_node) {
-	for(let i in n.links)
-	    if (n.links[i] == other_node)
-		return true;
-	for(let i in n.backLinks)
-	    if (n.backLinks[i] == other_node)
-		return true;
-	return false;
+    static calc_dist(n0,n1) {
+        return Math.sqrt((n0.x-n1.x)*(n0.x-n1.x) + (n0.y-n1.y)*(n0.y-n1.y));
     }
     static draw(n,p,draw_trace,draw_labels) {
-        if (!p.fill_colour)
+	if (!p.fill_colour)
 	    n.c2d.fillStyle = draw_trace ? n.tracefillcolour : n.fillcolour;
-
-	if (!p.line_colour)
-            n.c2d.strokeStyle = draw_trace ? n.tracelinecolour : n.linecolour;
-        n.c2d.beginPath();
-	switch(n.shape) {
-	case 'c':
-            n.links.forEach(otherNode => {
-		const coords1 = this.getPointOnCircle(n,this.angleBetween(n,otherNode));
-		n.c2d.moveTo(coords1[0], coords1[1]);
-		const coords2 = this.getPointOnCircle(otherNode,this.angleBetween(otherNode,n));
-		n.c2d.lineTo(coords2[0], coords2[1]);
-            });
-	    break;
-	case 'e':
-	    n.links.forEach(otherNode => {
-		const coords1 = this.getPointOnEllipse(n,this.angleBetween(n,otherNode));
-		n.c2d.moveTo(coords1[0], coords1[1]);
-		const coords2 = this.getPointOnEllipse(otherNode,this.angleBetween(otherNode,n));
-		n.c2d.lineTo(coords2[0], coords2[1]);
-            });
-	    break;
-	case 'r':
-	case 's':
-	    n.links.forEach(otherNode => {
-		const coords1 = this.getConnectionPoint(n,otherNode);
-		n.c2d.moveTo(coords1[0], coords1[1]);
-		const coords2 = this.getConnectionPoint(otherNode,n);
-		n.c2d.lineTo(coords2[0], coords2[1]);
-            });
-	    break;
-	default:
-	    n.links.forEach(otherNode => {
-		n.c2d.moveTo(otherNode.x, otherNode.y);
-		n.c2d.lineTo(n.x, n.y);
-            });
-	}
-	if (!p.line_colour)
-            n.c2d.stroke();
-
-	if (!p.outline_col)
+    	if (!p.outline_col)
             n.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
 	
 	n.c2d.beginPath();
@@ -196,12 +116,27 @@ class Node {
 	    n.c2d.fillText(n.name, n.x + node_params.label_offset_x, n.y + node_params.label_offset_y);
 	}
     }
+    static get_point(n,otherNode) {
+	switch(n.shape) {
+	case 'c':
+		return this.getPointOnCircle(n,this.angleBetween(n,otherNode));
+	    break;
+	case 'e':
+		return this.getPointOnEllipse(n,this.angleBetween(n,otherNode));
+	    break;
+	case 'r':
+	case 's':
+		return this.getConnectionPoint(n,otherNode);
+	    break;
+	default:
+	    return [otherNode.x,otherNode.y];
+	}
+    }
     static angleBetween(n,other) {
 	// Calculate the angle...
 	// This is our "0" or start angle..
 	let rotation = -Math.atan2(other.x - n.x, other.y - n.y);
 	rotation = rotation + Math.PI; // 180 degrees
-
 	return rotation;
     }
     static getPointOnCircle(n,radians) {
@@ -234,6 +169,46 @@ class Node {
 	const y = (otherNode.y < n.y) ? n.y : n.y + n.size1;
 	return [x,y];
     }
+    // connect(otherNode) {
+    // 	if(!this.constructor.is_connected(this,otherNode)) {
+    // 	    this.add_uni_link(otherNode);
+    // 	    otherNode.add_back_link(this);
+    // 	}
+    // }
+    // disconnect(otherNode) {
+    // 	if(this.constructor.is_connected(this,otherNode)) {
+    // 	    this.rem_link(otherNode);
+    // 	    otherNode.rem_back_link(this);
+    // 	    return true;
+    // 	}
+    // 	return false;
+    // }
+    // rem_from_arr(arr,node) {
+    // 	const ind = arr.indexOf(node);
+    // 	if (ind > -1)
+    // 	    arr.splice(ind,1);
+    // }
+    // rem_link(otherNode) {
+    // 	this.rem_from_arr(this.links,otherNode);
+    // }
+    // rem_back_link(otherNode) {
+    // 	this.rem_from_arr(this.backLinks,otherNode);
+    // }
+    // add_uni_link(otherNode) {
+    //     this.links.push(otherNode);
+    // }
+    // add_back_link(otherNode) {
+    //     this.backLinks.push(otherNode);
+    // }
+    // static is_connected(n,other_node) {
+    // 	for(let i in n.links)
+    // 	    if (n.links[i] == other_node)
+    // 		return true;
+    // 	for(let i in n.backLinks)
+    // 	    if (n.backLinks[i] == other_node)
+    // 		return true;
+    // 	return false;
+    // }
     static status(g) {
         return g.name+": coord.: (" + g.x + ","+g.y+") forces: ("+ g.fx + ","+g.fy+")";
     }

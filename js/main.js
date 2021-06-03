@@ -148,7 +148,7 @@ function set_graph_alg(a) {
     graph_algorithm = a;
 }
 function add_node_at_pos(gr,name,xpos,ypos,shape=node_shape,sz=node_size,cols=colours,rpairs=rnd_pairs,c=c2d) {
-    gr.addNode(new Node(name,
+    gr.add_vertex(new Node(name,
 			shape,
 			sz.s0,
 			sz.s1,
@@ -372,7 +372,7 @@ function make_r2r_graph(nuno,nued) {
     while(gr.nu_edges < max_num) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
-	gr.addLink(n1,n2);
+	gr.add_edge(n1,n2);
     }
     return(gr);
 }
@@ -383,7 +383,7 @@ function make_r2r_all_graph(nuno,nued_id="nu_edges") {
     for(let i = 0;i<nuno || Graph.discover_node_groups(gr,false).length > 1;++i) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
-	if (gr.addLink(n1,n2))
+	if (gr.add_edge(n1,n2))
 	    ++ne;
     }
     document.getElementById(nued_id).value = ne;
@@ -405,7 +405,7 @@ function make_s2r_graph(nuno,nued) {
 	let n2 = n1
 	while (n2 == n1)
 	    n2 = Math.floor(Math.random()*nuno);
-	gr.addLink(n1,n2);
+	gr.add_edge(n1,n2);
     }
     return(gr);
 }
@@ -416,7 +416,7 @@ function make_s2r_all_graph(nuno,nued_id="nu_edges") {
     let ne = 0;
     while(Graph.discover_node_groups(gr,false).length > 1) {
 	let n2 = Math.floor(Math.random()*nuno);
-	if (gr.addLink(i++,n2))
+	if (gr.add_edge(i++,n2))
 	    ++ne;
 	if (i == nuno)
 	    i = 0;
@@ -430,7 +430,7 @@ function make_a2a_graph(nuno) {
 
     for(let i = 0;i < nuno;++i)
 	for (let j = i; j < nuno; ++j)
-	     gr.addLink(i,j);
+	     gr.add_edge(i,j);
 	     
     return(gr);
 }
@@ -439,15 +439,15 @@ function make_circular_graph(nuno) {
     add_nodes(gr,nuno);
     let i;
     for(i = 1; i < nuno; ++i)
-	gr.addLink(i-1,i);
-    gr.addLink(i-1,0);
+	gr.add_edge(i-1,i);
+    gr.add_edge(i-1,0);
     return(gr);
 }
 function make_central_graph(nuno) {
     const gr = new Graph('central');
     add_nodes(gr,nuno);
     for(let i = 1; i < nuno; ++i)
-	gr.addLink(0,i);
+	gr.add_edge(0,i);
     return(gr);
 }
 function make_triangulated_graph(nuno) {
@@ -455,13 +455,13 @@ function make_triangulated_graph(nuno) {
     add_nodes(gr,nuno);
     if (nuno <= 1)
 	return(gr);
-    gr.addLink(0,1);
+    gr.add_edge(0,1);
     let i;
     for(i = 2; i < nuno; ++i) {
-	gr.addLink(0,i);
-	gr.addLink(i-1,i);
+	gr.add_edge(0,i);
+	gr.add_edge(i-1,i);
     }
-    gr.addLink(i-1,1);
+    gr.add_edge(i-1,1);
     return(gr);
 }
 function make_matrix_graph(nuno,nuno2) {
@@ -471,9 +471,9 @@ function make_matrix_graph(nuno,nuno2) {
     for(let i = 0; i < nuno; ++i) {
 	for(let j = 0; j < nuno2; ++j,++n) {
 	    if(j>0)
-		gr.addLink(n-1,n);
+		gr.add_edge(n-1,n);
 	    if(i>0)
-		gr.addLink(n-nuno2,n);
+		gr.add_edge(n-nuno2,n);
 	}
     }
     return(gr);
@@ -488,7 +488,7 @@ function make_tree_graph(nuno,nubr,c=canv) {
 	    const ni = queue.shift();
 	    for(let b = 0; b < nubr && i < nuno; ++b,++i) {
 		queue.push(i);
-		gr.addLink(ni,i);
+		gr.add_edge(ni,i);
 	    }
 	}
     }
@@ -502,7 +502,7 @@ function make_el_graph() {
     for(let i in edges) {
 	if (edges[i].length != 2)
 	    continue;
-	gr.addLink(nodes.indexOf(edges[i][0]),nodes.indexOf(edges[i][1]));
+	gr.add_edge(nodes.indexOf(edges[i][0]),nodes.indexOf(edges[i][1]));
     }
     return(gr);
 }
@@ -610,7 +610,7 @@ function anim_step() {
     if(!first_step) {
 	if(tracer.checked)
 	    g.draw(off_pairs,true,false);
-	g.calcForces();
+	g.calc_forces();
 	g.step();
 	if(!tracer.checked)
 	    clear_canvas();
