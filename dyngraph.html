@@ -214,7 +214,7 @@
 	      <td><input title="number of nodes" id="nu_nodes" type="number" min="2" max="1000" /><label>x</label><input id="nu_nodes2" type="number" min="1" max="100" value="1" disabled></td>
 	    </tr>
 	    <tr>
-	      <td><label>shape/label></td>
+	      <td><label>shape</label></td>
 	      <td><select class="button1" title="the shape of the nodes" id="sel_shape" onchange="proc_shape_sel('sel_shape','node_dim_target')">
 		  <option value="c" selected>circle</option>
 		  <option value="s">square</option>
@@ -547,9 +547,9 @@
 	}
 	function rem_node(selid="sel_node_list1",gr=g,nued_id="nu_edges") {
 	    const seli = document.getElementById(selid);
-	    gr.remNodeByName(seli[seli.selectedIndex].value);
+	    gr.rem_vertex_by_name(seli[seli.selectedIndex].value);
 	    init_connectedness_selectors();
-	    document.getElementById(nued_id).value = gr.nu_edges;
+	    sync_nu_edges();
 	    document.getElementById("btn_save_as_sedge").disabled = true;
 	    sync_nu_nodes();
 	}
@@ -591,29 +591,24 @@
 	    nodes[nd_sel_box2.selectedIndex].fillcolour = sel_col;
 	    nodes[nd_sel_box2.selectedIndex].linecolour = sel_col;
 	}
-	function connect_selected_nodes(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2",nued_id="nu_edges") {
-	    const nd_sel_box1 = document.getElementById(sel1);
-	    const nd_sel_box2 = document.getElementById(sel2);
-	    g.addLink(nd_sel_box1.selectedIndex,nd_sel_box2.selectedIndex);
-	    nd_sel_box2.dispatchEvent(new Event("change"));
-	    document.getElementById(nued_id).value = g.nu_edges;
+	function connect_selected_nodes(gr=g,sel1="sel_node_list1",sel2="sel_node_list2",nued_id="nu_edges") {
+	    const ind1 = document.getElementById(sel1).selectedIndex;
+	    const ind2 = document.getElementById(sel2).selectedIndex;
+	    gr.add_edge(ind1,ind2);
+	    sync_nu_edges();
 	}
-	function disconnect_selected_nodes(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2",nued_id="nu_edges") {
-	    const nd_sel_box1 = document.getElementById(sel1);
-	    const nd_sel_box2 = document.getElementById(sel2);
-	    const ind1 = nd_sel_box1.selectedIndex;
-	    const ind2 = nd_sel_box2.selectedIndex;
-	    if(g.is_connected(ind1,ind2))
-		g.remLink(ind1,ind2);
-	    if(g.is_connected(ind2,ind1))
-		g.remLink(ind2,ind1);
-	    nd_sel_box2.dispatchEvent(new Event("change"));
-	    document.getElementById(nued_id).value = g.nu_edges;
+	function disconnect_selected_nodes(gr=g,sel1="sel_node_list1",sel2="sel_node_list2",nued_id="nu_edges") {
+	    const ind1 = document.getElementById(sel1).selectedIndex;
+	    const ind2 = document.getElementById(sel2).selectedIndex;
+	    console.log(`selected indices: ${ind1} ${ind2}`);
+	    gr.rem_edge(ind1,ind2);
+	    sync_nu_edges();
 	}
-	function init_connectedness_selectors(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2",res="sp_is_connected") {
+	function init_connectedness_selectors(gr=g,sel1="sel_node_list1",sel2="sel_node_list2",res="sp_is_connected") {
 	    const sel_box1 = document.getElementById(sel1);
 	    const sel_box2 = document.getElementById(sel2);
 	    const res_targ = document.getElementById(res);
+	    const nodes = gr.ns;
 	    init_node_selector(sel_box1,nodes);
 	    init_node_selector(sel_box2,nodes);
 	    //console.log("nodes length: " + nodes.length);
@@ -622,10 +617,10 @@
 		sel_box2.selectedIndex = nodes.length-1;
 	    }
 	    sel_box1.addEventListener("change",function() {
-		res_targ.innerHTML = Node.is_connected(nodes[this.selectedIndex],nodes[sel_box2.selectedIndex]);
+		res_targ.innerHTML = gr.is_connected(this.selectedIndex,sel_box2.selectedIndex);
 	    });
 	    sel_box2.addEventListener("change",function() {
-		res_targ.innerHTML = Node.is_connected(nodes[this.selectedIndex],nodes[sel_box1.selectedIndex]);
+		res_targ.innerHTML = gr.is_connected(this.selectedIndex,sel_box1.selectedIndex);
 	    });
 	}
 	function examine_routes_between(sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",res="sp_is_route_between",gr=g) {
@@ -1087,6 +1082,9 @@
 	    change_shape(sel_id);
 	    create_table(targ_id,prep_tr_data(set_shape_params(node_shape)));
 	    sync_back_node_sizes('inp_nodesize0','inp_nodesize1');
+	}
+	function sync_nu_edges(gr=g,nued_id="nu_edges") {
+	    document.getElementById(nued_id).value = gr.nu_edges/2;
 	}
 	function sync_nu_nodes(nu1_id="nu_nodes",nu2_id="nu_nodes2",gr=g) {
 	    document.getElementById(nu1_id).value = gr.ns.length;

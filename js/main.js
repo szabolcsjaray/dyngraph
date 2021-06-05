@@ -369,7 +369,7 @@ function make_r2r_graph(nuno,nued) {
     add_nodes(gr,nuno);
     const theoretical_max = full_connect_nu(nuno);
     const max_num = (nued <= theoretical_max) ? nued : theoretical_max;
-    while(gr.nu_edges < max_num) {
+    while(gr.nu_edges/2 < max_num) {
 	let n1 = Math.floor(Math.random()*nuno);
 	let n2 = Math.floor(Math.random()*nuno);
 	gr.add_edge(n1,n2);
@@ -398,7 +398,7 @@ function make_s2r_graph(nuno,nued) {
 	return gr;
     const theoretical_max = full_connect_nu(nuno);
     const max_num = (nued <= theoretical_max) ? nued : theoretical_max;
-    for(let n = 0;gr.nu_edges < max_num;++n) {
+    for(let n = 0;gr.nu_edges/2 < max_num;++n) {
 	if (n == nuno)
 	    n = 0;
 	const n1 = n;
@@ -556,7 +556,7 @@ function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
     default:
 	console.log("Invalid graph algorithm code: " + graph_algorithm);
     }
-    document.getElementById(nued_id).value = g.nu_edges;
+    sync_nu_edges();
     animate = cb_paused_start.checked ? false : true;
     animPhase();
 }

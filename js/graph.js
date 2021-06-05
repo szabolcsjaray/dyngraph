@@ -35,14 +35,21 @@ class Graph {
 	return true;
     }
     add_edge(v1,v2) {
+	if(v1 == v2)
+	    return false;
+	if(this.is_connected(v1,v2))
+	    return false;
 	this.add_uni_edge(v1,v2);
-	if (v1 != v2)
-	    this.add_uni_edge(v2,v1);
+	this.add_uni_edge(v2,v1);
+	return true;
     }
     rem_edge(v1,v2) {
+	if(!this.is_connected(v1,v2))
+	    return false;
 	this.rem_uni_edge(v1,v2);
 	if (v1 != v2)
 	    this.rem_uni_edge(v2,v1);
+	return true;
     }
     add_uni_edge(v1,v2) {
 	this.adj[v1].push(v2);
@@ -57,7 +64,8 @@ class Graph {
 	this.ns[num].y = ypos;
     }
     is_connected(index1,index2) {
-	return(this.adj[index1].indexOf[index2] > -1 || this.adj[index2].indexOf[index1] > -1);
+	//console.log(`is connected? ${index1} and ${index2}`);
+	return(this.adj[index1].includes(index2) || this.adj[index2].includes(index1));
     }
     draw_path() {
 	for(let i = 1; i < this.path.length; ++i) {
@@ -73,7 +81,7 @@ class Graph {
 	//console.log("graph.draw() has been called");
         for (let i in this.ns) {
             Node.draw(this.ns[i],params,draw_trace,draw_labels);
-	    for (let j in this.adj[i])
+	    for (let j of this.adj[i])
 		if (j < i)
 		    this.constructor.draw_edge(this.ns[i],this.ns[j],draw_trace,draw_labels);
         }
