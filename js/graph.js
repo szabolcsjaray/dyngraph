@@ -83,22 +83,28 @@ class Graph {
             Node.draw(this.ns[i],params,draw_trace,draw_labels);
 	    for (let j of this.adj[i])
 		if (j < i)
-		    this.constructor.draw_edge(this.ns[i],this.ns[j],draw_trace,draw_labels);
+		    this.constructor.draw_edge(this.ns[i],this.ns[j],params,draw_trace,draw_labels);
         }
 	this.draw_path();
     }
     calc_forces() {
         this.ns.forEach( node => {
-            node.resetForce();
+            node.reset_force();
         });
 	for (let i in this.ns)
 	    for (let j in this.ns)
                 if (i != j) {
-		    if(this.adj[i].includes(j))
+		    if(this.adj[i].includes(Number(j)))
 			this.ns[i].add_force_connected(this.ns[j]);
 		    else
 			this.ns[i].add_force_unconnected(this.ns[j]);
 		}
+    }
+    step() {
+        this.calc_forces();
+        this.ns.forEach( node => {
+            node.step();
+        });
     }
     refresh_colours(cols,rnd) {
         this.ns.forEach( node => {
@@ -123,12 +129,6 @@ class Graph {
 	    default:
 		console.log("Undefined direction: " + dir);
 	    }
-        });
-    }
-    step() {
-        this.calc_forces();
-        this.ns.forEach( node => {
-            node.step();
         });
     }
     resize_nodes(new_size0,new_size1) {

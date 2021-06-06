@@ -49,7 +49,7 @@ class Node {
 	this.traceoutlcolour = rnd.trc_oli_col ? gen_colour() : cols.trc_oli_col;
 	this.tracelinecolour = rnd.trc_lin_col ? gen_colour() : cols.trc_lin_col;
     }
-    resetForce() {
+    reset_force() {
         this.fx = 0;
         this.fy = 0;
     }
@@ -73,7 +73,7 @@ class Node {
     step() {
         this.x += this.fx*node_params.fx_multip;;
         this.y += this.fy*node_params.fy_multip;
-        this.resetForce();
+        this.reset_force();
     }
     move_up() {
 	this.y -= node_params.nudge_size;
@@ -88,13 +88,13 @@ class Node {
 	this.x += node_params.nudge_size;
     }
     static calc_dist(n0,n1) {
-        return Math.sqrt((n0.x-n1.x)*(n0.x-n1.x) + (n0.y-n1.y)*(n0.y-n1.y));
+        return Math.sqrt(Math.pow((n0.x-n1.x),2) + Math.pow((n0.y-n1.y),2));
     }
     static draw(n,p,draw_trace,draw_labels) {
 	if (!p.fill_colour)
 	    n.c2d.fillStyle = draw_trace ? n.tracefillcolour : n.fillcolour;
     	if (!p.outline_col)
-            n.c2d.strokeStyle = draw_trace ? this.traceoutlcolour : this.outlcolour;
+            n.c2d.strokeStyle = draw_trace ? n.traceoutlcolour : n.outlcolour;
 	
 	n.c2d.beginPath();
 	switch(n.shape) {
