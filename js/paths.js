@@ -18,8 +18,6 @@ class BreadthFirstPathsIterative {
 	while(this.queue.length > 0) {
 	    const vertex = this.queue.shift();
 	    const adj = g.adj[vertex];
-	    const badj = g.badj[vertex];
-	    adj.push.apply(adj,badj);
 	    for(let w of adj)
 		if (!this.marked[w]) {
 		    this.edge_to[w] = vertex;

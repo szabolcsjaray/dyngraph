@@ -624,14 +624,14 @@
 	    });
 	}
 	function examine_routes_between(sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",res="sp_is_route_between",gr=g) {
-	    const node1 = gr.ns[document.getElementById(sel1).selectedIndex];
-	    const node2 = gr.ns[document.getElementById(sel2).selectedIndex];
+	    const ind1 = document.getElementById(sel1).selectedIndex;
+	    const ind2 = document.getElementById(sel2).selectedIndex;
 	    const res_targ = document.getElementById(res);
 	    const col_sel_box = document.getElementById(col_sel_id);
 	    const group_colour = col_sel_box[col_sel_box.selectedIndex].value;
 	    const node1_group = [];
-	    Graph.discover_a_group(node1,group_colour,node1_group,true);
-	    res_targ.innerHTML = node1_group.indexOf(node2) > -1;
+	    Graph.discover_a_group(gr,ind1,group_colour,node1_group,true);
+	    res_targ.innerHTML = node1_group.includes(ind2);
 	    gr.unvisit_nodes();
 	}
 	function hilight_path_between(sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",res="sp_is_path_btw",gr=g) {

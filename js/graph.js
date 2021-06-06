@@ -163,27 +163,16 @@ class Graph {
 	if (!p.line_colour)
             n0.c2d.stroke();
     }
-    static discover_a_group(a_node,group_colour,the_group,cols) {
-	if (!a_node.visited)
-	    the_group.push(a_node);
-	else
-	    return;
-	if (cols) {
-	    a_node.fillcolour = "#" + group_colour;
-	    a_node.linecolour = "#" + group_colour;
-	}
-	a_node.visit();
-	const queue = [];
-	for (let i = 0; i < a_node.links.length; ++i) {
-	    if (!a_node.links[i].visited)
-		queue.push(a_node.links[i]);
-	}
-	for (let i = 0; i < a_node.backLinks.length; ++i) {
-	    if (!a_node.backLinks[i].visited)
-		queue.push(a_node.backLinks[i]);
-	}
-	while(queue.length > 0) {
-	    this.discover_a_group(queue.shift(),group_colour,the_group,cols);
+    static discover_a_group(gr,adji,group_colour,the_group,cols) {
+	for(let ni of gr.adj[adji]) {
+	    if (!gr.ns[ni].visited)
+		the_group.push(ni);
+	     else
+		continue;
+	    if (cols)
+		this.colour_node(gr,ni,group_colour);
+	    gr.ns[ni].visit();
+	    this.discover_a_group(gr,ni,group_colour,the_group,cols);
 	}
     }
     static discover_node_groups(gr,cols=true) {
@@ -193,20 +182,25 @@ class Graph {
 	    if (gr.ns[i].visited)
 		continue;
 	    const a_group = [];
-	    this.discover_a_group(gr.ns[i],get_next_safe_colour(),a_group,cols);
+	    const group_col = get_next_safe_colour();
+	    this.colour_node(gr,i,group_col);
+	    a_group.push(i);
+	    this.discover_a_group(gr,i,group_col,a_group,cols);
 	    groups.push(a_group);
 	}
 	gr.unvisit_nodes();
 	return(groups)
     }
+    static colour_node(gr,ni,col) {
+	gr.ns[ni].fillcolour = "#" + col;
+	gr.ns[ni].linecolour = "#" + col;
+    }
     static connect_node_groups_first(gr) {
 	const islands = this.discover_node_groups(gr);
 	for(let i = 1; i < islands.length; ++i) {
-	    //islands[i][0].connect(islands[i-1][0]);
-	    const ind1 = gr.ns.indexOf(islands[i][0]);
-	    const ind2 = gr.ns.indexOf(islands[i-1][0]);
-	    gr.addLink(ind1,ind2);
-	    //++gr.nu_edges;
+	    const ind1 = islands[i][0];
+	    const ind2 = islands[i-1][0];
+	    gr.add_edge(ind1,ind2);
 	}
     }
     static sort_islands_by_length(islnds) {
@@ -215,13 +209,11 @@ class Graph {
     static connect_node_groups_rand(gr) {
 	let islands = this.sort_islands_by_length(this.discover_node_groups(gr));
 	while(islands.length > 1) {
-	    const i0= Math.floor(Math.random()*islands[0].length);
+	    const i0 = Math.floor(Math.random()*islands[0].length);
 	    const i1 = Math.floor(Math.random()*islands[1].length);
-	    const ind0 = gr.ns.indexOf(islands[0][i0]);
-	    const ind1 = gr.ns.indexOf(islands[1][i1]);
-	    //islands[0][i0].connect(islands[1][i1]);
-	    //++gr.nu_edges;
-	    gr.addLink(ind0,ind1);
+	    const ind0 = islands[0][i0];
+	    const ind1 = islands[1][i1];
+	    gr.add_edge(ind0,ind1);
 	    islands = this.sort_islands_by_length(this.discover_node_groups(gr,false));
 	}
     }
