@@ -58,7 +58,7 @@ class Graph {
 	return true;
     }
     add_uni_edge(v1,v2) {
-	this.adj[v1].push(v2);
+	this.adj[v1].push(Number(v2));
 	++this.nu_edges;
     }
     rem_uni_edge(v1,v2) {
