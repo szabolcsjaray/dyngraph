@@ -3,16 +3,18 @@ class Graph {
         this.name = name;
 	this.nu_vertices = 0;
 	this.nu_edges = 0;
-        this.ns = [];
+	this.counter = 0;
+        this.ns = {};
 	this.sn = {};
 	this.adj = {};
 	this.path = [];
 	this.path_col = "#ff00ff";
     }
     add_vertex(node) {
-        this.ns.push(node);
+        this.ns[this.counter] = node;
 	this.sn[node.name] = node;
-	this.adj[this.nu_vertices] = [];
+	this.adj[this.counter] = [];
+	++this.counter;
 	++this.nu_vertices;
         return this.ns.length-1;
     }
@@ -28,11 +30,15 @@ class Graph {
 	    return false;
 	const the_node = this.ns[ind];
 	delete this.sn[this.ns[ind].name];
-	this.ns.splice(ind,1);
-	this.remLinks(ind,this.adj);
+	delete this.ns[ind];
+	this.rem_edges(ind);
 	delete this.adj[ind];
 	--this.nu_vertices;
 	return true;
+    }
+    rem_edges(ind) {
+	for(let i = this.adj[ind].length - 1; i > -1; --i)
+	    this.rem_edge(ind,this.adj[ind][i]);
     }
     add_edge(v1,v2) {
 	if(v1 == v2)
@@ -59,9 +65,9 @@ class Graph {
 	this.adj[v1].splice(this.adj[v1].indexOf(v2),1);
 	--this.nu_edges;
     }
-    reposition_node(num,xpos,ypos) {
-	this.ns[num].x = xpos;
-	this.ns[num].y = ypos;
+    reposition_node(key,xpos,ypos) {
+	this.ns[key].x = xpos;
+	this.ns[key].y = ypos;
     }
     is_connected(index1,index2) {
 	//console.log(`is connected? ${index1} and ${index2}`);
@@ -88,9 +94,9 @@ class Graph {
 	this.draw_path();
     }
     calc_forces() {
-        this.ns.forEach( node => {
-            node.reset_force();
-        });
+        for(let a_key in this.ns) {
+            this.ns[a_key].reset_force();
+        }
 	for (let i in this.ns)
 	    for (let j in this.ns)
                 if (i != j) {
@@ -102,9 +108,9 @@ class Graph {
     }
     step() {
         this.calc_forces();
-        this.ns.forEach( node => {
-            node.step();
-        });
+        for(let a_key in this.ns) {
+            this.ns[a_key].step();
+        }
     }
     refresh_colours(cols,rnd) {
         this.ns.forEach( node => {
@@ -144,9 +150,9 @@ class Graph {
     }
     get_edge_list(delim,quot) {
 	let output_string = "";
-	for(let i in this.ns) {
-		for(let j in this.ns[i].links) {
-		    output_string += quot + this.ns[i].name + quot + delim + quot + this.ns[i].links[j].name + quot + "\n";
+	for(let i in this.adj) {
+		for(let j of this.adj[i]) {
+		    output_string += quot + this.ns[i].name + quot + delim + quot + this.ns[j].name + quot + "\n";
 		    //console.log(output_string);
 		}
 	}

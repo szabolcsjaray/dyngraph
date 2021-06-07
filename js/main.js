@@ -165,17 +165,14 @@ function add_node_at_random_pos(gr,name,sc=scat,os=offs) {
 		    Math.random()*sc.x+os.x,
 		    Math.random()*sc.y+os.y);
 }
-function print_edges(target,delim=elem.delim,quot=elem.quote) {
-    target.value = g.get_edge_list(delim,quot);
-}
 function add_nodes_at_same_pos(gr,names,posx=0,posy=0) {
     const len = names.length;
     for(let i = 0; i < len; ++i)
 	add_node_at_pos(gr,names[i],posx,posy);
 }
 function scatter_nodes(gr,sc=scat,os=offs) {
-    for(let i = 0;i<gr.ns.length;i++)
-	gr.reposition_node(i,Math.random()*sc.x+os.x,Math.random()*sc.y+os.y);
+    for(let a_key in gr.ns)
+	gr.reposition_node(a_key,Math.random()*sc.x+os.x,Math.random()*sc.y+os.y);
 }
 function hline_nodes(gr,jit=jitter,os=offs,c=canv) {
     const len = gr.ns.length;
@@ -531,6 +528,7 @@ function start(c2d,nnodes,nnodes2,nedges,nbranches,nalpha,nued_id="nu_edges") {
 	break;
     case "el":
 	g = make_el_graph();
+	sync_nu_nodes();
 	break;
     case "circ":
 	g = make_circular_graph(num_nodes);

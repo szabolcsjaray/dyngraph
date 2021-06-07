@@ -537,6 +537,9 @@
 	    nu_scatter:   80,
 	    nu_alpha:     90,
 	}
+	function print_edges(target,gr=g,delim=elem.delim,quot=elem.quote) {
+	    target.value = g.get_edge_list(delim,quot);
+	}
 	function add_new_node(name_box,sel_shape_id="sel_shape",gr=g) {
 	    const sel_shape = document.getElementById(sel_shape_id);
 	    const node_shape = sel_shape[sel_shape.selectedIndex].value;
@@ -550,7 +553,7 @@
 	    gr.rem_vertex_by_name(seli[seli.selectedIndex].value);
 	    init_connectedness_selectors();
 	    sync_nu_edges();
-	    document.getElementById("btn_save_as_sedge").disabled = true;
+	    //document.getElementById("btn_save_as_sedge").disabled = true;
 	    sync_nu_nodes();
 	}
 	function init_starting_colour_selector() {
@@ -600,7 +603,7 @@
 	function disconnect_selected_nodes(gr=g,sel1="sel_node_list1",sel2="sel_node_list2",nued_id="nu_edges") {
 	    const ind1 = document.getElementById(sel1).selectedIndex;
 	    const ind2 = document.getElementById(sel2).selectedIndex;
-	    console.log(`selected indices: ${ind1} ${ind2}`);
+	    //console.log(`selected indices: ${ind1} ${ind2}`);
 	    gr.rem_edge(ind1,ind2);
 	    sync_nu_edges();
 	}
@@ -701,12 +704,10 @@
             hiddenElement.download = fn;
             hiddenElement.click();
 	}
-
 	const obj_csv = {
 	    size:0,
 	    data_file:[]
 	};
-			
 	function read_image(input,outbox_id) {
 	    //console.log(input)
 	    if (input.files && input.files[0]) {
@@ -721,7 +722,6 @@
 		}
 	    }
 	}
-
 	function read_image2(input,nu_nodes_id,nu_edges_id,endl=elem.endl,pstart=cb_paused_start) {
 	    //console.log(input)
 	    if (input.files && input.files[0]) {
@@ -740,7 +740,6 @@
 		}
 	    }
 	}
-
 	function parse_sedgewick_data(dat_lines,nuvert_id,nuedge_id,delim=elem.delim2) {
 	    const nuvert = dat_lines[0];
 	    document.getElementById(nuvert_id).value = Number(nuvert);
@@ -756,10 +755,9 @@
 	    for(let i = 2; i < len; ++i) {
 		const arr = dat_lines[i].trim().split(delim);
 		if (arr.length == 2)
-		    g.addLink(Number(arr[0].trim()),Number(arr[1].trim()));
+		    g.add_edge(Number(arr[0].trim()),Number(arr[1].trim()));
 	    }
 	}
- 
 	function parse_csv_data(data,out_id,delim=elem.delim,endl=elem.endl){
 	    const csv_data = [];
 	    document.getElementById(out_id).value = data;
@@ -769,7 +767,6 @@
 	    });
 	    //console.table(csvData);
 	}
-	
 	const inp_vals_map = {};
 	function setup_inp_vals_map() {
 	    const canv_dim_lock = document.getElementById("cb_canv_dim_lock");
@@ -814,12 +811,10 @@
 		inp_vals_map[a_val].dispatchEvent(new Event('change'));
 	    }
 	}
-
 	function save_to_inp_vals() {
 	    for (let a_val in inp_vals)
 		 inp_vals[a_val] = inp_vals_map[a_val].value;
 	}
-	
 	const tracer = document.getElementById("cb_tracing");
 	tracer.addEventListener("change",function() {
 	    if (this.checked && labelling.checked) {
@@ -864,7 +859,6 @@
 	    off_boxes[a_key] = document.getElementById(a_key + "_off");
 	    off_boxes[a_key].addEventListener("change",function(){col_off_change(a_key);});
 	}
-
 	const map_node_params = {};
 	for (let it in node_params) {
 	    map_node_params[it] = [];
@@ -979,7 +973,6 @@
 	}
 	for (let it in col_sels)
 	    col_sels[it].addEventListener("change",function(){colours[it] = col_sels[it].value;});
-
 	const area_edgelist = document.getElementById("edge_list");
 	area_edgelist.placeholder = "n1,n2\nn2,n3\nn3,n1";
 
