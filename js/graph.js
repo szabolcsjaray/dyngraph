@@ -12,7 +12,7 @@ class Graph {
     }
     add_vertex(node) {
         this.ns[this.counter] = node;
-	this.sn[node.name] = node;
+	this.sn[node.name] = this.counter;
 	this.adj[this.counter] = [];
 	++this.counter;
 	++this.nu_vertices;
@@ -21,16 +21,16 @@ class Graph {
     rem_vertex_by_name(name) {
 	if(this.sn[name]===undefined)
 	    return false;
-	if (this.rem_vertex(this.ns.indexOf(this.sn[name])))
-	    return true;
-	return false;
+	return this.rem_vertex(this.sn[name]);
     }
     rem_vertex(ind) {
-	if(ind < 0 || this.nu_vertices <= ind)
+	if(!Object.keys(this.ns).includes(ind.toString()))
 	    return false;
-	const the_node = this.ns[ind];
+	//console.log(`vertex ind to remove: ${this.sn[this.ns[ind].name]}`);
 	delete this.sn[this.ns[ind].name];
+	//console.log(`vertex to remove: ${this.ns[ind]}`);
 	delete this.ns[ind];
+	//console.log(`adj to remove: ${this.adj[ind]}`);
 	this.rem_edges(ind);
 	delete this.adj[ind];
 	--this.nu_vertices;
@@ -77,6 +77,7 @@ class Graph {
 	for(let i = 1; i < this.path.length; ++i) {
 	    let n0 = this.ns[this.path[i-1]];
 	    let n1 = this.ns[this.path[i]];
+	    n0.c2d.beginPath();
 	    n0.c2d.strokeStyle = this.path_col;
 	    n0.c2d.moveTo(n0.x,n0.y);
 	    n0.c2d.lineTo(n1.x,n1.y);
@@ -113,40 +114,38 @@ class Graph {
         }
     }
     refresh_colours(cols,rnd) {
-        this.ns.forEach( node => {
-            node.refresh_colours(cols,rnd);
-        });
+	for(let a_key in this.ns)
+	    this.ns[a_key].refresh_colours(cols,rnd);
     }
     nudge(dir) {
-	this.ns.forEach( node => {
+	for(let a_key in g.ns) {
 	    switch(dir) {
 	    case 'up':
-		node.move_up();
+		g.ns[a_key].move_up();
 		break;
 	    case 'down':
-		node.move_down();
+		g.ns[a_key].move_down();
 		break;
 	    case 'left':
-		node.move_left();
+		g.ns[a_key].move_left();
 		break;
 	    case 'right':
-		node.move_right();
+		g.ns[a_key].move_right();
 		break;
 	    default:
 		console.log("Undefined direction: " + dir);
 	    }
-        });
+        }
     }
     resize_nodes(new_size0,new_size1) {
-	this.ns.forEach( node => {
-            node.size0=Number(new_size0);
-	    node.size1=Number(new_size1);
-        });
+	for (let a_key in this.ns) {
+            this.ns[a_key].size0=Number(new_size0);
+	    this.ns[a_key].size1=Number(new_size1);
+        }
     }
     unvisit_nodes() {
-	this.ns.forEach( node => {
-	    node.unvisit();
-	});
+	for (let a_key in this.ns)
+	    this.ns[a_key].unvisit();
     }
     get_edge_list(delim,quot) {
 	let output_string = "";
@@ -184,14 +183,14 @@ class Graph {
     static discover_node_groups(gr,cols=true) {
 	const groups = [];
 	gr.unvisit_nodes();
-	for(let i = 0; i < gr.ns.length; ++i) {
-	    if (gr.ns[i].visited)
+	for(let a_key in gr.ns) {
+	    if (gr.ns[a_key].visited)
 		continue;
 	    const a_group = [];
 	    const group_col = get_next_safe_colour();
-	    this.colour_node(gr,i,group_col);
-	    a_group.push(i);
-	    this.discover_a_group(gr,i,group_col,a_group,cols);
+	    this.colour_node(gr,a_key,group_col);
+	    a_group.push(a_key);
+	    this.discover_a_group(gr,a_key,group_col,a_group,cols);
 	    groups.push(a_group);
 	}
 	gr.unvisit_nodes();
@@ -223,8 +222,7 @@ class Graph {
 	    islands = this.sort_islands_by_length(this.discover_node_groups(gr,false));
 	}
     }
-    static connect_node_groups(gr,rnd_id,nu_edges_id) {
+    static connect_node_groups(gr,rnd_id) {
 	document.getElementById(rnd_id).checked ? this.connect_node_groups_rand(gr) : this.connect_node_groups_first(gr);
-	document.getElementById(nu_edges_id).value = gr.nu_edges;
     }
 }

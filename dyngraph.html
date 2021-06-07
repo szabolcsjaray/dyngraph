@@ -500,7 +500,7 @@
 	      <td><input type="button" title="した (Ctrl+Shift+DownArrow)" id="btn_down" onClick="nudge('down');" value="下" /></td>
 	    </tr>
 	    <tr>
-	      <td><label><input type="button" id="btn_discover_groups" onClick="reset_safe_colour_index();Graph.discover_node_groups(g);" value="Colour Groups" /> or <input type="button" id="btn_connect_groups" onClick="reset_safe_colour_index();Graph.connect_node_groups(g,'cb_rnd_conn_grps','nu_edges');" value="Connect Groups" /> (rand:<input type="checkbox" class="cb" id="cb_rnd_conn_grps" checked>) starting with colour </label><select class="button1" id="sel_starting_safe_colour"></select></td> <!--  onChange="console.log(this.selectedIndex + ': ' + this[this.selectedIndex].text)" -->
+	      <td><label><input type="button" id="btn_discover_groups" onClick="reset_safe_colour_index();Graph.discover_node_groups(g);" value="Colour Groups" /> or <input type="button" id="btn_connect_groups" onClick="reset_safe_colour_index();Graph.connect_node_groups(g,'cb_rnd_conn_grps');sync_nu_edges();" value="Connect Groups" /> (rand:<input type="checkbox" class="cb" id="cb_rnd_conn_grps" checked>) starting with colour </label><select class="button1" id="sel_starting_safe_colour"></select></td>
 	      <td></td>
 	    </tr>
 	    <tr>
@@ -537,6 +537,18 @@
 	    nu_scatter:   80,
 	    nu_alpha:     90,
 	}
+	function name_from_selbox(selbox) {
+	    return(selbox[selbox.selectedIndex].value);
+	}
+	function name_from_selbox_id(selbox_id) {
+	    return(name_from_selbox(document.getElementById(selbox_id)));
+	}
+	function adj_index_from_selbox(selbox,gr=g) {
+	    return(gr.sn[name_from_selbox(selbox)]);
+	}
+	function adj_index_from_selbox_id(selbox_id,gr=g) {
+	    return(adj_index_from_selbox(document.getElementById(selbox_id),gr));
+	}
 	function print_edges(target,gr=g,delim=elem.delim,quot=elem.quote) {
 	    target.value = g.get_edge_list(delim,quot);
 	}
@@ -549,8 +561,8 @@
 	    sync_nu_nodes();
 	}
 	function rem_node(selid="sel_node_list1",gr=g,nued_id="nu_edges") {
-	    const seli = document.getElementById(selid);
-	    gr.rem_vertex_by_name(seli[seli.selectedIndex].value);
+	    //const seli = document.getElementById(selid);
+	    gr.rem_vertex_by_name(name_from_selbox_id(selid));
 	    init_connectedness_selectors();
 	    sync_nu_edges();
 	    //document.getElementById("btn_save_as_sedge").disabled = true;
@@ -579,30 +591,32 @@
 	    if(sel_box.options.length > 0)
 		remove_all_options(sel_box);
 	    const l = nodes.length;
-	    for(let i = 0; i < l; ++i) {
-		const option = nodes[i].name;
+	    for(let a_key in nodes) {
+		const option = nodes[a_key].name;
 		sel_box.options.add( new Option(option,option,false));
 	    }
 	}
-	function hilite_selected_nodes(nodes=g.ns,sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",colours=safe_colours) {
-	    const nd_sel_box1 = document.getElementById(sel1);
-	    const nd_sel_box2 = document.getElementById(sel2);
+	function hilite_node(node,col) {
+	    node.fillcolour = col;
+	    node.linecolour = col;
+	}
+	function hilite_selected_nodes(gr=g,sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",colours=safe_colours) {
+	    const ind1 = adj_index_from_selbox_id(sel1,gr);
+	    const ind2 = adj_index_from_selbox_id(sel2,gr);
 	    const col_sel_box = document.getElementById(col_sel_id);
-	    const sel_col = "#" + colours[col_sel_box.selectedIndex]
-	    nodes[nd_sel_box1.selectedIndex].fillcolour = sel_col;
-	    nodes[nd_sel_box1.selectedIndex].linecolour = sel_col;
-	    nodes[nd_sel_box2.selectedIndex].fillcolour = sel_col;
-	    nodes[nd_sel_box2.selectedIndex].linecolour = sel_col;
+	    const sel_col = "#" + colours[col_sel_box.selectedIndex];
+	    hilite_node(gr.ns[ind1],sel_col);
+	    hilite_node(gr.ns[ind2],sel_col);
 	}
 	function connect_selected_nodes(gr=g,sel1="sel_node_list1",sel2="sel_node_list2",nued_id="nu_edges") {
-	    const ind1 = document.getElementById(sel1).selectedIndex;
-	    const ind2 = document.getElementById(sel2).selectedIndex;
+	    const ind1 = adj_index_from_selbox_id(sel1);
+	    const ind2 = adj_index_from_selbox_id(sel2);
 	    gr.add_edge(ind1,ind2);
 	    sync_nu_edges();
 	}
 	function disconnect_selected_nodes(gr=g,sel1="sel_node_list1",sel2="sel_node_list2",nued_id="nu_edges") {
-	    const ind1 = document.getElementById(sel1).selectedIndex;
-	    const ind2 = document.getElementById(sel2).selectedIndex;
+	    const ind1 = adj_index_from_selbox_id(sel1);
+	    const ind2 = adj_index_from_selbox_id(sel2);
 	    //console.log(`selected indices: ${ind1} ${ind2}`);
 	    gr.rem_edge(ind1,ind2);
 	    sync_nu_edges();
@@ -612,23 +626,24 @@
 	    const sel_box2 = document.getElementById(sel2);
 	    const res_targ = document.getElementById(res);
 	    const nodes = gr.ns;
+	    const len = Object.keys(nodes).length;
 	    init_node_selector(sel_box1,nodes);
 	    init_node_selector(sel_box2,nodes);
 	    //console.log("nodes length: " + nodes.length);
-	    if(nodes.length > 0) {
+	    if(len > 0) {
 		sel_box1.selectedIndex = 0;
-		sel_box2.selectedIndex = nodes.length-1;
+		sel_box2.selectedIndex = len-1;
 	    }
 	    sel_box1.addEventListener("change",function() {
-		res_targ.innerHTML = gr.is_connected(this.selectedIndex,sel_box2.selectedIndex);
+		res_targ.innerHTML = gr.is_connected(adj_index_from_selbox(this),adj_index_from_selbox(sel_box2));
 	    });
 	    sel_box2.addEventListener("change",function() {
-		res_targ.innerHTML = gr.is_connected(this.selectedIndex,sel_box1.selectedIndex);
+		res_targ.innerHTML = gr.is_connected(adj_index_from_selbox(this),adj_index_from_selbox(sel_box1));
 	    });
 	}
 	function examine_routes_between(sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",res="sp_is_route_between",gr=g) {
-	    const ind1 = document.getElementById(sel1).selectedIndex;
-	    const ind2 = document.getElementById(sel2).selectedIndex;
+	    const ind1 = adj_index_from_selbox_id(sel1);
+	    const ind2 = adj_index_from_selbox_id(sel2);
 	    const res_targ = document.getElementById(res);
 	    const col_sel_box = document.getElementById(col_sel_id);
 	    const group_colour = col_sel_box[col_sel_box.selectedIndex].value;
@@ -638,8 +653,8 @@
 	    gr.unvisit_nodes();
 	}
 	function hilight_path_between(sel1="sel_node_list1",sel2="sel_node_list2",col_sel_id="sel_starting_safe_colour",res="sp_is_path_btw",gr=g) {
-	    const src_ind = document.getElementById(sel1).selectedIndex;
-	    const trg_ind = document.getElementById(sel2).selectedIndex;
+	    const src_ind = adj_index_from_selbox_id(sel1);
+	    const trg_ind = adj_index_from_selbox_id(sel2);
 	    const pth = new BreadthFirstPathsIterative(gr,src_ind);
 	    const col_sel_box = document.getElementById(col_sel_id);
 	    const is_path = pth.has_path_to(trg_ind);
@@ -1080,7 +1095,7 @@
 	    document.getElementById(nued_id).value = gr.nu_edges/2;
 	}
 	function sync_nu_nodes(nu1_id="nu_nodes",nu2_id="nu_nodes2",gr=g) {
-	    document.getElementById(nu1_id).value = gr.ns.length;
+	    document.getElementById(nu1_id).value = gr.nu_vertices;
 	    document.getElementById(nu2_id).value = 1;
 	}
 	function toggle(param) {

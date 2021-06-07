@@ -175,42 +175,66 @@ function scatter_nodes(gr,sc=scat,os=offs) {
 	gr.reposition_node(a_key,Math.random()*sc.x+os.x,Math.random()*sc.y+os.y);
 }
 function hline_nodes(gr,jit=jitter,os=offs,c=canv) {
-    const len = gr.ns.length;
+    const len = Object.keys(gr.ns).length;
     const vpos = c.height / 2;
     let vpos_mod = jit;
     const h_incr = (c.width - (2 * os.x))/len;
     let hpos = os.x;
-    for(let i = 0; i < len; hpos+=h_incr,++i,vpos_mod*=-1)
-	gr.reposition_node(i,hpos,vpos+vpos_mod);
+    for(let a_key in gr.ns) {
+	gr.reposition_node(a_key,hpos,vpos+vpos_mod);
+	hpos+=h_incr;
+	vpos_mod*=-1;
+    }
+    // for(let i = 0; i < len; hpos+=h_incr,++i,vpos_mod*=-1)
+    // 	gr.reposition_node(i,hpos,vpos+vpos_mod);
 }
 function vline_nodes(gr,jit=jitter,os=offs,c=canv) {
-    const len = gr.ns.length;
+    const len = Object.keys(gr.ns).length;
     const hpos = c.width / 2;
     let hpos_mod = jit;
     const v_incr = (c.height - (2 * os.y))/len;
     let vpos = os.y;
-    for(let i = 0; i < len; vpos+=v_incr,++i,hpos_mod*=-1)
-	gr.reposition_node(i,hpos+hpos_mod,vpos);
+    for(let a_key in gr.ns) {
+	gr.reposition_node(a_key,hpos+hpos_mod,vpos);
+	vpos+=v_incr;
+	hpos_mod*=-1;
+    }
+    // for(let i = 0; i < len; vpos+=v_incr,++i,hpos_mod*=-1)
+    // 	gr.reposition_node(i,hpos+hpos_mod,vpos);
 }
 function lrdiagonal_nodes(gr,jit=jitter,os=offs,c=canv) {
-    const len = gr.ns.length;
+    const len = Object.keys(gr.ns).length;
     const v_incr = (c.height - (2 * os.y))/len;
     const h_incr = (c.width - (2 * os.x))/len;
     let vpos = os.y;
     let hpos = os.x;
     let hpos_mod = jit;
-    for(let i = 0; i < len; vpos+=v_incr,hpos+=h_incr,++i,hpos_mod*=-1)
-	gr.reposition_node(i,hpos+hpos_mod,vpos);
+    for(let a_key in gr.ns) {
+	gr.reposition_node(a_key,hpos+hpos_mod,vpos);
+	vpos+=v_incr;
+	hpos+=h_incr;
+	hpos_mod*=-1;
+    }
+    // for(let i = 0; i < len; vpos+=v_incr,hpos+=h_incr,++i,hpos_mod*=-1)
+    // 	gr.reposition_node(i,hpos+hpos_mod,vpos);
 }
 function x_nodes(gr,os=offs,c=canv) {
-    const len = gr.ns.length;
+    const len = Object.keys(gr.ns).length;
     const v_incr = (c.height - (2 * os.y))/len;
     const h_incr = (c.width - (2 * os.x))/len;
     let vpos = os.y;
     let hpos1 = os.x;
     let hpos2 = c.width-os.x;
-    for(let i = 0; i < len; vpos+=v_incr,hpos1+=h_incr,hpos2-=h_incr,++i)
-	gr.reposition_node(i,(i % 2 == 0) ? hpos1 : hpos2,vpos);
+    let i = 0;
+    for(let a_key in gr.ns) {
+	gr.reposition_node(a_key,(i % 2 == 0) ? hpos1 : hpos2,vpos);
+	i++;
+	vpos+=v_incr;
+	hpos1+=h_incr;
+	hpos2-=h_incr;
+    }
+    // for(let i = 0; i < len; vpos+=v_incr,hpos1+=h_incr,hpos2-=h_incr,++i)
+    // 	gr.reposition_node(i,(i % 2 == 0) ? hpos1 : hpos2,vpos);
 }
 class Point {
     constructor(x,y) {
@@ -223,18 +247,24 @@ function get_point_on_circ(origin,radian,radius) {
 		     Math.round(origin.y + Math.sin(radian) * radius)));
 }
 function circular_nodes(gr,os=offs,c=canv) {
-    const len = gr.ns.length;
+    const len = Object.keys(gr.ns).length;
     const o = new Point(c.width/2,c.height/2);
     const radius = (o.x < o.y) ? o.x - os.x : o.y - os.y;
     const rad_incr = (2 * Math.PI) / len;
     let radian = 0;
-    for(let i = 0; i < len; ++i,radian+=rad_incr) {
+    for(let a_key in gr.ns) {
 	const p = get_point_on_circ(o,radian,radius)
-	gr.reposition_node(i,p.x,p.y);
-    }	
+	gr.reposition_node(a_key,p.x,p.y);
+	radian+=rad_incr;
+    }
+    // for(let i = 0; i < len; ++i,radian+=rad_incr) {
+    // 	const p = get_point_on_circ(o,radian,radius)
+    // 	gr.reposition_node(i,p.x,p.y);
+    // }
 }
 function grid_nodes(gr,os=offs,c=canv) {
-    const len = gr.ns.length;
+    const len = Object.keys(gr.ns).length;
+    const keys = Object.keys(gr.ns);
     let vpos;
     let hpos = os.x;
     let num_max = Math.ceil(Math.sqrt(len));
@@ -243,7 +273,7 @@ function grid_nodes(gr,os=offs,c=canv) {
     let n;
     for(let i = 0,n=0; i < num_max; hpos+=h_incr,++i)
 	for(let j = 0,vpos = os.y; j < num_max && n<len; vpos+=v_incr,++j,++n)
-	    gr.reposition_node(n,Math.floor(hpos),Math.floor(vpos));
+	    gr.reposition_node(keys[n],Math.floor(hpos),Math.floor(vpos));
 }
 function make_namelist(n,l) {
     for(let i = 0; i < n; ++i)
