@@ -516,7 +516,11 @@
 	      <td></td>
 	    </tr>
 	    <tr>
-	      <td><label>Add node with name <input type="text" id="inp_new_node_name" onchange="add_new_node(this)" size="10" /></label></td>
+	      <td><label>Add node with name <input type="text" id="inp_new_node_name" onchange="add_new_node(this,'cb_hilite_added')" size="10" /> (highlight: <input type="checkbox" class="cb" id="cb_hilite_added" checked>)</label></td>
+	      <td></td>
+	    </tr>
+	    <tr>
+	      <td><label>Find node with name <input type="text" id="inp_find_node_name" onchange="find_node(this,'sp_found_node')" size="10" /><span id="sp_found_node"></span></label></td>
 	      <td></td>
 	    </tr>
 	  </table>
@@ -552,13 +556,29 @@
 	function print_edges(target,gr=g,delim=elem.delim,quot=elem.quote) {
 	    target.value = g.get_edge_list(delim,quot);
 	}
-	function add_new_node(name_box,sel_shape_id="sel_shape",gr=g) {
+	function colour_from_selbox_id(selbox_id) {
+	    const name = name_from_selbox_id(selbox_id);
+	    return('#' + name);
+	}
+	function add_new_node(name_box,hi_id,sel_shape_id="sel_shape",col_sel_id="sel_starting_safe_colour",gr=g) {
 	    const sel_shape = document.getElementById(sel_shape_id);
 	    const node_shape = sel_shape[sel_shape.selectedIndex].value;
 	    add_node_at_random_pos(gr,name_box.value);
 	    init_connectedness_selectors();
+	    if (document.getElementById(hi_id).checked)
+		hilite_node(gr.ns[gr.sn[name_box.value]],colour_from_selbox_id(col_sel_id));
 	    name_box.value = "";
 	    sync_nu_nodes();
+	}
+	function find_node(inp,out_id,col_sel_id="sel_starting_safe_colour",gr=g) {
+	    const str2find = inp.value;
+	    const outspan = document.getElementById(out_id);
+	    if (gr.sn[str2find]===undefined)
+		outspan.innerHTML = " Not found";
+	    else {
+		hilite_node(gr.ns[gr.sn[str2find]],colour_from_selbox_id(col_sel_id));
+		outspan.innerHTML = " Found & highlighted";
+	    }
 	}
 	function rem_node(selid="sel_node_list1",gr=g,nued_id="nu_edges") {
 	    //const seli = document.getElementById(selid);
